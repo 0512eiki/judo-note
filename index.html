@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>柔道ノート Judo Note</title>
+<meta name="theme-color" content="#eef0f6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="柔道ノート">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ── トークン：ガラス（Liquid Glass）。色(--acc-*)と背景の光(--b1..3)は個人設定でJSが差し替える ── */
+:root{
+  --acc-l:#3552d4; --acc-d:#8ea2ff; --acc-2:#8b5cf6;
+  --b1:rgba(129,140,248,.55); --b2:rgba(196,181,253,.50); --b3:rgba(125,211,252,.40);
+  --accent:var(--acc-l);
+  --grad:linear-gradient(135deg,var(--accent),var(--acc-2));
+  --tint:color-mix(in srgb,var(--accent) 13%,transparent);
+  --text:#151827; --dim:#5b6072; --faint:#8a8fa0;
+  --base:#eef0f6;
+  --panel:rgba(255,255,255,.62); --panel2:rgba(255,255,255,.46); --glass:rgba(255,255,255,.58);
+  --glass-bd:rgba(255,255,255,.78); --hi:inset 0 1px 0 rgba(255,255,255,.9);
+  --shadow:0 10px 34px rgba(40,50,90,.14); --line:rgba(30,40,80,.10); --line2:rgba(30,40,80,.20);
+  --good:#1f8a4c; --good-s:rgba(31,138,76,.13); --warn:#b86e00; --warn-s:rgba(214,138,0,.15); --bad:#cf3434; --bad-s:rgba(207,52,52,.12);
+  --blob-op:1; --frost:26px; --radius:20px;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Helvetica Neue",sans-serif;
+  --mincho:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* 印刷用の紙（テーマに関係なく常に白い紙） */
+  --s-paper:#ffffff; --s-ink:#16181f; --s-dim:#5a5f6b; --s-line:#cfd2d9; --s-soft:#f3f4f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not([data-mode="light"]){
+    --accent:var(--acc-d); --text:#eef0f8; --dim:#a9afc2; --faint:#767c8f; --base:#0b0d15;
+    --panel:rgba(26,30,44,.58); --panel2:rgba(255,255,255,.07); --glass:rgba(14,16,26,.66);
+    --glass-bd:rgba(255,255,255,.14); --hi:inset 0 1px 0 rgba(255,255,255,.08);
+    --shadow:0 12px 40px rgba(0,0,0,.5); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.2);
+    --good:#5fd18c; --good-s:rgba(95,209,140,.15); --warn:#f2b451; --warn-s:rgba(242,180,81,.15); --bad:#ff7a7a; --bad-s:rgba(255,122,122,.15);
+    --blob-op:.45; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]:not([data-mode="light"]), :root[data-mode="dark"]{
+  --accent:var(--acc-d); --text:#eef0f8; --dim:#a9afc2; --faint:#767c8f; --base:#0b0d15;
+  --panel:rgba(26,30,44,.58); --panel2:rgba(255,255,255,.07); --glass:rgba(14,16,26,.66);
+  --glass-bd:rgba(255,255,255,.14); --hi:inset 0 1px 0 rgba(255,255,255,.08);
+  --shadow:0 12px 40px rgba(0,0,0,.5); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.2);
+  --good:#5fd18c; --good-s:rgba(95,209,140,.15); --warn:#f2b451; --warn-s:rgba(242,180,81,.15); --bad:#ff7a7a; --bad-s:rgba(255,122,122,.15);
+  --blob-op:.45; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.6;color:var(--text);background:var(--base);-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--blob-op);
+  background:
+    radial-gradient(900px 620px at 6% -10%, var(--b1), transparent 58%),
+    radial-gradient(820px 640px at 108% 8%, var(--b2), transparent 55%),
+    radial-gradient(760px 600px at 50% 118%, var(--b3), transparent 58%);}
+body::after{content:"";position:fixed;z-index:0;pointer-events:none;width:62vw;height:62vw;right:-22vw;bottom:-28vw;border-radius:50%;filter:blur(50px);opacity:calc(var(--blob-op)*.6);
+  background:conic-gradient(from 30deg,transparent,var(--b1),rgba(255,255,255,.5),transparent);animation:drift 32s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0) rotate(0)}to{transform:translate(-8vw,-6vh) rotate(24deg)}}
+@media (prefers-reduced-motion: reduce){body::after{animation:none}}
+#app{position:relative;z-index:1}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ── ヘッダー（すりガラス） ── */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--glass);border-bottom:1px solid var(--glass-bd);box-shadow:var(--hi);
+  -webkit-backdrop-filter:saturate(170%) blur(var(--frost));backdrop-filter:saturate(170%) blur(var(--frost))}
+.top-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:baseline;gap:8px;min-width:0}
+.brand{white-space:nowrap;flex:none}
+@media (max-width:520px){.top-in{gap:8px;padding-inline:12px}.demo-tag,.brand small,.who .nm{display:none}.hello h1{font-size:24px}}
+.brand b{font-family:var(--mincho);font-weight:800;font-size:21px;letter-spacing:.04em}
+.brand small{font-size:10px;letter-spacing:.2em;color:var(--dim);font-weight:600}
+.sp{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);min-width:0}
+.who .nm{color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid var(--glass-bd);background:var(--panel2);box-shadow:var(--hi);display:grid;place-items:center;cursor:pointer;color:var(--text);flex:none}
+.icon-btn svg{width:18px;height:18px}
+.tabs{max-width:1100px;margin:0 auto;padding:0 16px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tab{border:1px solid transparent;background:transparent;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;color:var(--dim);cursor:pointer;white-space:nowrap}
+.tab[aria-current="page"]{background:var(--panel);border-color:var(--glass-bd);color:var(--accent);box-shadow:var(--hi),0 4px 14px rgba(0,0,0,.06)}
+.tab .dot{display:inline-block;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;line-height:18px;text-align:center;margin-left:6px;padding:0 5px}
+
+/* ── レイアウトとガラスカード ── */
+main{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+.card{background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--radius);box-shadow:var(--shadow),var(--hi);padding:18px;
+  -webkit-backdrop-filter:blur(var(--frost)) saturate(1.5);backdrop-filter:blur(var(--frost)) saturate(1.5)}
+.card h2{margin:0 0 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stack{display:grid;gap:16px}
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.hello{padding:4px 2px 2px}
+.hello .sub{font-size:13px;color:var(--dim);font-weight:500}
+.hello h1{margin:2px 0 0;font-size:28px;line-height:1.2;letter-spacing:-.01em;font-weight:700;text-wrap:balance}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--dim)} .small{font-size:13px}
+.demo-tag{display:inline-block;font-size:11px;font-weight:600;color:var(--dim);border:1px dashed var(--line2);border-radius:999px;padding:1px 9px}
+
+/* ── ボタン・入力 ── */
+.btn{border:none;border-radius:12px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer;background:var(--grad);color:#fff;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--panel2);color:var(--accent);border:1px solid var(--glass-bd);box-shadow:var(--hi)}
+.btn.sm{padding:6px 12px;font-size:13px;border-radius:10px}
+.field{display:grid;gap:6px}
+.field>label,.lbl{font-size:13px;font-weight:600;color:var(--dim)}
+.inp{width:100%;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:15px}
+textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* 1〜5 の段階ボタン */
+.cond{display:grid;gap:12px}
+.crow{display:grid;grid-template-columns:7.5em 1fr;gap:10px;align-items:center}
+.crow .nm{font-weight:600;font-size:14px}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg span{display:grid;place-items:center;height:40px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);font-weight:700;font-family:var(--mono);transition:.12s}
+.seg input:checked+span{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 12px color-mix(in srgb,var(--accent) 35%,transparent)}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.ends{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:-6px}
+.rpe{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.rpe span{height:44px;font-size:14px}
+.rpe-cap{font-size:13px;color:var(--dim);min-height:1.4em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chk{position:relative}
+.chk input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chk span{display:inline-block;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);font-size:13px;font-weight:600}
+.chk input:checked+span{background:var(--tint);border-color:var(--accent);color:var(--accent)}
+.chk input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.chk.danger input:checked+span{background:var(--bad-s);border-color:var(--bad);color:var(--bad)}
+.card.alert{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
+.card.alert h2{color:var(--bad)}
+.seen{margin-top:6px;font-size:12px;font-weight:700;color:var(--good)}
+.evcard{display:grid;gap:8px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--panel)),color-mix(in srgb,var(--acc-2) 12%,var(--panel)))}
+.evcard .k{font-size:13px;font-weight:700;color:var(--dim)}
+.evcard .big{font-size:18px;font-weight:600} .evcard .big b{font-size:40px;line-height:1;font-family:var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:2px}
+.evrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)} .evrow:first-child{border-top:0} .evrow>div{flex:1} .evrow.past{opacity:.55}
+.evform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+@media (max-width:520px){ .crow{grid-template-columns:1fr} .ends{grid-column:1} .rpe{grid-template-columns:repeat(6,1fr)} }
+
+/* 状態チップ */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--panel2);color:var(--dim);white-space:nowrap}
+.pill.bad{background:var(--bad-s);color:var(--bad)} .pill.warn{background:var(--warn-s);color:var(--warn)} .pill.good{background:var(--good-s);color:var(--good)} .pill.acc{background:var(--tint);color:var(--accent)}
+
+/* ── コーチ：選手一覧 ── */
+.stats{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.stat .v{font-size:30px;font-weight:700;line-height:1.1;font-family:var(--mono)}
+.stat .v small{font-size:15px;color:var(--dim);font-weight:500}
+.stat .k{font-size:12px;color:var(--dim);font-weight:600}
+@media (max-width:520px){.stats{grid-template-columns:1fr 1fr 1fr}.stat .v{font-size:22px}.stat{padding:12px}}
+.roster{display:grid;gap:0}
+.rrow{display:grid;grid-template-columns:minmax(9em,1.3fr) 132px 5.5em 5.5em 7.5em minmax(0,2fr);gap:14px;align-items:center;padding:12px 6px;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%;border-radius:0}
+.rrow:first-of-type{border-top:0}
+.rrow:hover{background:var(--tint)}
+.rhead{font-size:11px;color:var(--faint);font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:default;padding-block:0 8px}
+.rhead:hover{background:none}
+.rname b{display:block;font-size:15px}
+.rname span{font-size:12px;color:var(--dim)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+.num small{color:var(--dim);font-size:11px}
+.flags{display:flex;gap:4px;flex-wrap:wrap}
+@media (max-width:860px){
+  .rrow{grid-template-columns:1fr auto;gap:6px 12px}
+  .rhead{display:none}
+  .rrow .c-spark{grid-row:1/3;grid-column:2}
+  .rrow .c-m{display:none}
+  .rrow .flags{grid-column:1/-1}
+}
+.lang-tag{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--dim);border:1px solid var(--line2);border-radius:5px;padding:0 4px;margin-left:6px;vertical-align:1px}
+
+/* 記録リスト */
+.entries{display:grid;gap:0}
+.ent{display:grid;grid-template-columns:6.5em 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.ent:first-child{border-top:0;padding-top:4px}
+.ent .d{font-weight:700;font-size:14px}
+.ent .d small{display:block;color:var(--dim);font-weight:500;font-size:12px}
+.ent .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.ent p{margin:4px 0 0}
+.cmt{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--tint);font-size:14px}
+.cmt b{font-size:12px;color:var(--accent);display:block}
+.cform{display:flex;gap:8px;margin-top:8px}
+.cform .inp{padding:7px 10px;font-size:14px}
+@media (max-width:520px){.ent{grid-template-columns:1fr;gap:4px}}
+
+/* 質問スレッド */
+.thread{padding:14px 0;border-top:1px solid var(--line)}
+.thread:first-child{border-top:0;padding-top:2px}
+.bubble{max-width:560px;padding:9px 13px;border-radius:16px;margin-top:6px;background:var(--panel2);border:1px solid var(--line)}
+.bubble.coach{margin-left:auto;background:var(--tint);border-color:transparent}
+.bubble .by{font-size:11px;color:var(--dim);font-weight:600}
+.thead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
+
+/* チャート */
+.chart svg{width:100%;height:auto;display:block}
+.chart .t{font-size:13px;font-weight:600;margin-bottom:2px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.chart .t small{color:var(--dim);font-weight:500}
+
+/* ── 設定パネル ── */
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(10,12,20,.28);display:grid;place-items:center;padding:16px}
+.sheet-ui{width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--glass);border:1px solid var(--glass-bd);border-radius:24px;box-shadow:var(--shadow),var(--hi);padding:20px;
+  -webkit-backdrop-filter:blur(34px) saturate(1.6);backdrop-filter:blur(34px) saturate(1.6)}
+.sheet-ui h3{margin:0 0 14px;font-size:18px}
+.opt-group{display:grid;gap:8px;margin-bottom:18px}
+.segbar{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.segbar button{flex:1;border:0;background:none;padding:7px 8px;border-radius:9px;font-size:14px;font-weight:600;color:var(--dim);cursor:pointer}
+.segbar button[aria-pressed="true"]{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12),var(--hi)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.sw{border:0;background:none;padding:0;cursor:pointer;display:grid;justify-items:center;gap:4px;font-size:11px;color:var(--dim);font-weight:600}
+.sw i{width:40px;height:40px;border-radius:50%;display:block;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 10px rgba(0,0,0,.15)}
+.sw[aria-pressed="true"] i{outline:3px solid var(--text);outline-offset:3px}
+.sw input[type=color]{width:40px;height:40px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--glass);border:1px solid var(--glass-bd);box-shadow:var(--shadow),var(--hi);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6)}
+
+/* ── ログイン ── */
+.login{min-height:calc(100vh - 40px);display:grid;place-items:center;padding-inline:16px;padding-block:32px}
+.login .card{width:min(420px,100%);padding:26px}
+.login h1{font-family:var(--mincho);font-weight:800;font-size:32px;margin:0;letter-spacing:.06em;line-height:1.1}
+.login .en{font-size:11px;letter-spacing:.3em;color:var(--dim);font-weight:700}
+.acct{display:grid;gap:6px;margin-top:8px}
+.acct button{display:flex;justify-content:space-between;gap:8px;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:7px 11px;font-size:13px;cursor:pointer;text-align:left}
+.acct button span{color:var(--dim)}
+.err{color:var(--bad);font-size:13px;font-weight:600;min-height:1.2em}
+
+/* ── 印刷プレビュー（紙） ── */
+.sheets{overflow-x:auto;display:grid;gap:22px;justify-content:center;padding-block:4px 20px}
+.paper{background:var(--s-paper);color:var(--s-ink);box-shadow:0 18px 50px rgba(20,24,40,.22),0 1px 0 rgba(0,0,0,.04);position:relative;overflow:hidden;font-family:var(--sans);--s-acc:#3552d4}
+.paper.a5{width:148mm;height:210mm;padding:11mm 11mm 12mm;font-size:8.6pt;line-height:1.5}
+.paper.a4{width:210mm;height:297mm;padding:14mm 14mm 14mm;font-size:9pt;line-height:1.5}
+.paper .foot{position:absolute;left:11mm;right:11mm;bottom:6mm;display:flex;justify-content:space-between;font-size:6.8pt;color:var(--s-dim);font-family:var(--mono);letter-spacing:.04em}
+.paper.a4 .foot{left:14mm;right:14mm}
+.paper h2{font-family:var(--mincho);font-weight:800;font-size:15pt;margin:0 0 3mm;letter-spacing:.04em;display:flex;align-items:baseline;gap:3mm}
+.paper h2 small{font-family:var(--mono);font-size:7pt;color:var(--s-acc);letter-spacing:.2em;font-weight:500}
+.paper h3{font-size:8.6pt;margin:4mm 0 1.5mm;color:var(--s-acc);letter-spacing:.06em}
+.rule{height:1.2pt;background:var(--s-ink);margin:0 0 4mm}
+.cover{display:flex;flex-direction:column;height:100%}
+.cover .band{height:26mm;margin:-11mm -11mm 0;background:var(--s-acc);position:relative}
+.cover .band::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5mm;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 1.2mm,transparent 1.2mm 3mm)}
+.cover .ttl{font-family:var(--mincho);font-weight:800;font-size:38pt;letter-spacing:.12em;margin-top:12mm;line-height:1}
+.cover .ym{font-family:var(--mono);font-size:11pt;letter-spacing:.2em;color:var(--s-acc);margin-top:3mm}
+.cover .nm{margin-top:10mm;font-size:15pt;font-weight:700;border-bottom:1pt solid var(--s-ink);padding-bottom:1.5mm;display:flex;justify-content:space-between;align-items:baseline}
+.cover .nm small{font-size:8.5pt;font-weight:500;color:var(--s-dim)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-top:6mm}
+.kpi{border:0.6pt solid var(--s-line);border-radius:2mm;padding:2.2mm}
+.kpi .k{font-size:6.6pt;color:var(--s-dim);font-weight:600}
+.kpi .v{font-family:var(--mono);font-size:12pt;font-weight:500;line-height:1.25}
+.kpi .v small{font-size:7pt;color:var(--s-dim)}
+.goal-list{margin:0;padding:0;list-style:none;display:grid;gap:1.6mm}
+.goal-list li{display:grid;grid-template-columns:5mm 1fr;gap:1.5mm;border-bottom:0.5pt dashed var(--s-line);padding-bottom:1.4mm}
+.goal-list li i{width:3.4mm;height:3.4mm;border:0.8pt solid var(--s-ink);border-radius:.6mm;display:block;margin-top:.6mm}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:1mm}
+.cal .h{font-size:6.4pt;color:var(--s-dim);text-align:center;font-weight:700}
+.cal .c{border:0.5pt solid var(--s-line);border-radius:1.2mm;height:15mm;padding:.8mm 1mm;font-size:6.2pt;position:relative;overflow:hidden}
+.cal .c.o{border:none}
+.cal .c b{font-family:var(--mono);font-size:7pt}
+.cal .c .bar{position:absolute;left:0;right:0;bottom:0;height:1.4mm}
+.cal .c .l{color:var(--s-dim);font-family:var(--mono);display:block;line-height:1.25}
+.legend{display:flex;gap:3mm;font-size:6.4pt;color:var(--s-dim);margin-top:1.5mm;flex-wrap:wrap}
+.legend i{display:inline-block;width:4mm;height:1.6mm;margin-right:1mm;vertical-align:.3mm}
+.day{display:grid;grid-template-columns:17mm 1fr;gap:2.5mm;border-top:0.5pt solid var(--s-line);padding:1.9mm 0}
+.day:first-of-type{border-top:1pt solid var(--s-ink)}
+.day .dt{font-family:var(--mono);font-weight:500;font-size:8pt;line-height:1.3}
+.day .dt small{display:block;font-size:6.4pt;color:var(--s-dim)}
+.day .mt{font-size:6.6pt;color:var(--s-dim);margin-bottom:.6mm}
+.day .nt{font-size:7.8pt}
+.day .cm{font-size:7.2pt;margin-top:.8mm;padding-left:2mm;border-left:1.2pt solid var(--s-acc);color:#2a2e38}
+.qa{border-top:0.5pt solid var(--s-line);padding:2mm 0}
+.qa .q{font-weight:600}
+.qa .a{margin-top:1mm;padding-left:2mm;border-left:1.2pt solid var(--s-acc)}
+.qa .dd{font-family:var(--mono);font-size:6.6pt;color:var(--s-dim)}
+.lines{background:repeating-linear-gradient(to bottom,transparent 0 7.4mm,var(--s-line) 7.4mm 7.6mm);border-top:0.5pt solid var(--s-line)}
+.boxlbl{font-size:7.4pt;font-weight:700;margin:3mm 0 0;display:flex;justify-content:space-between}
+.boxlbl small{font-weight:500;color:var(--s-dim)}
+.typed{font-size:7.8pt;background:var(--s-soft);border-radius:1.5mm;padding:2mm 2.5mm}
+.signs{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:4mm}
+.signs div{border:0.6pt solid var(--s-ink);border-radius:1.5mm;height:15mm;padding:1.2mm 2mm;font-size:6.6pt;color:var(--s-dim);position:relative}
+.signs div::after{content:"";position:absolute;right:2.5mm;bottom:2mm;width:10mm;height:10mm;border:0.6pt dashed var(--s-line);border-radius:50%}
+.rep{width:100%;border-collapse:collapse;font-size:8pt}
+.rep th{font-size:6.8pt;color:var(--s-dim);text-align:left;font-weight:700;border-bottom:1pt solid var(--s-ink);padding:1.5mm 1.5mm}
+.rep td{border-bottom:0.5pt solid var(--s-line);padding:2mm 1.5mm;vertical-align:middle}
+.rep td.n{font-family:var(--mono);text-align:right}
+.rep th.n{text-align:right}
+.pchart .t{font-size:7pt;font-weight:700;margin:2.5mm 0 .5mm;display:flex;justify-content:space-between}
+.pchart .t small{font-weight:500;color:var(--s-dim)}
+.pchart svg{width:100%;height:auto;display:block}
+.printbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.printbar .field{min-width:150px}
+
+@media print{
+  @page a5{size:148mm 210mm;margin:0}
+  @page a4{size:210mm 297mm;margin:0}
+  body{background:#fff}
+  body::before,body::after,.noprint{display:none!important}
+  main{padding:0;max-width:none}
+  .sheets{display:block;overflow:visible;padding:0}
+  .paper{box-shadow:none;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .paper.a5{page:a5} .paper.a4{page:a4}
+}
+.linkish{border:0;background:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;padding:4px 0;text-align:left}
+.linkish.danger{color:var(--bad)}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:14px;line-height:1.5}
+.consent input{margin-top:4px;width:18px;height:18px;flex:none;accent-color:var(--accent)}
+.invite-new{margin-top:12px;padding:14px;border-radius:14px;background:var(--tint);display:grid;gap:6px}
+.invite-new .code{font-size:28px;letter-spacing:.18em;font-weight:500}
+.member{display:grid;gap:8px;padding:14px 0;border-top:1px solid var(--line)} .member:first-child{border-top:0;padding-top:2px}
+.danger-btn{background:var(--bad);box-shadow:none}
+.btn:disabled{opacity:.55;cursor:wait}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast noprint" role="status" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
+<script>
+/* =============================================================
+   柔道ノート Judo Note — 本番版（Supabase に保存・ID＋パスワードでログイン）
+   閲覧範囲はデータベースの行レベルセキュリティで守る（supabase/schema.sql）
+   ============================================================= */
+const I18N = {
+ ja:{
+  app:'柔道ノート',
+  g_hello:'{n}さんの記録', g_sub:'保護者として見ています（見るだけ）', t_g_log:'記録', viewers:'あなたの記録を見られる人', viewers_list:'コーチ{g}', viewers_g:'・保護者（{n}）',
+  coach_only:'コーチだけに見せる（保護者には見えません）', coach_only_pill:'コーチだけ', g_inv:'保護者用コード', g_inv_made:'{n}さんの保護者用コードです。保護者に渡してください。', guardians:'保護者', g_join:'{a}さんの保護者として登録します（見るだけ）', g_remove:'外す',
+  loading:'読み込み中…', join:'招待コードで登録', join_title:'チームに参加する', code:'招待コード', code_check:'確認', code_ok:'「{t}」に参加します', code_bad:'この招待コードは使えません。コーチに新しいコードをもらってください。',
+  name:'名前（表示名）', name_ph:'例：佐藤 健太', login_id:'ID（ログイン用）', login_id_help:'半角の英小文字・数字・ - ・ _ で3〜20文字', pw2:'パスワード（確認）', pw_help:'8文字以上',
+  wclass:'階級', wclass_ph:'例：男子 -73kg', wlimit:'階級の上限（kg）', minor:'18歳未満です', guardian:'保護者の名前',
+  consent:'保護者に「調子・体重・ケガ・練習の記録をコーチと共有すること」を説明し、同意をもらいました。',
+  consent_note:'記録を見られるのは本人とコーチだけです。卒業・退部のときは、コーチが記録を削除するか、PDFにして渡します。',
+  register:'登録してはじめる', back_login:'ログインに戻る', setup:'はじめての方（コーチ）', setup_title:'チームを作る（最初のコーチ）', team_name:'チーム名', create_team:'チームを作る',
+  e_id:'IDは半角の英小文字・数字・ - ・ _ で3〜20文字にしてください。', e_pw:'パスワードは8文字以上にしてください。', e_pw2:'確認用のパスワードが一致しません。',
+  e_taken:'このIDはもう使われています。別のIDにしてください。', e_consent:'18歳未満の場合は、保護者の名前と同意のチェックが必要です。',
+  e_net:'通信できませんでした。電波のよいところでもう一度試してください。', e_conf:'登録の設定がまだ完了していません。コーチに伝えてください。',
+  e_team:'チームはもう作られています。コーチから招待コードをもらってください。', e_generic:'うまくいきませんでした（{m}）',
+  offline_saved:'電波が弱くて保存できませんでした。入力はこのスマホに残っているので、あとでもう一度「保存」を押してください。', draft_restored:'保存できていなかった入力を戻しました。',
+  t_members:'選手の管理', inv_title:'招待コードを発行', inv_memo:'誰に渡すか（メモ）', inv_memo_ph:'誰に渡すか（例：佐藤 健太）', inv_make:'発行する', inv_list:'まだ使われていない招待コード',
+  inv_until:'{d}まで有効', inv_link:'このリンクを選手に送ってください（コードは入力済みになります）', copy:'コピー', copied:'コピーしました', inv_del:'取り消す', inv_none:'ありません',
+  members:'選手', m_login:'ID', m_minor:'18歳未満・保護者 {g}', save_cls:'階級を保存', saved_cls:'階級を保存しました', reset_pw:'パスワード再設定', new_pw:'新しいパスワード（8文字以上）',
+  reset_done_pw:'パスワードを変更しました。本人に直接伝えてください。', remove:'この選手を削除', remove_q:'本当に削除しますか？ 記録もすべて消えます。', remove_yes:'削除する', removed:'削除しました',
+  no_athletes:'まだ選手がいません。「選手の管理」で招待コードを発行して、選手に渡してください。', print_btn:'印刷・PDFで保存', review:'月末の振り返り', review_ph:'この1ヶ月でよかったこと・課題など（冊子に載ります）', signin:'ログイン', id:'ID', pw:'パスワード', login_err:'IDかパスワードが違います。',
+  demo_accts:'デモ用アカウント（パスワードは全員 judo）', privacy:'選手は自分の記録だけ、コーチはチーム全員の記録を見られます。',
+  logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
+  settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
+  t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
+  hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？',
+  cond:'コンディション', sleep:'睡眠', energy:'元気', soreness:'筋肉痛・張り', stress:'ストレス', mood:'気分',
+  sleep_lo:'眠れない', sleep_hi:'ぐっすり', energy_lo:'だるい', energy_hi:'元気いっぱい', soreness_lo:'ひどい', soreness_hi:'なし', stress_lo:'大きい', stress_hi:'なし', mood_lo:'落ち込み', mood_hi:'最高',
+  practice:'今日の稽古', content:'内容', minutes:'時間（分）', rpe:'きつさ', rpe_help:'稽古全体をふり返って、0〜10でどれくらいきつかったか',
+  rpe_l:['安静','とても楽','楽','ほどよい','ややきつい','きつい','きつい','とてもきつい','とてもきつい','とてもきつい','限界'],
+  body:'体重と体の状態', weight:'体重（kg）', pain:'痛むところ・体調', pain_lv:'痛みの強さ', lv:['','軽い','中くらい','強い'],
+  note:'練習の感想・気づき', note_ph:'うまくいったこと、課題、次に意識することなど', ask:'コーチへの質問', ask_ph:'（任意）あれば書いてください',
+  save:'今日の記録を保存', saved:'今日の記録を保存しました', from_coach:'コーチから',
+  ty:{waza:'技術練習',uchikomi:'打ち込み',nagekomi:'投げ込み',randori:'乱取り',newaza:'寝技',strength:'トレーニング',shiai:'試合形式'},
+  other_ph:'どんな症状・どこか（例：風邪、腹痛、股関節）',pt:{head:'頭',neck:'首',shoulder:'肩',elbow:'肘',hand:'手首・指',back:'腰',knee:'膝',ankle:'足首',other:'その他・体調'},
+  load:'練習負荷', load_u:'きつさ×分', ramp:'負荷の増え方', ramp_help:'直近7日の平均 ÷ 28日の平均。0.8〜1.3が目安', last28:'直近4週間',
+  limit:'階級上限', recent:'最近の記録', rest:'休養日', no_entry:'未入力', score:'調子',
+  f_miss:'{n}日 未入力', f_miss1:'今日 未入力', f_drop:'調子低下 {d}', f_ramp:'負荷急増 ×{v}', f_pain:'痛み・体調：{p}', f_w:'減量 あと{d}kg', f_q:'未返信の質問', f_abs:'今日 欠席：{r}', f_watch:'今日 見学',
+  att:'出欠', att_l:{present:'参加',watch:'見学',absent:'欠席',off:'休み（オフ）'}, abs_reason:'欠席の理由', ar:{sick:'体調不良',injury:'ケガ',school:'学校・仕事',personal:'用事',other:'その他'}, abs_note:'ひとこと（任意）', abs_note_ph:'例：熱が38度あるので休みます', c_abs:'欠席',
+  remind:'毎日のお知らせ', remind_off:'なし', remind_note:'本番版では、この時刻に「今日の記録」のお知らせがスマホに届きます（iPhoneはホーム画面に追加すると届きます）。', streak:'記録 {n}日連続',
+  head:'頭のケガ', head_help:'稽古中に頭を打ったとき、あとから症状が出たときは必ずチェック', hs:{hit:'頭を打った',headache:'頭痛',nausea:'吐き気',dizzy:'めまい',foggy:'ぼんやりする'}, f_head:'頭部：{s}',
+  head_saved:'コーチに知らせました。症状があるうちは稽古を休み、医療機関で診てもらってください。',
+  seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（kg）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
+  events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
+  ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}kg）まで あと{w}kg', ev_ok:'階級内（{l}kg以下）', f_ev:'試合まで{d}日', ev_none:'予定はまだありません', ev_del:'削除',
+  s_logged:'本日の入力', s_attn:'要チェック', s_unans:'未返信の質問',
+  h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
+  cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
+  waiting:'返信待ち', answered:'返信済み', back:'← 選手一覧', goals:'今月の目標', goals_save:'目標を保存', goals_saved:'目標を保存しました',
+  booklet:'選手用・月刊ノート（A5）', report:'コーチ用・チームレポート（A4）', month:'月', athlete:'選手', kind:'種類',
+  print_hint:'1ヶ月分を冊子の形にまとめたプレビューです。本番版ではここからPDFを保存して印刷します。ノートの言語と色は、その選手の設定に合わせています。',
+  my_note_hint:'毎月この冊子を印刷して、手元に残せます。',
+  nb:'柔道ノート', nb_sub:'JUDO NOTE', days:'稽古日数', total:'総稽古時間', avg:'平均コンディション', wchg:'体重',
+  cal:'月間カレンダー', cal_sub:'MONTH', daily:'日々の記録', daily_sub:'DAILY LOG', dia:'コーチとの対話', dia_sub:'DIALOGUE', ref:'月末の振り返り', ref_sub:'REVIEW',
+  good:'よかったこと', issue:'課題', next:'来月の目標', cword:'コーチからひとこと', sign_a:'選手サイン', sign_c:'コーチ確認',
+  typed:'アプリに書いた振り返り', hand:'手書き', lg_good:'調子よい（20〜25）', lg_mid:'ふつう（16〜19）', lg_low:'低い（〜15）', lg_rest:'休養・未入力',
+  team:'チームレポート', team_sub:'TEAM REPORT', c_days:'稽古日数', c_avg:'平均調子', c_ramp:'最大負荷比', c_w:'体重（月初→月末）', c_pain:'痛み日数', c_q:'質問',
+  cond_trend:'コンディションの推移', load_trend:'練習負荷の推移', weight_trend:'体重の推移', none:'なし', goals_ph:'目標 {n}',
+  reset:'デモデータを初期化', reset_done:'デモデータを初期状態に戻しました', of25:'/25', sent:'送信しました', coach:'コーチ',
+  wd:['日','月','火','水','木','金','土'], min:'分'
+ },
+ en:{
+  app:'Judo Note',
+  g_hello:'{n}’s records', g_sub:'Viewing as a parent/guardian (read-only)', t_g_log:'Records', viewers:'Who can see your records', viewers_list:'Your coach{g}', viewers_g:', your guardian ({n})',
+  coach_only:'Only my coach can see this (hidden from my guardian)', coach_only_pill:'Coach only', g_inv:'Guardian code', g_inv_made:'Guardian code for {n}. Give it to their parent/guardian.', guardians:'Guardians', g_join:'You’re registering as {a}’s guardian (read-only)', g_remove:'Remove',
+  loading:'Loading…', join:'Join with invite code', join_title:'Join your team', code:'Invite code', code_check:'Check', code_ok:'You’re joining “{t}”', code_bad:'This invite code can’t be used. Ask your coach for a new one.',
+  name:'Your name', name_ph:'e.g. Liam Carter', login_id:'ID (for signing in)', login_id_help:'3–20 characters: lowercase letters, numbers, - or _', pw2:'Password (again)', pw_help:'At least 8 characters',
+  wclass:'Weight class', wclass_ph:'e.g. Men -90kg', wlimit:'Class limit (kg)', minor:'I’m under 18', guardian:'Parent/guardian name',
+  consent:'I explained to my parent/guardian that my condition, weight, injury and practice records are shared with my coach, and they agreed.',
+  consent_note:'Only you and your coach can see your records. When you graduate or leave, your coach deletes them or gives them to you as a PDF.',
+  register:'Create account', back_login:'Back to sign in', setup:'First time? (coach)', setup_title:'Create your team (first coach)', team_name:'Team name', create_team:'Create team',
+  e_id:'Your ID must be 3–20 characters: lowercase letters, numbers, - or _.', e_pw:'Your password must be at least 8 characters.', e_pw2:'The passwords don’t match.',
+  e_taken:'This ID is already taken. Please choose another.', e_consent:'If you’re under 18, enter your guardian’s name and check the consent box.',
+  e_net:'Couldn’t connect. Try again where your signal is better.', e_conf:'Sign-up isn’t fully set up yet. Please tell your coach.',
+  e_team:'A team already exists. Ask your coach for an invite code.', e_generic:'Something went wrong ({m})',
+  offline_saved:'Your signal was too weak to save. Your entry is kept on this phone — tap Save again later.', draft_restored:'Restored an entry that hadn’t been saved.',
+  t_members:'Members', inv_title:'Create an invite code', inv_memo:'Who is it for (memo)', inv_memo_ph:'Who is it for (e.g. Liam Carter)', inv_make:'Create', inv_list:'Unused invite codes',
+  inv_until:'Valid until {d}', inv_link:'Send this link to the athlete (the code is filled in)', copy:'Copy', copied:'Copied', inv_del:'Cancel code', inv_none:'None',
+  members:'Athletes', m_login:'ID', m_minor:'Under 18 · guardian {g}', save_cls:'Save class', saved_cls:'Weight class saved', reset_pw:'Reset password', new_pw:'New password (8+ characters)',
+  reset_done_pw:'Password changed. Tell the athlete in person.', remove:'Remove this athlete', remove_q:'Remove for good? All their records are deleted too.', remove_yes:'Remove', removed:'Removed',
+  no_athletes:'No athletes yet. Create an invite code under “Members” and give it to your athletes.', print_btn:'Print / save as PDF', review:'Monthly review', review_ph:'What went well and what to work on this month (printed in the notebook)', signin:'Sign in', id:'ID', pw:'Password', login_err:'Incorrect ID or password.',
+  demo_accts:'Demo accounts (password for all: judo)', privacy:'Athletes can only see their own records. The coach can see every athlete on the team.',
+  logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
+  settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
+  t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
+  hello:'Good work today, {n}', today_q:'How are you feeling?',
+  cond:'Condition', sleep:'Sleep', energy:'Energy', soreness:'Soreness', stress:'Stress', mood:'Mood',
+  sleep_lo:'Poor', sleep_hi:'Great', energy_lo:'Drained', energy_hi:'Fresh', soreness_lo:'Very sore', soreness_hi:'None', stress_lo:'High', stress_hi:'None', mood_lo:'Low', mood_hi:'Great',
+  practice:'Today’s practice', content:'What you did', minutes:'Duration (min)', rpe:'Effort', rpe_help:'Looking back on the whole session, how hard was it from 0 to 10?',
+  rpe_l:['Rest','Very easy','Easy','Moderate','Somewhat hard','Hard','Hard','Very hard','Very hard','Very hard','Maximal'],
+  body:'Weight & body', weight:'Weight (kg)', pain:'Pain & illness', pain_lv:'Pain level', lv:['','Mild','Moderate','Severe'],
+  note:'Reflections', note_ph:'What worked, what to fix, what to focus on next', ask:'Question for the coach', ask_ph:'(optional)',
+  save:'Save today’s entry', saved:'Today’s entry saved', from_coach:'From your coach',
+  ty:{waza:'Technique',uchikomi:'Uchikomi',nagekomi:'Nagekomi',randori:'Randori',newaza:'Newaza',strength:'Strength',shiai:'Match sim'},
+  other_ph:'What and where? (e.g. cold, stomach ache, hip)',pt:{head:'Head',neck:'Neck',shoulder:'Shoulder',elbow:'Elbow',hand:'Wrist/fingers',back:'Lower back',knee:'Knee',ankle:'Ankle',other:'Other / illness'},
+  load:'Training load', load_u:'effort × min', ramp:'Load ramp', ramp_help:'7-day average ÷ 28-day average. Aim for 0.8–1.3', last28:'Last 4 weeks',
+  limit:'Weight limit', recent:'Recent entries', rest:'Rest day', no_entry:'No entry', score:'Condition',
+  f_miss:'No entry for {n} days', f_miss1:'No entry today', f_drop:'Condition down {d}', f_ramp:'Load spike ×{v}', f_pain:'Pain/illness: {p}', f_w:'{d} kg to make weight', f_q:'Unanswered question', f_abs:'Absent today: {r}', f_watch:'Watching today',
+  att:'Attendance', att_l:{present:'Training',watch:'Watching',absent:'Absent',off:'Day off'}, abs_reason:'Reason', ar:{sick:'Sick',injury:'Injury',school:'School/work',personal:'Personal',other:'Other'}, abs_note:'Note (optional)', abs_note_ph:'e.g. I have a fever, staying home', c_abs:'Absent',
+  remind:'Daily reminder', remind_off:'Off', remind_note:'In the full version your phone gets a reminder to log your day at this time (on iPhone, add the app to your Home Screen first).', streak:'{n}-day streak',
+  head:'Head injury', head_help:'Always check this if you hit your head in practice or notice symptoms later', hs:{hit:'Hit my head',headache:'Headache',nausea:'Nausea',dizzy:'Dizziness',foggy:'Feeling foggy'}, f_head:'Head: {s}',
+  head_saved:'Your coach has been notified. Don’t train while you have symptoms, and please see a doctor.',
+  seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight (kg)', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
+  events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
+  ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} kg to make {l} kg', ev_ok:'On weight (≤{l} kg)', f_ev:'Match in {d} d', ev_none:'No events yet', ev_del:'Delete',
+  s_logged:'Logged today', s_attn:'Need a look', s_unans:'Unanswered',
+  h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
+  cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
+  waiting:'Awaiting reply', answered:'Answered', back:'← Team', goals:'This month’s goals', goals_save:'Save goals', goals_saved:'Goals saved',
+  booklet:'Athlete notebook (A5)', report:'Team report for coach (A4)', month:'Month', athlete:'Athlete', kind:'Type',
+  print_hint:'A preview of one month bound as a booklet. In the full version you save it as a PDF and print from here. Each notebook uses that athlete’s language and color.',
+  my_note_hint:'Print this booklet every month and keep it on your shelf.',
+  nb:'柔道ノート', nb_sub:'JUDO NOTE', days:'Training days', total:'Total time', avg:'Avg. condition', wchg:'Weight',
+  cal:'Month at a glance', cal_sub:'MONTH', daily:'Daily log', daily_sub:'DAILY LOG', dia:'Talks with coach', dia_sub:'DIALOGUE', ref:'Monthly review', ref_sub:'REVIEW',
+  good:'What went well', issue:'What to work on', next:'Goals for next month', cword:'A word from the coach', sign_a:'Athlete', sign_c:'Coach',
+  typed:'Your review from the app', hand:'by hand', lg_good:'Good (20–25)', lg_mid:'OK (16–19)', lg_low:'Low (≤15)', lg_rest:'Rest / no entry',
+  team:'Team report', team_sub:'TEAM REPORT', c_days:'Days', c_avg:'Avg. cond.', c_ramp:'Peak ramp', c_w:'Weight (start→end)', c_pain:'Pain days', c_q:'Qs',
+  cond_trend:'Condition', load_trend:'Training load', weight_trend:'Weight', none:'none', goals_ph:'Goal {n}',
+  reset:'Reset demo data', reset_done:'Demo data reset', of25:'/25', sent:'Sent', coach:'Coach',
+  wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], min:' min'
+ }
+};
+const ACCENTS = {
+  ai:    {ja:'藍', en:'Indigo', l:'#3552d4', d:'#8ea2ff', g2:'#8b5cf6', b:['rgba(129,140,248,.55)','rgba(196,181,253,.5)','rgba(125,211,252,.4)']},
+  sakura:{ja:'桜', en:'Sakura', l:'#d23d76', d:'#ff8fb6', g2:'#f08a5d', b:['rgba(251,160,196,.6)','rgba(253,205,190,.55)','rgba(221,190,255,.45)']},
+  matcha:{ja:'抹茶',en:'Matcha', l:'#357a4a', d:'#86d49a', g2:'#9bab2e', b:['rgba(160,210,150,.55)','rgba(215,230,160,.5)','rgba(150,210,200,.4)']},
+  yuhi:  {ja:'夕焼け',en:'Sunset',l:'#cf5a22', d:'#ffa36e', g2:'#d63f78', b:['rgba(253,186,116,.6)','rgba(251,150,180,.5)','rgba(253,224,160,.45)']},
+  sumi:  {ja:'墨', en:'Sumi',   l:'#2c313d', d:'#d9dde6', g2:'#5b6478', b:['rgba(170,178,196,.5)','rgba(205,210,222,.5)','rgba(150,160,180,.35)']},
+};
+
+/* ---------- 日付 ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const localDay=iso=>{const d=new Date(iso);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+let TODAY=localDay(new Date());
+const curYm=()=>TODAY.slice(0,7);
+function recentMonths(n=4){const out=[];let [y,m]=TODAY.split('-').map(Number);for(let i=0;i<n;i++){out.push(`${y}-${pad(m)}`);m--;if(!m){m=12;y--}}return out}
+const addDays=(s,n)=>{const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+const dow=s=>new Date(s+'T00:00:00Z').getUTCDay();
+const md=s=>{const[,m,d]=s.split('-');return `${+m}/${+d}`};
+function fd(s,L){const w=I18N[L].wd[dow(s)];return L==='ja'?`${md(s)}(${w})`:`${w} ${md(s)}`}
+function monthLabel(ym,L){const[y,m]=ym.split('-').map(Number);return L==='ja'?`${y}年${m}月`:new Date(Date.UTC(y,m-1,1)).toLocaleString('en-US',{month:'long',year:'numeric',timeZone:'UTC'})}
+function monthDates(ym){const out=[];let s=ym+'-01';while(s.startsWith(ym)){out.push(s);s=addDays(s,1)}return out}
+const fmtMin=(m,L)=>{const h=Math.floor(m/60),r=m%60;return L==='ja'?`${h}時間${r?r+'分':''}`:`${h}h${r?' '+r+'m':''}`};
+
+const TYPES=['waza','uchikomi','nagekomi','randori','newaza','strength','shiai'];
+const PARTS=['head','neck','shoulder','elbow','hand','back','knee','ankle','other'];
+
+/* ---------- Supabase（データの保存とログイン） ---------- */
+const SUPABASE_URL='https://ktwunswfyxozcultprnq.supabase.co';
+const SUPABASE_KEY='sb_publishable_P_UMeGV4gB54MjRBfjUIrA_E7drptd5';   // 公開用のキー（アプリに入れてよい値）
+const ID_DOMAIN='players.judo-note.app';                               // ID を Supabase のログイン用メールに変える
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-note-auth'}});
+const idToEmail=id=>`${id.trim().toLowerCase()}@${ID_DOMAIN}`;
+const ID_RE=/^[a-z0-9_-]{3,20}$/;
+
+let ACCOUNTS=[], ATH=[];
+const acct=id=>ACCOUNTS.find(a=>a.id===id);
+const guardiansOf=aid=>ACCOUNTS.filter(a=>a.role==='guardian'&&a.guardianOf===aid);
+const subject=()=>me()?.role==='guardian'?me().guardianOf:UI.session;   // 保護者は子どもの記録を見る
+let ST={entries:{},threads:[],goals:{},events:[],prefs:{},invites:[],team:null};
+let DAYS=[];
+const LOAD_DAYS=150;   // 何日前までの記録を読み込むか（冊子とグラフに十分な長さ）
+
+function mapEntry(r,fb){
+  return {id:r.id,att:r.att,absReason:r.abs_reason||undefined,sleep:r.sleep,energy:r.energy,soreness:r.soreness,stress:r.stress,mood:r.mood,
+    min:r.minutes,rpe:r.rpe,types:r.types||[],weight:r.weight==null?null:+r.weight,pain:r.pain||[],head:r.head||[],note:r.note||'',
+    comment:fb&&fb.comment?{text:fb.comment,at:localDay(fb.commented_at||fb.seen_at)}:null,seen:fb?localDay(fb.seen_at):null};
+}
+function must(res){if(res.error)throw res.error;return res.data}
+
+async function loadAll(){
+  const since=addDays(TODAY,-LOAD_DAYS);
+  const [pr,en,fb,th,ms,ev,go,tm]=await Promise.all([
+    sb.from('profiles').select('*'),
+    sb.from('entries').select('*').gte('day',since),
+    sb.from('feedback').select('*'),
+    sb.from('threads').select('*'),
+    sb.from('messages').select('*').order('created_at'),
+    sb.from('events').select('*'),
+    sb.from('goals').select('*'),
+    sb.from('teams').select('*')]);
+  const profs=must(pr);
+  ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
+    limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at)}));
+  ATH=ACCOUNTS.filter(a=>a.role==='athlete').sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind});
+  const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
+  ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
+  must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
+  const role=id=>acct(id)?.role||'athlete', byThread={};
+  must(ms).forEach(m=>(byThread[m.thread_id]||(byThread[m.thread_id]=[])).push(m));
+  ST.threads=must(th).map(t=>{const list=byThread[t.id]||[];const first=list[0];
+    return first?{id:t.id,aid:t.athlete_id,coachOnly:!!t.coach_only,date:localDay(first.created_at),text:first.body,
+      replies:list.slice(1).map(m=>({from:role(m.author_id)==='coach'?'coach':'athlete',date:localDay(m.created_at),text:m.body}))}:null}).filter(Boolean);
+  ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:role(e.created_by)==='coach'?'coach':'athlete',aids:[e.athlete_id]}));
+  ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
+  ST.team=must(tm)[0]||null;
+  if(acct(UI.session)?.role==='coach')ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
+  DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));
+  UI.loadedAt=Date.now();
+}
+
+/* 画面の入力を1日分の記録にまとめる（保存にも、保存できなかったときの下書きにも使う） */
+function formToEntry(fdt){
+  const lv=+fdt.get('level')||1, att=fdt.get('att')||'present', train=att==='present'||att==='watch';
+  return {att,absReason:att==='absent'?(fdt.get('absReason')||'other'):undefined,
+    sleep:+fdt.get('sleep')||null,energy:+fdt.get('energy')||null,soreness:+fdt.get('soreness')||null,stress:+fdt.get('stress')||null,mood:+fdt.get('mood')||null,
+    min:train?(+fdt.get('min')||0):0,rpe:train?+(fdt.get('rpe')??0):0,types:train?fdt.getAll('types'):[],weight:+fdt.get('weight')||null,
+    head:fdt.getAll('head'),pain:fdt.getAll('pain').map(p=>p==='other'?{part:p,level:lv,detail:(fdt.get('painOther')||'').trim()}:{part:p,level:lv}),
+    note:fdt.get('note')||'',ask:(fdt.get('ask')||'').trim(),askPrivate:!!fdt.get('askPrivate')};
+}
+const draftKey=()=>`judo-draft-${UI.session}-${TODAY}`;
+function saveDraft(d){try{localStorage.setItem(draftKey(),JSON.stringify(d))}catch(e){}}
+function loadDraft(){try{return JSON.parse(localStorage.getItem(draftKey())||'null')}catch(e){return null}}
+function clearDraft(){try{localStorage.removeItem(draftKey())}catch(e){}}
+
+async function saveEntry(d){
+  const row={athlete_id:UI.session,day:TODAY,att:d.att,abs_reason:d.absReason||null,sleep:d.sleep,energy:d.energy,soreness:d.soreness,stress:d.stress,mood:d.mood,
+    minutes:d.min,rpe:d.rpe,types:d.types,weight:d.weight,pain:d.pain,head:d.head,note:d.note};
+  const saved=must(await sb.from('entries').upsert(row,{onConflict:'athlete_id,day'}).select().single());
+  const old=E(UI.session,TODAY);
+  ST.entries[UI.session][TODAY]={...mapEntry(saved,null),comment:old?.comment||null,seen:old?.seen||null};
+  if(d.ask)await askQuestion(d.ask,d.askPrivate);
+}
+async function askQuestion(text,coachOnly){
+  const t=must(await sb.from('threads').insert({athlete_id:UI.session,coach_only:!!coachOnly}).select().single());
+  must(await sb.from('messages').insert({thread_id:t.id,body:text}));
+  ST.threads.push({id:t.id,aid:UI.session,coachOnly:!!coachOnly,date:TODAY,text,replies:[]});
+}
+async function sendReply(tid,text){
+  must(await sb.from('messages').insert({thread_id:tid,body:text}));
+  ST.threads.find(x=>x.id===tid).replies.push({from:me().role==='coach'?'coach':'athlete',date:TODAY,text});
+}
+async function sendFeedback(aid,day,comment){
+  const e=E(aid,day), now=new Date().toISOString(), row={entry_id:e.id,athlete_id:aid,coach_id:UI.session,seen_at:now};
+  if(comment){row.comment=comment;row.commented_at=now}
+  must(await sb.from('feedback').upsert(row,{onConflict:'entry_id'}));
+  e.seen=TODAY; if(comment)e.comment={text:comment,at:TODAY};
+}
+async function addEvent(aid,name,date,weigh,target){
+  const r=must(await sb.from('events').insert({athlete_id:aid,name,match_day:date,weigh_in:weigh||null,target_weight:target||null}).select().single());
+  ST.events.push({id:r.id,name,date,weigh:weigh||'',target:target||null,by:me().role==='coach'?'coach':'athlete',aids:[aid]});
+}
+async function deleteEvent(id){must(await sb.from('events').delete().eq('id',id));ST.events=ST.events.filter(e=>e.id!==id)}
+async function saveGoals(ym,items,review){
+  must(await sb.from('goals').upsert({athlete_id:UI.session,month:ym,items,review},{onConflict:'athlete_id,month'}));
+  ST.goals[UI.session+'|'+ym]={items,review};
+}
+async function savePrefs(p){
+  ST.prefs[UI.session]=p; render();
+  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00'}).eq('id',UI.session));
+}
+
+/* ---------- 計算 ---------- */
+const dayDiff=(a,b)=>Math.round((new Date(b+'T00:00:00Z')-new Date(a+'T00:00:00Z'))/864e5);
+const nextEvent=aid=>(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&ev.date>=TODAY).sort((x,y)=>x.date.localeCompare(y.date))[0];
+function eventMarks(aid,ds){const m=[];(ST.events||[]).forEach(ev=>{if(!ev.aids.includes(aid))return;const i=ds.indexOf(ev.date);if(i>=0)m.push([i,ev.name])});return m}
+function streak(aid){let n=0,d=E(aid,TODAY)?TODAY:addDays(TODAY,-1);while(E(aid,d)){n++;d=addDays(d,-1)}return n}
+const E=(aid,d)=>ST.entries[aid]&&ST.entries[aid][d];
+const score=e=>e?e.sleep+e.energy+e.soreness+e.stress+e.mood:null;
+const load=e=>e&&e.min?e.min*e.rpe:0;
+function firstDay(aid){const k=Object.keys(ST.entries[aid]||{});return k.length?k.reduce((a,b)=>a<b?a:b):null}
+function ramp(aid,d){const f=firstDay(aid);if(!f||dayDiff(f,d)<21)return null;   // 記録が3週間分そろうまでは出さない
+  let a=0,c=0;for(let i=0;i<28;i++){const l=load(E(aid,addDays(d,-i)));if(i<7)a+=l;c+=l}return c?(a/7)/(c/28):null}
+function baseline(aid,d){const v=[];for(let i=1;i<=14;i++){const s=score(E(aid,addDays(d,-i)));if(s!=null)v.push(s)}return v.length?v.reduce((x,y)=>x+y,0)/v.length:null}
+function latestWeight(aid){for(let i=0;i<7;i++){const e=E(aid,addDays(TODAY,-i));if(e&&e.weight)return e.weight}return null}
+const unanswered=th=>!th.replies.length||th.replies[th.replies.length-1].from!=='coach';
+function flags(aid,L){
+  const t=I18N[L], a=acct(aid), f=[], e=E(aid,TODAY);
+  if(!e){ const y=addDays(TODAY,-1); if(!E(aid,y)&&(a.joined||TODAY)<=y) f.push(['bad',t.f_miss.replace('{n}',2)]); else f.push(['warn',t.f_miss1]); }
+  if(e){const b=baseline(aid,TODAY),s=score(e);if(b!=null&&s<=b-3)f.push([s<=b-5?'bad':'warn',t.f_drop.replace('{d}',(s-b).toFixed(0))])}
+  const rr=ramp(aid,TODAY); if(rr>1.3)f.push([rr>1.5?'bad':'warn',t.f_ramp.replace('{v}',rr.toFixed(2))]);
+  const le=e||E(aid,addDays(TODAY,-1)); if(le&&le.pain.length){const p=le.pain.reduce((x,y)=>y.level>x.level?y:x);if(p.level>=2)f.push([p.level>=3?'bad':'warn',t.f_pain.replace('{p}',le.pain.map(q=>ptxt(q,t)).join('・'))])}
+  const w=latestWeight(aid); if(w&&a.limit&&w>a.limit)f.push(['warn',t.f_w.replace('{d}',(w-a.limit).toFixed(1))]);
+  if(e&&e.head&&e.head.length)f.unshift(['bad',t.f_head.replace('{s}',e.head.map(k=>t.hs[k]).join('・')),10]);
+  {const ne=nextEvent(aid);if(ne){const dd=dayDiff(TODAY,ne.date);if(dd<=14)f.push(['acc',t.f_ev.replace('{d}',dd)])}}
+  if(e&&attOf(e)==='absent')f.push(['warn',t.f_abs.replace('{r}',e.absReason?t.ar[e.absReason]:t.att_l.absent)]);
+  if(e&&attOf(e)==='watch')f.push(['acc',t.f_watch]);
+  if(ST.threads.some(th=>th.aid===aid&&unanswered(th)))f.push(['acc',t.f_q]);
+  return f;
+}
+const sev=f=>f.reduce((s,[k,,p])=>s+(p||(k==='bad'?3:k==='warn'?1:0)),0);
+
+/* ---------- 画面の状態 ---------- */
+let UI={booting:false,auth:null,authUser:null,busy:false,draft:null,join:null,newInvite:null,confirmRemove:null,session:null,view:'',sel:null,settings:false,loginLang:(navigator.language||'ja').startsWith('ja')?'ja':'en',pAid:null,pYm:TODAY.slice(0,7),pKind:'a5',err:''};
+const me=()=>UI.session&&acct(UI.session);
+const prefs=id=>ST.prefs[id]||{lang:UI.loginLang,accent:'ai',mode:'auto',remind:'21:00'};
+const lang=()=>UI.session?prefs(UI.session).lang:UI.loginLang;
+const t=k=>I18N[lang()][k];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+function accentOf(id){const p=prefs(id);if(p.accent==='custom'&&p.custom){const c=p.custom;return{l:c,d:c,g2:c,b:[hexA(c,.5),hexA(c,.3),hexA(c,.25)]}}return ACCENTS[p.accent]||ACCENTS.ai}
+function applyTheme(){
+  const id=UI.session||'coach', p=UI.session?prefs(id):{mode:'auto',accent:'ai'}, a=UI.session?accentOf(id):ACCENTS.ai, r=document.documentElement.style;
+  r.setProperty('--acc-l',a.l);r.setProperty('--acc-d',a.d);
+  r.setProperty('--acc-2',p.accent==='custom'?`color-mix(in oklab, ${a.l} 60%, #ff5fa2)`:a.g2);
+  r.setProperty('--b1',a.b[0]);r.setProperty('--b2',a.b[1]);r.setProperty('--b3',a.b[2]);
+  if(p.mode==='auto')document.documentElement.removeAttribute('data-mode');else document.documentElement.setAttribute('data-mode',p.mode);
+  document.documentElement.lang=lang();
+}
+
+
+/* ---------- チャート ---------- */
+function chart(vals,{min,max,kind='line',w=640,h=150,color='var(--accent)',ink='var(--faint)',grid='var(--line)',ref=null,refLabel='',ticks=[],labels=[],fill=true,fs=10,marks=[],mc='var(--acc-2)'}){
+  const pl=30,pr=8,pt=8,pb=18,iw=w-pl-pr,ih=h-pt-pb,n=vals.length;
+  const x=i=>kind==='bar'?pl+(i+.5)*iw/n:pl+(n===1?iw/2:i*iw/(n-1));
+  const y=v=>pt+ih-(Math.max(min,Math.min(max,v))-min)/(max-min)*ih;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  ticks.forEach(v=>{s+=`<line x1="${pl}" x2="${w-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${grid}" stroke-width="1"/><text x="${pl-5}" y="${y(v)+3.5}" text-anchor="end" font-size="${fs}" fill="${ink}" font-family="IBM Plex Mono,monospace">${v}</text>`});
+  labels.forEach(([i,l])=>{s+=`<text x="${x(i)}" y="${h-4}" text-anchor="${i===n-1&&kind!=='bar'?'end':i===0&&kind!=='bar'?'start':'middle'}" font-size="${fs}" fill="${ink}" font-family="IBM Plex Mono,monospace">${l}</text>`});
+  marks.forEach(([i,l])=>{s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${pt}" y2="${pt+ih}" stroke="${mc}" stroke-width="1.4" stroke-dasharray="3 3"/><text x="${x(i)-4}" y="${pt+9}" text-anchor="end" font-size="${fs}" font-weight="700" fill="${mc}">${esc(l)}</text>`});
+  if(ref!=null){s+=`<line x1="${pl}" x2="${w-pr}" y1="${y(ref)}" y2="${y(ref)}" stroke="var(--bad, #cf3434)" stroke-dasharray="4 4" stroke-width="1.2"/><text x="${w-pr}" y="${y(ref)-4}" text-anchor="end" font-size="${fs}" fill="var(--bad, #cf3434)">${esc(refLabel)}</text>`}
+  if(kind==='bar'){const bw=Math.max(2,iw/n*.62);vals.forEach((v,i)=>{if(v)s+=`<rect x="${x(i)-bw/2}" y="${y(v)}" width="${bw}" height="${pt+ih-y(v)}" rx="${Math.min(3,bw/3)}" fill="${color}" opacity="${i===n-1?1:.72}"/>`})}
+  else{
+    let seg=[],segs=[];vals.forEach((v,i)=>{if(v==null){if(seg.length)segs.push(seg);seg=[]}else seg.push([x(i),y(v)])});if(seg.length)segs.push(seg);
+    segs.forEach(sg=>{const d=sg.map((p,j)=>(j?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+      if(fill&&sg.length>1)s+=`<path d="${d}L${sg[sg.length-1][0]} ${pt+ih}L${sg[0][0]} ${pt+ih}Z" fill="${color}" opacity=".12"/>`;
+      s+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`});
+    const li=vals.map((v,i)=>v==null?-1:i).filter(i=>i>=0).pop();
+    if(li!=null&&li>=0)s+=`<circle cx="${x(li)}" cy="${y(vals[li])}" r="3.6" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+  }
+  return s+'</svg>';
+}
+function spark(vals,w=132,h=30){
+  const mn=5,mx=25,n=vals.length,x=i=>2+i*(w-4)/(n-1),y=v=>h-3-(v-mn)/(mx-mn)*(h-6);
+  let d='',on=false;vals.forEach((v,i)=>{if(v==null){on=false;return}d+=(on?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1);on=true});
+  const li=vals.map((v,i)=>v==null?-1:i).filter(i=>i>=0).pop();
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${y(20)}" y2="${y(20)}" stroke="var(--line)" stroke-dasharray="2 3"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round"/>${li>=0?`<circle cx="${x(li)}" cy="${y(vals[li])}" r="2.8" fill="var(--accent)"/>`:''}</svg>`;
+}
+function trendCharts(aid,L,days=28){
+  const tt=I18N[L], ds=[];for(let i=days-1;i>=0;i--)ds.push(addDays(TODAY,-i));
+  const ne=nextEvent(aid), ahead=ne?dayDiff(TODAY,ne.date):99; if(ahead>0&&ahead<=14)for(let i=1;i<=ahead;i++)ds.push(addDays(TODAY,i));
+  const labels=ds.map((d,i)=>[i,md(d)]).filter((_,i)=>i%7===0||i===ds.length-1), marks=eventMarks(aid,ds);
+  const a=acct(aid), ws=ds.map(d=>E(aid,d)?.weight??null).filter(v=>v!=null), wv=[...ws,...(a.limit?[a.limit]:[])];
+  const wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
+  const rr=ramp(aid,TODAY);
+  return `<div class="card"><h2>${tt.last28}</h2><div class="stack">
+   <div class="chart"><div class="t">${tt.cond} <small>${tt.sleep}・${tt.energy}・${tt.soreness}・${tt.stress}・${tt.mood}（5〜25）</small></div>${chart(ds.map(d=>score(E(aid,d))),{min:5,max:25,ticks:[10,15,20,25],labels,marks})}</div>
+   <div class="chart"><div class="t">${tt.load} <small>${tt.load_u}</small> <span class="sp"></span><span class="pill ${rr>1.5?'bad':rr>1.3?'warn':'good'}" title="${esc(tt.ramp_help)}">${tt.ramp} ×${rr?rr.toFixed(2):'—'}</span></div>${chart(ds.map(d=>load(E(aid,d))),{min:0,max:1800,kind:'bar',ticks:[0,600,1200,1800],labels,marks})}<div class="small muted">${tt.ramp_help}</div></div>
+   <div class="chart"><div class="t">${tt.weight} <small>${esc(a.cls)}</small></div>${chart(ds.map(d=>E(aid,d)?.weight??null),{min:wmin,max:wmax,ticks:[wmin,Math.round((wmin+wmax)/2),wmax],labels,ref:a.limit||null,refLabel:a.limit?tt.limit+' '+a.limit+'kg':'',fill:false,marks})}</div>
+  </div></div>`;
+}
+
+
+/* ---------- 部品 ---------- */
+const ICON={gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+ out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>'};
+const pills=f=>f.map(([k,txt])=>`<span class="pill ${k}">${esc(txt)}</span>`).join('');
+const attOf=e=>e.att||(e.min?'present':'off');
+const attTxt=(e,T)=>{const a=attOf(e);return a==='absent'?T.att_l.absent+(e.absReason?'・'+T.ar[e.absReason]:''):a==='present'?'':T.att_l[a]};
+const ptxt=(q,T)=>q.part==='other'&&q.detail?q.detail:T.pt[q.part];
+const typeTxt=(e,L)=>e.types.map(x=>I18N[L].ty[x]).join('・');
+
+function header(tabs){
+  const m=me(), L=lang();
+  return `<header class="top noprint"><div class="top-in">
+    <div class="brand"><b>${L==='ja'?'柔道ノート':'Judo Note'}</b><small>${L==='ja'?'JUDO NOTE':'柔道ノート'}</small></div>
+    <span class="sp"></span>
+    <div class="who"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span></div>
+    <button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
+    <button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>
+  </div><nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
+}
+
+/* ---------- 選手の画面 ---------- */
+function athleteView(){
+  const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
+  const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
+  const tabs=[['today',t('t_today')],['log',t('t_log')],['q',t('t_q'),newReplies||0],['note',t('t_note')]];
+  let body='';
+  if(UI.view==='today')body=athToday();
+  if(UI.view==='log')body=`<div class="grid2">${trendCharts(m.id,L)}${entryList(m.id,L,14,false)}</div>`;
+  if(UI.view==='q')body=questions(m.id,L,false);
+  if(UI.view==='note')body=athNote();
+  return header(tabs)+`<main>${body}</main>`;
+}
+function athToday(){
+  const L=lang(), T=I18N[L], m=me(), e=E(m.id,TODAY)||UI.draft||{sleep:0,energy:0,soreness:0,stress:0,mood:0,min:120,rpe:-1,types:[],weight:'',pain:[],note:''};
+  let lastC=null;for(let i=1;i<10&&!lastC;i++){const x=E(m.id,addDays(TODAY,-i));if(x&&x.comment)lastC={d:addDays(TODAY,-i),c:x.comment}}
+  const seg=(k)=>`<div class="crow"><div class="nm">${T[k]}</div><div class="seg" role="radiogroup" aria-label="${T[k]}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="${k}" value="${v}" ${e[k]===v?'checked':''} required><span>${v}</span></label>`).join('')}</div><div class="ends"><span>1 ${T[k+'_lo']}</span><span>${T[k+'_hi']} 5</span></div></div>`;
+  const lvl=e.pain[0]?.level||1, att=E(m.id,TODAY)?attOf(e):'present';
+  return `<div class="stack">
+  <div class="hello"><div class="sub">${fd(TODAY,L)}${m.cls?' · '+esc(m.cls):''} ${streak(m.id)>1?`<span class="pill acc">${T.streak.replace('{n}',streak(m.id))}</span>`:''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${T.today_q}</span></h1></div>
+  ${E(m.id,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
+  ${evCard(m.id,L)}
+  ${lastC?`<div class="card"><h2>${T.from_coach} · ${fd(lastC.d,L)}</h2><div>${esc(lastC.c.text)}</div></div>`:''}
+  <form id="today-form" class="stack">
+   <div class="card"><h2>${T.cond}</h2><div class="cond">${['sleep','energy','soreness','stress','mood'].map(seg).join('')}</div></div>
+   <div class="card stack"><h2 style="margin:0">${T.practice}</h2>
+     <div class="field"><span class="lbl">${T.att}</span><div class="segbar" style="max-width:460px">${['present','watch','absent','off'].map(v=>`<button type="button" data-act="att" data-v="${v}" aria-pressed="${att===v}">${T.att_l[v]}</button>`).join('')}</div><input type="hidden" name="att" id="f-att" value="${att}"></div>
+     <div class="stack" id="abs-fields" ${att==='absent'?'':'hidden'}>
+       <div class="field"><span class="lbl">${T.abs_reason}</span><div class="chips">${Object.keys(T.ar).map(k=>`<label class="chk"><input type="radio" name="absReason" value="${k}" ${e.absReason===k?'checked':''}><span>${T.ar[k]}</span></label>`).join('')}</div></div>
+     </div>
+     <div class="stack" id="prac-fields" ${att==='absent'||att==='off'?'hidden':''}>
+     <div class="field"><span class="lbl">${T.content}</span><div class="chips">${TYPES.map(x=>`<label class="chk"><input type="checkbox" name="types" value="${x}" ${e.types.includes(x)?'checked':''}><span>${T.ty[x]}</span></label>`).join('')}</div></div>
+     <div class="field" style="max-width:180px"><label for="f-min">${T.minutes}</label><input class="inp mono" id="f-min" name="min" type="number" min="0" max="600" step="5" value="${e.min}"></div>
+     <div class="field"><span class="lbl">${T.rpe}（0〜10）</span><div class="small muted">${T.rpe_help}</div>
+       <div class="seg rpe" role="radiogroup" aria-label="${T.rpe}">${[...Array(11).keys()].map(v=>`<label><input type="radio" name="rpe" value="${v}" ${e.rpe===v?'checked':''}><span>${v}</span></label>`).join('')}</div>
+       <div class="rpe-cap" id="rpe-cap">${e.rpe>=0?esc(e.rpe+' — '+T.rpe_l[e.rpe]):''}</div></div>
+     </div>
+   </div>
+   <div class="card stack"><h2 style="margin:0">${T.body}</h2>
+     <div class="field" style="max-width:180px"><label for="f-w">${T.weight}</label><input class="inp mono" id="f-w" name="weight" type="number" step="0.1" min="30" max="200" value="${e.weight}"></div>
+     <div class="field"><span class="lbl">${T.pain}</span><div class="chips">${PARTS.map(p=>`<label class="chk"><input type="checkbox" name="pain" value="${p}" ${e.pain.some(q=>q.part===p)?'checked':''}><span>${T.pt[p]}</span></label>`).join('')}</div>
+       <input class="inp" id="f-pain-other" name="painOther" maxlength="40" placeholder="${esc(T.other_ph)}" value="${esc(e.pain.find(q=>q.part==='other')?.detail||'')}" ${e.pain.some(q=>q.part==='other')?'':'hidden'}></div>
+     <div class="field"><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
+     <div class="field"><span class="lbl">${T.head}</span><div class="small muted">${T.head_help}</div><div class="chips">${Object.keys(T.hs).map(k=>`<label class="chk danger"><input type="checkbox" name="head" value="${k}" ${e.head?.includes(k)?'checked':''}><span>${T.hs[k]}</span></label>`).join('')}</div></div>
+   </div>
+   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><textarea class="inp" id="f-note" name="note" placeholder="${esc(T.note_ph)}">${esc(e.note)}</textarea></div>
+     <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea>
+       <label class="consent small"><input type="checkbox" name="askPrivate" id="f-ask-private"> <span>🔒 ${T.coach_only}</span></label></div>
+     <div><button class="btn" type="submit">${T.save}</button></div></div>
+  </form></div>`;
+}
+function evCard(aid,L,ro){
+  const T=I18N[L], ne=nextEvent(aid); if(!ne)return ro?'':`<div class="card row" style="justify-content:space-between"><span class="small">${T.ev_prompt}</span><button class="btn ghost sm" data-act="view" data-v="note">${T.ev_go}</button></div>`;
+  const dd=dayDiff(TODAY,ne.date), a=acct(aid), w=latestWeight(aid), tg=ne.target||a.limit;
+  const wtxt=w==null||!tg?'':w>tg?`<span class="pill warn">${T.ev_to_go.replace('{w}',(w-tg).toFixed(1)).replace('{l}',tg)}</span>`:`<span class="pill good">${T.ev_ok.replace('{l}',tg)}</span>`;
+  return `<div class="card evcard"><div class="evn"><div class="k">${dd?esc(T.ev_until.replace('{n}',ne.name)):esc(T.ev_today.replace('{n}',ne.name))}</div><div class="big">${dd?T.ev_days.replace('{d}',`<b>${dd}</b>`):'—'}</div></div>
+    <div class="row small">${ne.weigh?`<span class="pill">${T.ev_weigh_s.replace('{d}',fd(ne.weigh,L))}</span>`:''}${wtxt}</div></div>`;
+}
+function entryList(aid,L,n,coach){
+  const T=I18N[L]; let rows='';
+  for(let i=0;i<n;i++){const d=addDays(TODAY,-i), e=E(aid,d);
+    if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div class="muted small">${T.no_entry}</div></div>`;continue}
+    const s=score(e);
+    rows+=`<div class="ent"><div class="d">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
+      <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${e.weight}kg</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
+      ${e.note?`<p>${esc(e.note)}</p>`:''}
+      ${e.comment?`<div class="cmt"><b>${T.from_coach}</b>${esc(e.comment.text)}</div>`:''}
+      ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
+      ${coach&&!e.comment?`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="c-${aid}-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`:''}
+    </div></div>`;}
+  return `<div class="card"><h2>${T.recent}</h2><div class="entries">${rows}</div></div>`;
+}
+function questions(aid,L,coach,ro){
+  const T=I18N[L];
+  const list=ST.threads.filter(th=>coach?(aid?th.aid===aid:true):th.aid===aid).sort((a,b)=>(unanswered(b)-unanswered(a))||b.date.localeCompare(a.date));
+  const th=list.map(q=>{const a=acct(q.aid), un=unanswered(q);
+    return `<div class="thread"><div class="thead">${coach?`<b>${esc(a.name)}</b>`:''}<span class="muted mono">${fd(q.date,L)}</span><span class="pill ${un?(coach?'bad':'warn'):'good'}">${un?T.waiting:T.answered}</span>${q.coachOnly?`<span class="pill">🔒 ${T.coach_only_pill}</span>`:''}</div>
+      <div class="bubble ${coach?'':''}"><div class="by">${esc(a.name)}</div>${esc(q.text)}</div>
+      ${q.replies.map(r=>`<div class="bubble ${r.from==='coach'?'coach':''}"><div class="by">${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}</div>${esc(r.text)}</div>`).join('')}
+      ${ro?'':`<form class="cform" data-form="reply" data-id="${q.id}"><input class="inp" id="r-${q.id}" name="r" placeholder="${esc(T.reply_ph)}"><button class="btn sm ghost" type="submit">${T.reply}</button></form>`}</div>`}).join('');
+  const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" placeholder="${esc(T.ask_ph)}"></textarea><label class="consent small"><input type="checkbox" name="private" id="q-private"> <span>🔒 ${T.coach_only}</span></label><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
+  return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
+}
+function athNote(){
+  const L=lang(), T=I18N[L], m=me(), ym=curYm(), g=ST.goals[m.id+'|'+ym]||{items:['','',''],review:''};
+  return `<div class="stack">
+    ${viewersNote(m.id,L)}
+    ${eventsCard(m.id,L)}
+    <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
+      ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
+      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
+      <div><button class="btn ghost" type="submit">${T.goals_save}</button></div></form></div>
+    <div class="card"><h2>${T.booklet}</h2><p class="small muted" style="margin-top:0">${T.my_note_hint}</p><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
+    <div class="sheets">${booklet(m.id,UI.pYm)}</div></div>`;
+}
+function monthPicker(){const L=lang();return `<div class="printbar noprint"><div class="field"><label for="p-ym">${t('month')}</label><select class="inp" id="p-ym" data-act="pym">${recentMonths().map(y=>`<option value="${y}" ${UI.pYm===y?'selected':''}>${monthLabel(y,L)}</option>`).join('')}</select></div></div>`}
+
+function viewersNote(aid,L){
+  const T=I18N[L], gs=guardiansOf(aid);
+  return `<div class="card small"><b>🔒 ${T.viewers}</b>：${T.viewers_list.replace('{g}',gs.map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</div>`;
+}
+function guardianView(){
+  const L=lang(), T=I18N[L], S=subject(), a=acct(S);
+  const tabs=[['log',T.t_g_log],['q',T.t_q],['note',T.t_note]];
+  if(!['log','q','note'].includes(UI.view))UI.view='log';
+  const hello=`<div class="hello"><div class="sub">${esc(T.g_sub)}${a?.cls?' · '+esc(a.cls):''}</div><h1>${esc(T.g_hello.replace('{n}',a?.name||''))}</h1></div>`;
+  let body='';
+  if(!a)body=`<div class="card">${T.none}</div>`;
+  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${evCard(S,L,true)}<div class="grid2">${trendCharts(S,L)}${entryList(S,L,14,false)}</div></div>`;
+  else if(UI.view==='q')body=`<div class="stack">${hello}${questions(S,L,false,true)}</div>`;
+  else {const g=ST.goals[S+'|'+curYm()];body=`<div class="stack">${hello}${eventsCard(S,L,true)}
+    ${g?`<div class="card"><h2>${T.goals} · ${monthLabel(curYm(),L)}</h2><ul style="margin:0;padding-left:1.2em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>${g.review?`<p class="muted">${esc(g.review)}</p>`:''}</div>`:''}
+    <div class="card"><h2>${T.booklet}</h2><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
+    <div class="sheets">${booklet(S,UI.pYm)}</div></div>`}
+  return header(tabs)+`<main>${body}</main>`;
+}
+
+/* ---------- コーチの画面 ---------- */
+function coachView(){
+  const L=lang(), un=ST.threads.filter(unanswered).length;
+  const tabs=[['team',t('t_team')],['q',t('t_q'),un],['print',t('t_print')],['members',t('t_members')]];
+  let body='';
+  if(UI.view==='team')body=UI.sel?coachDetail(UI.sel):coachTeam();
+  if(UI.view==='q')body=questions(null,L,true);
+  if(UI.view==='print')body=coachPrint();
+  if(UI.view==='members')body=membersView();
+  return header(tabs)+`<main>${body}</main>`;
+}
+function coachTeam(){
+  const L=lang(), T=I18N[L];
+  const rows=ATH.map(a=>({a,f:flags(a.id,L)})).sort((x,y)=>sev(y.f)-sev(x.f));
+  const logged=ATH.filter(a=>E(a.id,TODAY)).length, attn=rows.filter(r=>sev(r.f)>0).length, un=ST.threads.filter(unanswered).length;
+  const d14=[];for(let i=13;i>=0;i--)d14.push(addDays(TODAY,-i));
+  return `<div class="stack">
+   <div class="hello"><div class="sub">${fd(TODAY,L)}</div><h1>${T.t_team}</h1></div>
+   <div class="stats"><div class="card stat"><div class="k">${T.s_logged}</div><div class="v">${logged}<small>/${ATH.length}</small></div></div>
+     <div class="card stat"><div class="k">${T.s_attn}</div><div class="v" style="color:var(--bad)">${attn}</div></div>
+     <div class="card stat"><div class="k">${T.s_unans}</div><div class="v" style="color:var(--accent)">${un}</div></div></div>
+   ${ATH.length?'':`<div class="card">${T.no_athletes}</div>`}
+   <div class="card" ${ATH.length?'':'hidden'}><div class="roster">
+     <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w}</span><span></span></div>
+     ${rows.map(({a,f})=>{const e=E(a.id,TODAY),s=score(e),b=baseline(a.id,TODAY),rr=ramp(a.id,TODAY),w=latestWeight(a.id);
+       return `<button class="rrow" data-act="open" data-id="${a.id}">
+        <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span></span>
+        <span class="c-spark">${spark(d14.map(d=>score(E(a.id,d))))}</span>
+        <span class="num c-m">${s!=null?`${s}<small>${T.of25}</small>`:'—'}${s!=null&&b!=null?`<br><small>${s-b>=0?'+':''}${(s-b).toFixed(1)}</small>`:''}</span>
+        <span class="num c-m">${rr?'×'+rr.toFixed(2):'—'}</span>
+        <span class="num c-m">${w?w.toFixed(1)+'kg':'—'}${a.limit?`<br><small>≤${a.limit}kg</small>`:''}</span>
+        <span class="flags">${pills(f)||`<span class="pill good">OK</span>`}</span></button>`}).join('')}
+   </div></div></div>`;
+}
+function coachDetail(aid){
+  const L=lang(), T=I18N[L], a=acct(aid);
+  return `<div class="stack"><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
+   <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div></div>
+   <div class="grid2"><div class="stack">${trendCharts(aid,L)}${eventsCard(aid,L)}</div><div class="stack">${entryList(aid,L,10,true)}${questions(aid,L,true)}</div></div></div>`;
+}
+function eventsCard(aid,L,ro){
+  const T=I18N[L], mine=UI.session===aid, list=(ST.events||[]).filter(ev=>ev.aids.includes(aid)).sort((x,y)=>x.date.localeCompare(y.date));
+  return `<div class="card"><h2>${T.events}</h2>
+   <div class="entries">${list.length?list.map(ev=>`<div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+ev.target+'kg':''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
+   ${ro?'':`<form class="evform" data-form="event" data-aid="${aid}">
+     <div class="field"><label for="ev-name">${T.ev_name}</label><input class="inp" id="ev-name" name="name" required></div>
+     <div class="field"><label for="ev-date">${T.ev_date}</label><input class="inp" id="ev-date" name="date" type="date" min="${TODAY}" required></div>
+     <div class="field"><label for="ev-weigh">${T.ev_weigh}</label><input class="inp" id="ev-weigh" name="weigh" type="date"></div>
+     <div class="field"><label for="ev-target">${T.ev_target}</label><input class="inp mono" id="ev-target" name="target" type="number" step="0.1" min="30" max="200" placeholder="${acct(aid).limit??''}"></div>
+     <div><button class="btn sm" type="submit">${T.ev_add}</button></div></form>`}</div>`;
+}
+function coachPrint(){
+  const L=lang(), T=I18N[L];
+  return `<div class="stack"><div class="card noprint"><h2>${T.t_print}</h2><p class="small muted" style="margin-top:0">${T.print_hint}</p>
+   <div class="printbar">
+    <div class="field"><label for="p-kind">${T.kind}</label><select class="inp" id="p-kind" data-act="pkind"><option value="a5" ${UI.pKind==='a5'?'selected':''}>${T.booklet}</option><option value="a4" ${UI.pKind==='a4'?'selected':''}>${T.report}</option></select></div>
+    ${UI.pKind==='a5'?`<div class="field"><label for="p-aid">${T.athlete}</label><select class="inp" id="p-aid" data-act="paid">${(UI.pAid=UI.pAid||ATH[0]?.id,ATH).map(a=>`<option value="${a.id}" ${UI.pAid===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div>`:''}
+    <div class="field"><label for="p-ym">${T.month}</label><select class="inp" id="p-ym" data-act="pym">${recentMonths().map(y=>`<option value="${y}" ${UI.pYm===y?'selected':''}>${monthLabel(y,L)}</option>`).join('')}</select></div>
+   <button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
+   <div class="sheets">${UI.pKind==='a5'?(UI.pAid?booklet(UI.pAid,UI.pYm):''):teamReport(UI.pYm,L)}</div></div>`;
+}
+
+/* ---------- 印刷ノート（A5 冊子） ---------- */
+function monthStats(aid,ym){
+  const ds=monthDates(ym).filter(d=>d<=TODAY), es=ds.map(d=>E(aid,d)).filter(Boolean), tr=es.filter(e=>e.min);
+  const sc=es.map(score), ws=ds.map(d=>E(aid,d)?.weight).filter(Boolean);
+  let mr=0;ds.forEach(d=>{if(d<addDays(DAYS[0],27))return;const r=ramp(aid,d);if(r>mr)mr=r}); // 28日分の記録がそろう日だけで比べる
+  return {ds,days:tr.length,min:tr.reduce((s,e)=>s+e.min,0),avg:sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null,w0:ws[0],w1:ws[ws.length-1],pain:es.filter(e=>e.pain.length).length,maxRamp:mr,
+    q:ST.threads.filter(th=>th.aid===aid&&th.date.startsWith(ym)).length, abs:es.filter(e=>attOf(e)==='absent').length};
+}
+function booklet(aid,ym){
+  const a=acct(aid), L=prefs(aid).lang, T=I18N[L], acc=accentOf(aid).l, st=monthStats(aid,ym), g=ST.goals[aid+'|'+ym]||{items:[],review:''};
+  const pages=[]; const foot=p=>`<div class="foot"><span>JUDO NOTE · ${ym.replace('-','.')}</span><span>${esc(a.name)}</span><span>p.${p}</span></div>`;
+  const all=monthDates(ym), lab=all.map((d,i)=>[i,md(d)]).filter((_,i)=>i%7===0);
+  const cc={ink:'#5a5f6b',grid:'#e3e5ea',color:acc,w:520,h:120,fs:10};
+  // 1. 表紙
+  pages.push(`<div class="cover"><div class="band"></div>
+    <div class="ttl">柔道ノート</div><div class="ym">JUDO NOTE — ${monthLabel(ym,'en').toUpperCase()}</div>
+    <div class="nm">${esc(a.name)}<small>${esc(a.cls)}</small></div>
+    <div class="kpis"><div class="kpi"><div class="k">${T.days}</div><div class="v">${st.days}<small>${L==='ja'?'日':' d'}</small></div></div>
+      <div class="kpi"><div class="k">${T.total}</div><div class="v" style="font-size:10pt">${fmtMin(st.min,L)}</div></div>
+      <div class="kpi"><div class="k">${T.avg}</div><div class="v">${st.avg?st.avg.toFixed(1):'—'}<small>/25</small></div></div>
+      <div class="kpi"><div class="k">${T.wchg}</div><div class="v" style="font-size:9.5pt">${st.w0??'—'}→${st.w1??'—'}</div></div></div>
+    <h3 style="margin-top:8mm">${T.goals.toUpperCase?T.goals:''}</h3>
+    <ul class="goal-list">${[0,1,2].map(i=>`<li><i></i><span>${esc(g.items[i]||'')}&nbsp;</span></li>`).join('')}</ul>
+    <div class="pchart" style="margin-top:auto"><div class="t">${T.cond_trend}<small>5–25</small></div>${chart(all.map(d=>d<=TODAY?score(E(aid,d)):null),{...cc,min:5,max:25,ticks:[10,15,20,25],labels:lab,marks:eventMarks(aid,all),mc:acc})}</div>
+  </div>`);
+  // 2. カレンダー＋グラフ
+  const first=dow(all[0]), cells=[];for(let i=0;i<first;i++)cells.push('<div class="c o"></div>');
+  all.forEach(d=>{const e=E(aid,d),s=score(e);const col=!e||!e.min&&!s?'#e3e5ea':s>=20?acc:s>=16?hexA(acc,.45):'#d9534f';
+    cells.push(`<div class="c"><b>${+d.slice(8)}</b>${e?`<span class="l" ${attOf(e)==='absent'?'style="color:#b86e00;font-weight:600"':''}>${attOf(e)==='absent'?esc(T.att_l.absent):e.min?e.min+"'·"+e.rpe+(attOf(e)==='watch'?' '+esc(T.att_l.watch):''):T.rest}</span><span class="l">${e.weight}</span>${e.pain.length?`<span class="l" style="color:#c0392b">${e.pain.map(p=>esc(ptxt(p,T))).join(' ')}</span>`:''}`:d<=TODAY?`<span class="l">—</span>`:''}<span class="bar" style="background:${d<=TODAY?col:'transparent'}"></span></div>`)});
+  const ws=all.map(d=>E(aid,d)?.weight).filter(Boolean), wv=[...ws,...(a.limit?[a.limit]:[])], wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.5);
+  pages.push(`<h2>${T.cal}<small>${T.cal_sub}</small></h2><div class="rule"></div>
+    <div class="cal">${I18N[L].wd.map(w=>`<div class="h">${w}</div>`).join('')}${cells.join('')}</div>
+    <div class="legend"><span><i style="background:${acc}"></i>${T.lg_good}</span><span><i style="background:${hexA(acc,.45)}"></i>${T.lg_mid}</span><span><i style="background:#d9534f"></i>${T.lg_low}</span><span><i style="background:#e3e5ea"></i>${T.lg_rest}</span></div>
+    <div class="pchart"><div class="t">${T.load_trend}<small>${T.load_u}</small></div>${chart(all.map(d=>load(E(aid,d))),{...cc,h:100,min:0,max:1800,kind:'bar',ticks:[0,900,1800],labels:lab,marks:eventMarks(aid,all),mc:acc})}</div>
+    <div class="pchart"><div class="t">${T.weight_trend}<small>${a.limit?T.limit+' '+a.limit+'kg':''}</small></div>${chart(all.map(d=>E(aid,d)?.weight??null),{...cc,h:100,min:wmin,max:wmax,ticks:[wmin,wmax],labels:lab,ref:a.limit||null,refLabel:'',fill:false})}</div>`);
+  // 3. 日々の記録（1ページ9日ずつ）
+  const days=all.filter(d=>d<=TODAY&&E(aid,d)&&(E(aid,d).min||E(aid,d).note||attOf(E(aid,d))==='absent'));
+  for(let p=0;p<days.length;p+=9){
+    pages.push(`<h2>${T.daily}<small>${T.daily_sub}</small></h2>${days.slice(p,p+9).map(d=>{const e=E(aid,d);
+      return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)} · ${e.weight}kg</small></div>
+       <div><div class="mt">${esc(typeTxt(e,L))}${e.pain.length?' · '+e.pain.map(q=>esc(ptxt(q,T))+'('+T.lv[q.level]+')').join(' '):''}${e.head?.length?` · <b style="color:#c0392b">${e.head.map(k=>T.hs[k]).join('・')}</b>`:''}</div><div class="nt">${esc(e.note)}</div>${e.comment?`<div class="cm">${esc(e.comment.text)}</div>`:''}</div></div>`}).join('')}`);
+  }
+  // 4. 対話
+  const qs=ST.threads.filter(th=>th.aid===aid&&th.date.startsWith(ym));
+  pages.push(`<h2>${T.dia}<small>${T.dia_sub}</small></h2><div class="rule"></div>${qs.length?qs.map(q=>`<div class="qa"><div class="dd">${fd(q.date,L)}</div><div class="q">Q. ${esc(q.text)}</div>${q.replies.map(r=>`<div class="a"><span class="dd">${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}</span><br>${esc(r.text)}</div>`).join('')}</div>`).join(''):`<p style="color:#5a5f6b">${T.none}</p>`}
+    <div class="boxlbl" style="margin-top:5mm">${T.cword}<small>${T.hand}</small></div><div class="lines" style="height:38mm"></div>`);
+  // 5. 振り返り（手書き欄）
+  pages.push(`<h2>${T.ref}<small>${T.ref_sub}</small></h2><div class="rule"></div>
+    ${g.review?`<div class="boxlbl">${T.typed}</div><div class="typed">${esc(g.review)}</div>`:''}
+    <div class="boxlbl">${T.good}<small>${T.hand}</small></div><div class="lines" style="height:30mm"></div>
+    <div class="boxlbl">${T.issue}<small>${T.hand}</small></div><div class="lines" style="height:30mm"></div>
+    <div class="boxlbl">${T.next}<small>${T.hand}</small></div><div class="lines" style="height:${g.review?22:30}mm"></div>
+    <div class="signs"><div>${T.sign_a}</div><div>${T.sign_c}</div></div>`);
+  return pages.map((p,i)=>`<section class="paper a5" style="--s-acc:${acc}" lang="${L}">${p}${i?foot(i+1):''}</section>`).join('');
+}
+function teamReport(ym,L){
+  const T=I18N[L], acc=accentOf(UI.session||'coach').l, all=monthDates(ym), lab=all.map((d,i)=>[i,md(d)]).filter((_,i)=>i%7===0);
+  const rows=ATH.map(a=>({a,s:monthStats(a.id,ym)}));
+  return `<section class="paper a4" style="--s-acc:${acc}" lang="${L}"><h2>${T.team}<small>${T.team_sub} · ${monthLabel(ym,'en').toUpperCase()}</small></h2><div class="rule"></div>
+   <table class="rep"><thead><tr><th>${T.h_ath}</th><th class="n">${T.c_days}</th><th class="n">${T.c_avg}</th><th class="n">${T.c_ramp}</th><th class="n">${T.c_w}</th><th class="n">${T.c_abs}</th><th class="n">${T.c_pain}</th><th class="n">${T.c_q}</th></tr></thead><tbody>
+   ${rows.map(({a,s})=>`<tr><td><b>${esc(a.name)}</b><br><span style="color:#5a5f6b;font-size:7pt">${esc(a.cls)}</span></td><td class="n">${s.days}</td><td class="n">${s.avg?s.avg.toFixed(1):'—'}</td><td class="n" style="${s.maxRamp>1.3?'color:#c0392b;font-weight:600':''}">${s.maxRamp?'×'+s.maxRamp.toFixed(2):'—'}</td><td class="n" style="${a.limit&&s.w1>a.limit?'color:#b86e00;font-weight:600':''}">${s.w0??'—'}→${s.w1??'—'}</td><td class="n">${s.abs}</td><td class="n">${s.pain}</td><td class="n">${s.q}</td></tr>`).join('')}
+   </tbody></table>
+   <h3 style="margin-top:7mm">${T.cond_trend}</h3>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm">${rows.map(({a})=>`<div class="pchart"><div class="t">${esc(a.name)}<small>${esc(a.cls)}</small></div>${chart(all.map(d=>d<=TODAY?score(E(a.id,d)):null),{ink:'#5a5f6b',grid:'#e3e5ea',color:accentOf(a.id).l,w:420,h:110,min:5,max:25,ticks:[10,20],labels:lab,fs:10})}</div>`).join('')}</div>
+   <div class="boxlbl" style="margin-top:6mm">${T.cword}<small>${T.hand}</small></div><div class="lines" style="height:40mm"></div>
+   <div class="foot"><span>JUDO NOTE · ${ym.replace('-','.')}</span><span>${T.team}</span><span>p.1</span></div></section>`;
+}
+
+/* ---------- 設定パネル ---------- */
+function settingsView(){
+  const p=prefs(UI.session), L=lang(), T=I18N[L];
+  return `<div class="scrim noprint" data-act="closeset"><div class="sheet-ui" role="dialog" aria-modal="true" aria-label="${T.settings}" data-stop>
+    <h3>${T.settings}</h3>
+    <div class="opt-group"><span class="lbl">${T.lang}</span><div class="segbar">${[['ja','日本語'],['en','English']].map(([v,l])=>`<button data-act="pref" data-k="lang" data-v="${v}" aria-pressed="${p.lang===v}">${l}</button>`).join('')}</div></div>
+    <div class="opt-group"><span class="lbl">${T.color}</span><div class="swatches">
+      ${Object.entries(ACCENTS).map(([k,a])=>`<button class="sw" data-act="pref" data-k="accent" data-v="${k}" aria-pressed="${p.accent===k}"><i style="background:linear-gradient(135deg,${a.l},${a.g2})"></i>${a[L]}</button>`).join('')}
+      <label class="sw" aria-pressed="${p.accent==='custom'}"><input type="color" id="custom-color" value="${p.custom||'#3552d4'}" aria-label="${T.custom}">${T.custom}</label>
+    </div></div>
+    <div class="opt-group"><span class="lbl">${T.mode}</span><div class="segbar">${[['auto',T.m_auto],['light',T.m_light],['dark',T.m_dark]].map(([v,l])=>`<button data-act="pref" data-k="mode" data-v="${v}" aria-pressed="${p.mode===v}">${l}</button>`).join('')}</div></div>
+    ${acct(UI.session).role==='athlete'?`<div class="opt-group"><label class="lbl" for="remind">${T.remind}</label><select class="inp" id="remind" data-act="remind">${['off','18:00','19:00','20:00','21:00','22:00'].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select><div class="small muted">${T.remind_note}</div></div>`:''}
+    ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}：${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
+    <p class="small muted">${T.settings_note}</p>
+    <div class="row" style="justify-content:space-between"><span class="small muted">${esc(me().name)} · ID <span class="mono">${esc(me().login)}</span></span><button class="btn sm" data-act="closeset">${T.close}</button></div>
+  </div></div>`;
+}
+
+/* ---------- ログイン・登録 ---------- */
+function langSwitch(){const L=UI.loginLang;return `<div class="segbar" style="width:150px;white-space:nowrap"><button type="button" data-act="loginlang" data-l="ja" aria-pressed="${L==='ja'}">日本語</button><button type="button" data-act="loginlang" data-l="en" aria-pressed="${L==='en'}">EN</button></div>`}
+function brandBlock(){return `<div class="row" style="justify-content:space-between;align-items:flex-start"><div><h1>柔道ノート</h1><div class="en">JUDO NOTE</div></div>${langSwitch()}</div>`}
+function loginView(){
+  const T=I18N[UI.loginLang];
+  if(UI.auth==='join')return joinView();
+  if(UI.auth==='setup')return setupView();
+  return `<div class="login"><form class="card stack" id="login-form" autocomplete="on">
+    ${brandBlock()}
+    <div class="field"><label for="lg-id">${T.id}</label><input class="inp" id="lg-id" name="uid" autocapitalize="off" autocomplete="username" autocorrect="off" spellcheck="false"></div>
+    <div class="field"><label for="lg-pw">${T.pw}</label><input class="inp" id="lg-pw" name="pass" type="password" autocomplete="current-password"></div>
+    <div class="err" id="lg-err">${esc(UI.err)}</div>
+    <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.signin}</button>
+    <p class="small muted" style="margin:0">🔒 ${T.privacy}</p>
+    <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost sm" data-act="auth" data-v="join">${T.join}</button><button type="button" class="linkish" data-act="auth" data-v="setup">${T.setup}</button></div>
+  </form></div>`;
+}
+function joinView(){
+  const T=I18N[UI.loginLang], j=UI.join||{}, signedIn=!!UI.authUser;
+  return `<div class="login"><form class="card stack" id="join-form" autocomplete="off">
+    ${brandBlock()}
+    <h2 style="margin:0">${T.join_title}</h2>
+    <div class="field"><label for="jn-code">${T.code}</label><div class="row" style="flex-wrap:nowrap"><input class="inp mono" id="jn-code" name="code" value="${esc(j.code||'')}" autocapitalize="characters" style="text-transform:uppercase"><button type="button" class="btn ghost sm" data-act="checkcode">${T.code_check}</button></div>
+      <div class="small ${j.team?'':'muted'}" id="jn-team">${j.team?esc(j.role==='guardian'?T.g_join.replace('{a}',j.athlete||''):T.code_ok.replace('{t}',j.team)):''}</div></div>
+    <div class="field"><label for="jn-name">${T.name}</label><input class="inp" id="jn-name" name="name" placeholder="${esc(T.name_ph)}" maxlength="40" required></div>
+    ${signedIn?'':`<div class="field"><label for="jn-id">${T.login_id}</label><input class="inp mono" id="jn-id" name="uid" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="username" required><div class="small muted">${T.login_id_help}</div></div>
+    <div class="field"><label for="jn-pw">${T.pw}</label><input class="inp" id="jn-pw" name="pass" type="password" autocomplete="new-password" required><div class="small muted">${T.pw_help}</div></div>
+    <div class="field"><label for="jn-pw2">${T.pw2}</label><input class="inp" id="jn-pw2" name="pass2" type="password" autocomplete="new-password" required></div>`}
+    <div class="stack" id="jn-athlete" ${j.role==='guardian'?'hidden':''}><div class="grid2" style="gap:10px"><div class="field"><label for="jn-cls">${T.wclass}</label><input class="inp" id="jn-cls" name="wclass" placeholder="${esc(T.wclass_ph)}" maxlength="20"></div>
+      <div class="field"><label for="jn-lim">${T.wlimit}</label><input class="inp mono" id="jn-lim" name="wlimit" type="number" step="0.1" min="20" max="250"></div></div>
+    <label class="chk"><input type="checkbox" name="minor" id="jn-minor" ${j.minor?'checked':''}><span>${T.minor}</span></label>
+    <div class="stack" id="jn-guard" ${j.minor?'':'hidden'}>
+      <div class="field"><label for="jn-g">${T.guardian}</label><input class="inp" id="jn-g" name="guardian" maxlength="40"></div>
+      <label class="consent"><input type="checkbox" name="consent" id="jn-consent"> <span>${T.consent}</span></label>
+    </div>
+    </div>
+    <p class="small muted" style="margin:0">🔒 ${T.consent_note}</p>
+    <div class="err" id="jn-err">${esc(UI.err)}</div>
+    <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.register}</button>
+    ${signedIn?`<button type="button" class="linkish" data-act="logout">${T.logout}</button>`:`<button type="button" class="linkish" data-act="auth" data-v="login">${T.back_login}</button>`}
+  </form></div>`;
+}
+function setupView(){
+  const T=I18N[UI.loginLang];
+  return `<div class="login"><form class="card stack" id="setup-form" autocomplete="off">
+    ${brandBlock()}
+    <h2 style="margin:0">${T.setup_title}</h2>
+    <div class="field"><label for="su-team">${T.team_name}</label><input class="inp" id="su-team" name="team" maxlength="60" required></div>
+    <div class="field"><label for="su-name">${T.name}</label><input class="inp" id="su-name" name="name" maxlength="40" required></div>
+    <div class="field"><label for="su-id">${T.login_id}</label><input class="inp mono" id="su-id" name="uid" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="username" required><div class="small muted">${T.login_id_help}</div></div>
+    <div class="field"><label for="su-pw">${T.pw}</label><input class="inp" id="su-pw" name="pass" type="password" autocomplete="new-password" required><div class="small muted">${T.pw_help}</div></div>
+    <div class="field"><label for="su-pw2">${T.pw2}</label><input class="inp" id="su-pw2" name="pass2" type="password" autocomplete="new-password" required></div>
+    <div class="err" id="su-err">${esc(UI.err)}</div>
+    <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.create_team}</button>
+    <button type="button" class="linkish" data-act="auth" data-v="login">${T.back_login}</button>
+  </form></div>`;
+}
+
+/* ---------- コーチ：選手の管理（招待コード・階級・パスワード再設定・削除） ---------- */
+function membersView(){
+  const L=lang(), T=I18N[L], base=location.origin+location.pathname;
+  const inv=(ST.invites||[]).filter(i=>new Date(i.expires_at)>new Date());
+  return `<div class="stack">
+   <div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${T.t_members}</h1></div>
+   <div class="card"><h2>${T.inv_title}</h2>
+     <form data-form="invite" class="row"><input class="inp" id="inv-memo" name="memo" placeholder="${esc(T.inv_memo_ph)}" maxlength="40" style="flex:1;min-width:160px" aria-label="${esc(T.inv_memo)}"><button class="btn sm" type="submit">${T.inv_make}</button></form>
+     ${UI.newInvite?`<div class="invite-new"><div class="code mono">${esc(UI.newInvite)}</div><div class="small muted">${T.inv_link}</div><div class="row" style="flex-wrap:nowrap"><input class="inp mono small" id="inv-link" readonly value="${esc(base+'#join-'+UI.newInvite)}"><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+UI.newInvite)}">${T.copy}</button></div></div>`:''}
+     <h3>${T.inv_list}</h3>
+     <div class="entries">${inv.length?inv.map(i=>`<div class="evrow"><div><b class="mono">${esc(i.code)}</b> <span class="small muted">${i.role==='guardian'?'👪 '+esc(T.guardians)+' · '+esc(acct(i.for_athlete)?.name||''):''} ${esc(i.memo)}</span><div class="small muted">${T.inv_until.replace('{d}',fd(localDay(i.expires_at),L))}</div></div><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+i.code)}">${T.copy}</button><button class="btn ghost sm" data-act="invdel" data-id="${esc(i.code)}">${T.inv_del}</button></div>`).join(''):`<div class="small muted">${T.inv_none}</div>`}</div>
+   </div>
+   <div class="card"><h2>${T.members}</h2><div class="entries">${ATH.length?ATH.map(a=>`<div class="member">
+     <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
+     <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" step="0.1" value="${a.limit??''}" placeholder="kg" style="width:90px" aria-label="${T.wlimit}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
+     <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
+     <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span>${UI.confirmRemove===g.id?`<button class="btn sm danger-btn" data-act="remove" data-id="${g.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id}">${T.g_remove}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
+     ${UI.newGInvite?.aid===a.id?`<div class="invite-new"><div class="small">${esc(T.g_inv_made.replace('{n}',a.name))}</div><div class="code mono">${esc(UI.newGInvite.code)}</div><div class="row" style="flex-wrap:nowrap"><input class="inp mono small" readonly value="${esc(base+'#join-'+UI.newGInvite.code)}"><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+UI.newGInvite.code)}">${T.copy}</button></div></div>`:''}
+     <div class="row">${UI.confirmRemove===a.id?`<span class="small" style="color:var(--bad)">${T.remove_q}</span><button class="btn sm danger-btn" data-act="remove" data-id="${a.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${a.id}">${T.remove}</button>`}</div>
+   </div>`).join(''):`<div class="small muted">${T.no_athletes}</div>`}</div></div>
+  </div>`;
+}
+
+/* ---------- 描画 ---------- */
+const app=document.getElementById('app');
+function render(){
+  applyTheme();
+  if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;return}
+  if(!UI.session||!me()){app.innerHTML=loginView();return}
+  const m=me();
+  app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'');
+  if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
+}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
+function errText(e){
+  const T=I18N[lang()], m=String(e?.message||e||'');
+  if(/Failed to fetch|NetworkError|network|Load failed/i.test(m))return T.e_net;
+  if(/already registered|already exists|User already/i.test(m))return T.e_taken;
+  if(/invalid invite/i.test(m))return T.code_bad;
+  if(/guardian consent/i.test(m))return T.e_consent;
+  if(/team already exists/i.test(m))return T.e_team;
+  if(/Invalid login credentials/i.test(m))return T.login_err;
+  return T.e_generic.replace('{m}',m);
+}
+async function afterSignIn(user){
+  UI.authUser=user; UI.session=user.id;
+  await loadAll();
+  if(!me()){UI.auth='join';UI.session=user.id;render();return}   // アカウントはあるがチームに未参加
+  UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
+  if(me().role==='guardian')UI.pAid=me().guardianOf;
+  if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
+  UI.loginLang=prefs(UI.session).lang; render(); window.scrollTo(0,0);
+}
+async function signOut(){await sb.auth.signOut().catch(()=>{});UI.session=null;UI.authUser=null;UI.settings=false;UI.auth=null;ACCOUNTS=[];ATH=[];render()}
+async function refreshData(){if(!me()||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))render()}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
+
+/* ---------- 操作 ---------- */
+async function run(fn,okMsg){
+  try{UI.busy=true;await fn();UI.busy=false;render();if(okMsg)toast(okMsg)}
+  catch(e){UI.busy=false;console.error(e);toast(errText(e));render()}
+}
+document.addEventListener('click',ev=>{
+  const el=ev.target.closest('[data-act]'); if(!el)return;
+  if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
+  const a=el.dataset.act;
+  if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
+  else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
+  else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
+    sb.rpc('check_invite',{invite_code:c}).then(({data,error})=>{const ok=!error&&data;UI.join={...UI.join,team:ok?data.team:null,role:ok?data.role:null,athlete:ok?data.athlete:null};
+      const T2=I18N[UI.loginLang], el2=document.getElementById('jn-team'), box=document.getElementById('jn-athlete');   // 入力中の内容を消さないよう、描き直さずに部分だけ更新
+      if(el2){el2.textContent=ok?(data.role==='guardian'?T2.g_join.replace('{a}',data.athlete||''):T2.code_ok.replace('{t}',data.team)):T2.code_bad;el2.className='small'+(ok?'':' err')}
+      if(box)box.hidden=ok&&data.role==='guardian'})}
+  else if(a==='logout'){signOut()}
+  else if(a==='view'){UI.view=el.dataset.v;UI.sel=null;render();window.scrollTo(0,0)}
+  else if(a==='open'){UI.sel=el.dataset.id;render();window.scrollTo(0,0)}
+  else if(a==='back'){UI.sel=null;render()}
+  else if(a==='settings'){UI.settings=true;render()}
+  else if(a==='closeset'){UI.settings=false;render()}
+  else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
+  else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
+  else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),t('seen_sent'))}
+  else if(a==='att'){const v=el.dataset.v;document.getElementById('f-att').value=v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));document.getElementById('abs-fields').hidden=v!=='absent';document.getElementById('prac-fields').hidden=v==='absent'||v==='off';stashDraft()}
+  else if(a==='lvl'){document.getElementById('f-level').value=el.dataset.v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));stashDraft()}
+  else if(a==='print'){window.print()}
+  else if(a==='copy'){const txt=el.dataset.t;(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(t('copied'))).catch(()=>{const i=document.getElementById('inv-link');if(i){i.select()}})}
+  else if(a==='invdel'){run(async()=>{must(await sb.from('invites').delete().eq('code',el.dataset.id));ST.invites=ST.invites.filter(i=>i.code!==el.dataset.id)})}
+  else if(a==='remove-ask'){UI.confirmRemove=el.dataset.id;render()}
+  else if(a==='remove-cancel'){UI.confirmRemove=null;render()}
+  else if(a==='remove'){const id=el.dataset.id;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_remove_athlete',{athlete:id}));await loadAll()},t('removed'))}
+  else if(a==='ginvite'){const aid=el.dataset.aid;run(async()=>{const c=must(await sb.rpc('create_guardian_invite',{athlete:aid,memo:''}));UI.newGInvite={aid,code:c};await loadAll()})}
+  else if(a==='refresh'){UI.loadedAt=0;run(loadAll)}
+});
+document.addEventListener('change',ev=>{
+  const el=ev.target;
+  if(el.dataset.act==='pym'){UI.pYm=el.value;render()}
+  else if(el.dataset.act==='paid'){UI.pAid=el.value;render()}
+  else if(el.dataset.act==='pkind'){UI.pKind=el.value;render()}
+  else if(el.dataset.act==='remind'){savePrefs({...prefs(UI.session),remind:el.value}).catch(e=>toast(errText(e)))}
+  else if(el.id==='custom-color'){savePrefs({...prefs(UI.session),accent:'custom',custom:el.value}).catch(e=>toast(errText(e)))}
+  else if(el.id==='jn-minor'){document.getElementById('jn-guard').hidden=!el.checked;UI.join={...(UI.join||{}),minor:el.checked}}
+  else if(el.name==='pain'&&el.value==='other'){const o=document.getElementById('f-pain-other');o.hidden=!el.checked;if(el.checked)o.focus()}
+  else if(el.name==='rpe'){const c=document.getElementById('rpe-cap');if(c)c.textContent=el.value+' — '+t('rpe_l')[+el.value]}
+  if(el.closest('#today-form'))stashDraft();
+});
+document.addEventListener('input',ev=>{if(ev.target.closest('#today-form'))stashDraft()});
+function stashDraft(){const f=document.getElementById('today-form');if(!f)return;clearTimeout(stashDraft.t);stashDraft.t=setTimeout(()=>saveDraft(formToEntry(new FormData(f))),400)}
+
+document.addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const f=ev.target, fid=f.getAttribute('id'), fdt=new FormData(f);
+  const LL=UI.loginLang, TT=I18N[LL], showErr=(id,msg)=>{UI.err=msg;const e=document.getElementById(id);if(e)e.textContent=msg};
+  if(fid==='login-form'){
+    const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
+    if(!id||!pw)return showErr('lg-err',TT.login_err);
+    UI.busy=true;
+    sb.auth.signInWithPassword({email:idToEmail(id),password:pw}).then(async({data,error})=>{UI.busy=false;if(error)throw error;await afterSignIn(data.user)})
+      .catch(e=>{UI.busy=false;showErr('lg-err',errText(e))});
+    return;
+  }
+  if(fid==='join-form'){
+    const code=(fdt.get('code')||'').trim().toUpperCase(), name=(fdt.get('name')||'').trim(), minor=!!fdt.get('minor');
+    const guardian=(fdt.get('guardian')||'').trim(), consent=!!fdt.get('consent');
+    if(minor&&(!guardian||!consent))return showErr('jn-err',TT.e_consent);
+    const args={invite_code:code,login:'',name,wclass:(fdt.get('wclass')||'').trim(),wlimit:+fdt.get('wlimit')||null,pref_lang:LL,minor,guardian,consent};
+    (async()=>{
+      UI.busy=true;
+      let user=UI.authUser;
+      if(!user){
+        const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
+        if(!ID_RE.test(id))throw new Error('__'+TT.e_id); if(pw.length<8)throw new Error('__'+TT.e_pw); if(pw!==fdt.get('pass2'))throw new Error('__'+TT.e_pw2);
+        const team=must(await sb.rpc('check_invite',{invite_code:code})); if(!team)throw new Error('invalid invite');
+        const {data,error}=await sb.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
+        if(!data.session)throw new Error('__'+TT.e_conf);
+        user=data.user; args.login=id;
+      }else args.login=(user.email||'').split('@')[0];
+      must(await sb.rpc('redeem_invite',args));
+      UI.busy=false; UI.join=null; await afterSignIn(user);
+    })().catch(e=>{UI.busy=false;const m=String(e?.message||'');showErr('jn-err',m.startsWith('__')?m.slice(2):errText(e))});
+    return;
+  }
+  if(fid==='setup-form'){
+    const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
+    (async()=>{
+      if(!ID_RE.test(id))throw new Error('__'+TT.e_id); if(pw.length<8)throw new Error('__'+TT.e_pw); if(pw!==fdt.get('pass2'))throw new Error('__'+TT.e_pw2);
+      UI.busy=true;
+      const {data,error}=await sb.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
+      if(!data.session)throw new Error('__'+TT.e_conf);
+      must(await sb.rpc('create_team',{team_name:(fdt.get('team')||'').trim(),login:id,name:(fdt.get('name')||'').trim()}));
+      UI.busy=false; await afterSignIn(data.user);
+    })().catch(e=>{UI.busy=false;const m=String(e?.message||'');showErr('su-err',m.startsWith('__')?m.slice(2):errText(e))});
+    return;
+  }
+  if(fid==='today-form'){
+    const d=formToEntry(fdt); saveDraft(d);
+    run(async()=>{await saveEntry(d);clearDraft();UI.draft=null;window.scrollTo(0,0)},d.head.length?t('head_saved'):t('saved'))
+      .then(()=>{if(loadDraft())toast(t('offline_saved'))});
+    return;
+  }
+  if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),t('sent'))}
+  if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),t('sent'))}
+  if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,!!fdt.get('private')),t('sent'))}
+  if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),t('ev_added'))}
+  if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),t('goals_saved'))}
+  if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()})}
+  if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:+fdt.get('wlimit')||null}).eq('id',aid));await loadAll()},t('saved_cls'))}
+  if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
+});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.settings){UI.settings=false;render()}});
+
+/* ---------- 起動 ---------- */
+(async function boot(){
+  const m=/^#join-([A-Za-z0-9]{6,12})$/.exec(location.hash);
+  if(m){UI.auth='join';UI.join={code:m[1].toUpperCase()};history.replaceState(null,'',location.pathname)}
+  UI.booting=true; render();
+  try{
+    const {data}=await sb.auth.getSession();
+    UI.booting=false;
+    if(data.session&&!m){await afterSignIn(data.session.user);return}
+    if(data.session&&m){await sb.auth.signOut().catch(()=>{})}
+  }catch(e){UI.booting=false;UI.err=errText(e)}
+  render();
+  if(UI.join?.code)document.querySelector('[data-act=checkcode]')?.click();
+})();
+
+</script>
+</body>
+</html>
