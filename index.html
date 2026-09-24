@@ -314,6 +314,12 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .pv-bar{max-width:1100px;margin:0 auto;padding:8px 16px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13px;font-weight:600;color:var(--warn)}
 .guide summary{cursor:pointer;list-style:none;font-size:15px} .guide summary::after{content:" ＋";color:var(--accent)} .guide[open] summary::after{content:" －"}
 .guide ol{margin:10px 0 8px;padding-left:1.4em;display:grid;gap:6px;font-size:14px}
+.goalbar{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 18%,var(--panel)),color-mix(in srgb,var(--acc-2) 12%,var(--panel)));border-color:color-mix(in srgb,var(--accent) 35%,var(--glass-bd))}
+.goalbar .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.goalbar .gk{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--accent)}
+.goalbar ol{margin:6px 0 0;padding-left:1.4em;display:grid;gap:2px;font-size:18px;font-weight:700;line-height:1.45}
+.goalbar ol li::marker{color:var(--accent);font-family:var(--mono);font-size:15px}
+.goalbar.empty{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
 </style>
@@ -361,6 +367,7 @@ const I18N = {
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
+  goal_banner:'今月の目標', goal_empty:'今月の目標がまだありません。3つまで決めておこう。', goal_set:'目標を決める', goal_edit:'変える',
   hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？', yday_q:'昨日の練習をふり返ろう', d_today:'今日', d_yday:'昨日',
   yday_nudge:'昨日（{d}）の記録がまだです。次の練習までに書いておこう。', yday_btn:'昨日の分を書く', f_miss_y:'昨日の分がまだ', saved_y:'昨日の記録を保存しました',
   cond:'コンディション', sleep:'睡眠', energy:'元気', soreness:'筋肉痛・張り', stress:'ストレス', mood:'気分',
@@ -431,6 +438,7 @@ const I18N = {
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
+  goal_banner:'This month’s goals', goal_empty:'No goals for this month yet. Set up to three.', goal_set:'Set goals', goal_edit:'Edit',
   hello:'Good work today, {n}', today_q:'How are you feeling?', yday_q:'Look back on yesterday’s practice', d_today:'Today', d_yday:'Yesterday',
   yday_nudge:'You haven’t logged yesterday ({d}) yet. Write it before your next practice.', yday_btn:'Log yesterday', f_miss_y:'Yesterday not logged yet', saved_y:'Yesterday’s entry saved',
   cond:'Condition', sleep:'Sleep', energy:'Energy', soreness:'Soreness', stress:'Stress', mood:'Mood',
@@ -751,6 +759,13 @@ function header(tabs){
 }
 
 /* ---------- 選手の画面 ---------- */
+/* 画面の一番上に出す「今月の目標」。選手・保護者・コーチの閲覧モードで同じものが見える */
+function goalsBanner(aid,L,editable){
+  const T=I18N[L], ym=curYm(), items=(ST.goals[aid+'|'+ym]?.items||[]).filter(Boolean);
+  if(!items.length)return editable?`<div class="card goalbar empty"><span>🎯 ${T.goal_empty}</span><button class="btn sm" data-act="view" data-v="note">${T.goal_set}</button></div>`:'';
+  return `<div class="card goalbar"><div class="goalhead"><span class="gk">🎯 ${T.goal_banner} · ${monthLabel(ym,L)}</span>${editable?`<button class="linkish" data-act="view" data-v="note">${T.goal_edit}</button>`:''}</div>
+    <ol>${items.map(i=>`<li>${esc(i)}</li>`).join('')}</ol></div>`;
+}
 function athleteView(){
   const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
   const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
@@ -760,7 +775,7 @@ function athleteView(){
   if(UI.view==='log')body=`<div class="grid2">${trendCharts(m.id,L)}${entryList(m.id,L,14,false)}</div>`;
   if(UI.view==='q')body=questions(m.id,L,false);
   if(UI.view==='note')body=athNote();
-  return header(tabs)+`<main>${body}</main>`;
+  return header(tabs)+`<main>${UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}</div>`:''}${body}</main>`;
 }
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
@@ -867,7 +882,7 @@ function guardianView(){
     ${g?`<div class="card"><h2>${T.goals} · ${monthLabel(curYm(),L)}</h2><ul style="margin:0;padding-left:1.2em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>${g.review?`<p class="muted">${esc(g.review)}</p>`:''}</div>`:''}
     <div class="card"><h2>${T.booklet}</h2><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(S,UI.pYm)}</div></div>`}
-  return header(tabs)+`<main>${body}</main>`;
+  return header(tabs)+`<main>${a&&UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(S,L,false)}</div>`:''}${body}</main>`;
 }
 
 /* ---------- コーチの画面 ---------- */
