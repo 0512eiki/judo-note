@@ -361,7 +361,8 @@ const I18N = {
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
-  hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？',
+  hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？', yday_q:'昨日の練習をふり返ろう', d_today:'今日', d_yday:'昨日',
+  yday_nudge:'昨日（{d}）の記録がまだです。次の練習までに書いておこう。', yday_btn:'昨日の分を書く', f_miss_y:'昨日の分がまだ', saved_y:'昨日の記録を保存しました',
   cond:'コンディション', sleep:'睡眠', energy:'元気', soreness:'筋肉痛・張り', stress:'ストレス', mood:'気分',
   sleep_lo:'眠れない', sleep_hi:'ぐっすり', energy_lo:'だるい', energy_hi:'元気いっぱい', soreness_lo:'ひどい', soreness_hi:'なし', stress_lo:'大きい', stress_hi:'なし', mood_lo:'落ち込み', mood_hi:'最高',
   practice:'今日の稽古', content:'内容', minutes:'時間（分）', rpe:'きつさ', rpe_help:'稽古全体をふり返って、0〜10でどれくらいきつかったか',
@@ -430,7 +431,8 @@ const I18N = {
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
-  hello:'Good work today, {n}', today_q:'How are you feeling?',
+  hello:'Good work today, {n}', today_q:'How are you feeling?', yday_q:'Look back on yesterday’s practice', d_today:'Today', d_yday:'Yesterday',
+  yday_nudge:'You haven’t logged yesterday ({d}) yet. Write it before your next practice.', yday_btn:'Log yesterday', f_miss_y:'Yesterday not logged yet', saved_y:'Yesterday’s entry saved',
   cond:'Condition', sleep:'Sleep', energy:'Energy', soreness:'Soreness', stress:'Stress', mood:'Mood',
   sleep_lo:'Poor', sleep_hi:'Great', energy_lo:'Drained', energy_hi:'Fresh', soreness_lo:'Very sore', soreness_hi:'None', stress_lo:'High', stress_hi:'None', mood_lo:'Low', mood_hi:'Great',
   practice:'Today’s practice', content:'What you did', minutes:'Duration (min)', rpe:'Effort', rpe_help:'Looking back on the whole session, how hard was it from 0 to 10?',
@@ -557,17 +559,17 @@ function formToEntry(fdt){
     head:fdt.getAll('head'),pain:fdt.getAll('pain').map(p=>p==='other'?{part:p,level:lv,detail:(fdt.get('painOther')||'').trim()}:{part:p,level:lv}),
     note:fdt.get('note')||'',ask:(fdt.get('ask')||'').trim(),askPrivate:!!fdt.get('askPrivate')};
 }
-const draftKey=()=>`judo-draft-${UI.session}-${TODAY}`;
+const draftKey=()=>`judo-draft-${UI.session}-${UI.eday||TODAY}`;
 function saveDraft(d){try{localStorage.setItem(draftKey(),JSON.stringify(d))}catch(e){}}
 function loadDraft(){try{return JSON.parse(localStorage.getItem(draftKey())||'null')}catch(e){return null}}
 function clearDraft(){try{localStorage.removeItem(draftKey())}catch(e){}}
 
-async function saveEntry(d){
-  const row={athlete_id:UI.session,day:TODAY,att:d.att,abs_reason:d.absReason||null,sleep:d.sleep,energy:d.energy,soreness:d.soreness,stress:d.stress,mood:d.mood,
+async function saveEntry(d,day=TODAY){
+  const row={athlete_id:UI.session,day,att:d.att,abs_reason:d.absReason||null,sleep:d.sleep,energy:d.energy,soreness:d.soreness,stress:d.stress,mood:d.mood,
     minutes:d.min,rpe:d.rpe,types:d.types,weight:d.weight,pain:d.pain,head:d.head,note:d.note};
   const saved=must(await sb.from('entries').upsert(row,{onConflict:'athlete_id,day'}).select().single());
-  const old=E(UI.session,TODAY);
-  ST.entries[UI.session][TODAY]={...mapEntry(saved,null),comment:old?.comment||null,seen:old?.seen||null};
+  const old=E(UI.session,day);
+  ST.entries[UI.session][day]={...mapEntry(saved,null),comment:old?.comment||null,seen:old?.seen||null};
   if(d.ask)await askQuestion(d.ask,d.askPrivate);
 }
 async function askQuestion(text,coachOnly){
@@ -650,7 +652,8 @@ function latestWeight(aid){for(let i=0;i<7;i++){const e=E(aid,addDays(TODAY,-i))
 const unanswered=th=>!th.replies.length||th.replies[th.replies.length-1].from!=='coach';
 function flags(aid,L){
   const t=I18N[L], a=acct(aid), f=[], e=E(aid,TODAY);
-  if(!e){ const y=addDays(TODAY,-1); if(!E(aid,y)&&(a.joined||TODAY)<=y) f.push(['bad',t.f_miss.replace('{n}',2)]); else f.push(['warn',t.f_miss1]); }
+  { const y=addDays(TODAY,-1), y2=addDays(TODAY,-2), j=a.joined||TODAY;   // 前日の分は次の練習までに書けばよい
+    if(!E(aid,y)&&j<=y){ if(!E(aid,y2)&&j<=y2) f.push(['bad',t.f_miss.replace('{n}',2)]); else f.push(['acc',t.f_miss_y]); } }
   if(e){const b=baseline(aid,TODAY),s=score(e);if(b!=null&&s<=b-3)f.push([s<=b-5?'bad':'warn',t.f_drop.replace('{d}',(s-b).toFixed(0))])}
   const rr=ramp(aid,TODAY); if(rr>1.3)f.push([rr>1.5?'bad':'warn',t.f_ramp.replace('{v}',rr.toFixed(2))]);
   const le=e||E(aid,addDays(TODAY,-1)); if(le&&le.pain.length){const p=le.pain.reduce((x,y)=>y.level>x.level?y:x);if(p.level>=2)f.push([p.level>=3?'bad':'warn',t.f_pain.replace('{p}',le.pain.map(q=>ptxt(q,t)).join('・'))])}
@@ -760,15 +763,19 @@ function athleteView(){
   return header(tabs)+`<main>${body}</main>`;
 }
 function athToday(){
-  const L=lang(), T=I18N[L], m=me(), e=E(m.id,TODAY)||UI.draft||{sleep:0,energy:0,soreness:0,stress:0,mood:0,min:120,rpe:-1,types:[],weight:'',pain:[],note:''};
+  const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
+  const needY=!isY&&!E(m.id,Y)&&(m.joined||TODAY)<=Y;   // 昨日の分がまだ（次の練習までに書けばよい）
+  const e=E(m.id,day)||UI.draft||{sleep:0,energy:0,soreness:0,stress:0,mood:0,min:120,rpe:-1,types:[],weight:'',pain:[],note:''};
   let lastC=null;for(let i=1;i<10&&!lastC;i++){const x=E(m.id,addDays(TODAY,-i));if(x&&x.comment)lastC={d:addDays(TODAY,-i),c:x.comment}}
   const seg=(k)=>`<div class="crow"><div class="nm">${T[k]}</div><div class="seg" role="radiogroup" aria-label="${T[k]}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="${k}" value="${v}" ${e[k]===v?'checked':''} required><span>${v}</span></label>`).join('')}</div><div class="ends"><span>1 ${T[k+'_lo']}</span><span>${T[k+'_hi']} 5</span></div></div>`;
-  const lvl=e.pain[0]?.level||1, att=E(m.id,TODAY)?attOf(e):'present';
+  const lvl=e.pain[0]?.level||1, att=E(m.id,day)?attOf(e):'present';
   return `<div class="stack">
-  <div class="hello"><div class="sub">${fd(TODAY,L)}${m.cls?' · '+esc(m.cls):''} ${streak(m.id)>1?`<span class="pill acc">${T.streak.replace('{n}',streak(m.id))}</span>`:''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${T.today_q}</span></h1></div>
-  ${E(m.id,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
+  <div class="hello"><div class="sub">${fd(day,L)}${m.cls?' · '+esc(m.cls):''} ${streak(m.id)>1?`<span class="pill acc">${T.streak.replace('{n}',streak(m.id))}</span>`:''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${isY?T.yday_q:T.today_q}</span></h1></div>
+  ${needY?`<div class="card row" style="justify-content:space-between"><span class="small">📝 ${esc(T.yday_nudge.replace('{d}',fd(Y,L)))}</span><button class="btn sm" data-act="eday" data-v="${Y}">${T.yday_btn}</button></div>`:''}
+  ${E(m.id,day)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
   ${evCard(m.id,L)}
   ${lastC?`<div class="card"><h2>${T.from_coach} · ${fd(lastC.d,L)}</h2><div>${esc(lastC.c.text)}</div></div>`:''}
+  <div class="segbar noprint" style="max-width:320px">${[[TODAY,T.d_today],[Y,T.d_yday]].map(([d,l])=>`<button type="button" data-act="eday" data-v="${d}" aria-pressed="${day===d}">${l} ${md(d)}${E(m.id,d)?' ✓':''}</button>`).join('')}</div>
   <form id="today-form" class="stack">
    <div class="card"><h2>${T.cond}</h2><div class="cond">${['sleep','energy','soreness','stress','mood'].map(seg).join('')}</div></div>
    <div class="card stack"><h2 style="margin:0">${T.practice}</h2>
@@ -1104,8 +1111,9 @@ function membersView(){
      <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
      <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" step="0.1" value="${a.limit??''}" placeholder="kg" style="width:90px" aria-label="${T.wlimit}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
      <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
-     <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span>${UI.confirmRemove===g.id?`<button class="btn sm danger-btn" data-act="remove" data-id="${g.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id}">${T.g_remove}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
+     <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span><button class="linkish" data-act="gpw" data-id="${g.id}">${T.reset_pw}</button>${UI.confirmRemove===g.id?`<button class="btn sm danger-btn" data-act="remove" data-id="${g.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id}">${T.g_remove}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
      ${UI.newGInvite?.aid===a.id?inviteBox(UI.newGInvite.code,T,a.id,T.g_inv_made.replace('{n}',a.name)):''}
+     ${guardiansOf(a.id).some(g=>g.id===UI.gpw)?`<form class="row" data-form="resetpw" data-aid="${UI.gpw}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}（${esc(acct(UI.gpw)?.name||'')}）" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>`:''}
      <div class="row">${UI.confirmRemove===a.id?`<span class="small" style="color:var(--bad)">${T.remove_q}</span><button class="btn sm danger-btn" data-act="remove" data-id="${a.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${a.id}">${T.remove}</button>`}</div>
    </div>`).join(''):`<div class="small muted">${T.no_athletes}</div>`}</div></div>
   </div>`;
@@ -1182,6 +1190,8 @@ document.addEventListener('click',ev=>{
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
   else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),t('seen_sent'))}
+  else if(a==='gpw'){UI.gpw=el.dataset.id;render()}
+  else if(a==='eday'){UI.eday=el.dataset.v;UI.draft=E(UI.session,UI.eday)?null:loadDraft();render();window.scrollTo(0,0)}
   else if(a==='att'){const v=el.dataset.v;document.getElementById('f-att').value=v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));document.getElementById('abs-fields').hidden=v!=='absent';document.getElementById('prac-fields').hidden=v==='absent'||v==='off';stashDraft()}
   else if(a==='lvl'){document.getElementById('f-level').value=el.dataset.v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));stashDraft()}
   else if(a==='print'){window.print()}
@@ -1256,7 +1266,8 @@ document.addEventListener('submit',ev=>{
   }
   if(fid==='today-form'){
     const d=formToEntry(fdt); saveDraft(d);
-    run(async()=>{await saveEntry(d);clearDraft();UI.draft=null;window.scrollTo(0,0)},d.head.length?t('head_saved'):t('saved'))
+    const day=UI.eday||TODAY, isY=day!==TODAY;
+    run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=TODAY;window.scrollTo(0,0)},d.head.length?t('head_saved'):isY?t('saved_y'):t('saved'))
       .then(()=>{if(loadDraft())toast(t('offline_saved'))});
     return;
   }
