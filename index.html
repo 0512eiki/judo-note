@@ -311,6 +311,9 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .invite-new{margin-top:12px;padding:14px;border-radius:14px;background:var(--tint);display:grid;gap:6px}
 .invite-new .code{font-size:28px;letter-spacing:.18em;font-weight:500}
 .member{display:grid;gap:8px;padding:14px 0;border-top:1px solid var(--line)} .member:first-child{border-top:0;padding-top:2px}
+.pv-bar{max-width:1100px;margin:0 auto;padding:8px 16px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13px;font-weight:600;color:var(--warn)}
+.guide summary{cursor:pointer;list-style:none;font-size:15px} .guide summary::after{content:" ＋";color:var(--accent)} .guide[open] summary::after{content:" －"}
+.guide ol{margin:10px 0 8px;padding-left:1.4em;display:grid;gap:6px;font-size:14px}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
 </style>
@@ -327,6 +330,15 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 const I18N = {
  ja:{
   app:'柔道ノート',
+  n_title:'通知', n_on_btn:'🔔 この端末で通知を受け取る', n_on:'✓ この端末で通知を受け取ります', n_test:'テスト通知を送る', n_off:'通知をやめる', n_test_sent:'テスト通知を送りました。数秒で届きます。', n_enabled:'通知をオンにしました',
+  n_unsupported:'このブラウザは通知に対応していません。', n_ios:'iPhoneでは、先にSafariの「共有」→「ホーム画面に追加」をして、ホーム画面の「柔」のアイコンから開くと、通知をオンにできます。',
+  n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
+  n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}に、チームのまとめ（記録した人数・未入力・欠席・痛みやケガ・未返信の質問）が1回だけ届きます。',
+  n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
+  pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
+  inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、LINEなどから選手に送る（日本語・英語を選べます）',
+  inv_s3:'選手がリンクを開き、自分でIDとパスワードを決めて登録する → 下の「選手」に名前が出たら完了', inv_s4:'保護者は、選手の登録が終わってから、その選手の欄の「＋ 保護者用コード」で同じように送る',
+  inv_note:'招待リンクは1人1回・14日間有効です。使われなかったコードは「取り消す」で消せます。', msg_lang:'メッセージの言語', share:'送る', msg_copied:'メッセージをコピーしました。LINEなどに貼り付けて送ってください。',
   g_hello:'{n}さんの記録', g_sub:'保護者として見ています（見るだけ）', t_g_log:'記録', viewers:'あなたの記録を見られる人', viewers_list:'コーチ{g}', viewers_g:'・保護者（{n}）',
   coach_only:'コーチだけに見せる（保護者には見えません）', coach_only_pill:'コーチだけ', g_inv:'保護者用コード', g_inv_made:'{n}さんの保護者用コードです。保護者に渡してください。', guardians:'保護者', g_join:'{a}さんの保護者として登録します（見るだけ）', g_remove:'外す',
   loading:'読み込み中…', join:'招待コードで登録', join_title:'チームに参加する', code:'招待コード', code_check:'確認', code_ok:'「{t}」に参加します', code_bad:'この招待コードは使えません。コーチに新しいコードをもらってください。',
@@ -387,6 +399,15 @@ const I18N = {
  },
  en:{
   app:'Judo Note',
+  n_title:'Notifications', n_on_btn:'🔔 Get notifications on this device', n_on:'✓ This device gets notifications', n_test:'Send a test', n_off:'Turn off', n_test_sent:'Test sent. It should arrive in a few seconds.', n_enabled:'Notifications turned on',
+  n_unsupported:'This browser doesn’t support notifications.', n_ios:'On iPhone, first tap Share → “Add to Home Screen” in Safari, then open the app from the Home Screen icon to turn on notifications.',
+  n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
+  n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Once a day at {h}: a team summary (logged, not logged, absent, pain/injury, unanswered questions).',
+  n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
+  pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
+  inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via LINE etc. (Japanese or English)',
+  inv_s3:'The athlete opens the link and picks their own ID and password → when their name appears under “Athletes”, you’re done', inv_s4:'For a parent/guardian: after the athlete has joined, tap “＋ Guardian code” in that athlete’s row and send it the same way',
+  inv_note:'Each invite link works once, for 14 days. Cancel unused codes with “Cancel code”.', msg_lang:'Message language', share:'Send', msg_copied:'Message copied — paste it into LINE or another app.',
   g_hello:'{n}’s records', g_sub:'Viewing as a parent/guardian (read-only)', t_g_log:'Records', viewers:'Who can see your records', viewers_list:'Your coach{g}', viewers_g:', your guardian ({n})',
   coach_only:'Only my coach can see this (hidden from my guardian)', coach_only_pill:'Coach only', g_inv:'Guardian code', g_inv_made:'Guardian code for {n}. Give it to their parent/guardian.', guardians:'Guardians', g_join:'You’re registering as {a}’s guardian (read-only)', g_remove:'Remove',
   loading:'Loading…', join:'Join with invite code', join_title:'Join your team', code:'Invite code', code_check:'Check', code_ok:'You’re joining “{t}”', code_bad:'This invite code can’t be used. Ask your coach for a new one.',
@@ -474,6 +495,7 @@ const PARTS=['head','neck','shoulder','elbow','hand','back','knee','ankle','othe
 /* ---------- Supabase（データの保存とログイン） ---------- */
 const SUPABASE_URL='https://ktwunswfyxozcultprnq.supabase.co';
 const SUPABASE_KEY='sb_publishable_P_UMeGV4gB54MjRBfjUIrA_E7drptd5';   // 公開用のキー（アプリに入れてよい値）
+const VAPID_PUBLIC='BChblwq2SoS3NVeX2FjxGFMSOeHKVrf0K7fiwRVWOb0NFEEOZW772YZGAr2dJ_ZGAU4eRwGFpdcNNkF9cP6XHnE';   // 通知の公開鍵（秘密鍵は Supabase 側だけ）
 const ID_DOMAIN='players.judo-note.app';                               // ID を Supabase のログイン用メールに変える
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-note-auth'}});
 const idToEmail=id=>`${id.trim().toLowerCase()}@${ID_DOMAIN}`;
@@ -563,6 +585,41 @@ async function sendFeedback(aid,day,comment){
   must(await sb.from('feedback').upsert(row,{onConflict:'entry_id'}));
   e.seen=TODAY; if(comment)e.comment={text:comment,at:TODAY};
 }
+/* ---------- スマホ通知 ---------- */
+const pushSupported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function b64ToU8(s){const b=atob((s+'='.repeat((4-s.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))}
+async function pushState(){
+  if(!pushSupported())return isIOS&&!standalone()?'ios':'unsupported';
+  if(Notification.permission==='denied')return 'denied';
+  const reg=await navigator.serviceWorker.getRegistration(); const sub=reg&&await reg.pushManager.getSubscription();
+  if(!sub)return 'off';
+  const {data}=await sb.from('push_subs').select('endpoint').eq('endpoint',sub.endpoint);   // この人の受け取り先として登録済みか
+  return data&&data.length?'on':'off';
+}
+async function enablePush(){
+  const perm=await Notification.requestPermission(); if(perm!=='granted')throw new Error('__'+t('n_denied'));
+  const reg=await navigator.serviceWorker.register('sw.js'); await navigator.serviceWorker.ready;
+  const sub=(await reg.pushManager.getSubscription())||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(VAPID_PUBLIC)});
+  const j=sub.toJSON(); must(await sb.rpc('claim_push',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth}));
+}
+async function disablePush(){
+  if(!pushSupported())return; const reg=await navigator.serviceWorker.getRegistration(); const sub=reg&&await reg.pushManager.getSubscription();
+  if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}
+}
+function pushBlock(T,p){
+  const role=acct(UI.session).role; if(role==='guardian')return '';
+  const st=UI.pushState, h=p.remind&&p.remind!=='off'?p.remind:null;
+  const what=(role==='coach'?T.n_what_c:T.n_what_a).replace('{h}',h||'—')+(h?'':T.n_what_off);
+  const ctl=st==='on'?`<div class="row"><span class="pill good">${T.n_on}</span><button class="btn ghost sm" data-act="pushtest">${T.n_test}</button><button class="linkish" data-act="pushoff">${T.n_off}</button></div>`
+    :st==='off'?`<button class="btn sm" data-act="pushon">${T.n_on_btn}</button>`
+    :st==='ios'?`<div class="small">${T.n_ios}</div>`:st==='denied'?`<div class="small" style="color:var(--warn)">${T.n_denied}</div><button class="btn ghost sm" data-act="pushon">${T.n_on_btn}</button>`
+    :st==='unsupported'?`<div class="small muted">${T.n_unsupported}</div>`:`<div class="small muted">${T.n_checking}</div>`;
+  return `<div class="opt-group"><span class="lbl">${T.n_title}</span>${ctl}<div class="small muted">${what}</div></div>`;
+}
+async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI.pushState='unsupported'}if(UI.settings)render()}
+
 async function addEvent(aid,name,date,weigh,target){
   const r=must(await sb.from('events').insert({athlete_id:aid,name,match_day:date,weigh_in:weigh||null,target_weight:target||null}).select().single());
   ST.events.push({id:r.id,name,date,weigh:weigh||'',target:target||null,by:me().role==='coach'?'coach':'athlete',aids:[aid]});
@@ -609,16 +666,17 @@ const sev=f=>f.reduce((s,[k,,p])=>s+(p||(k==='bad'?3:k==='warn'?1:0)),0);
 
 /* ---------- 画面の状態 ---------- */
 let UI={booting:false,auth:null,authUser:null,busy:false,draft:null,join:null,newInvite:null,confirmRemove:null,session:null,view:'',sel:null,settings:false,loginLang:(navigator.language||'ja').startsWith('ja')?'ja':'en',pAid:null,pYm:TODAY.slice(0,7),pKind:'a5',err:''};
-const me=()=>UI.session&&acct(UI.session);
+const viewerId=()=>UI.previewAs||UI.session;   // 閲覧モード中は、その選手として画面を組み立てる
+const me=()=>UI.session&&acct(viewerId());
 const prefs=id=>ST.prefs[id]||{lang:UI.loginLang,accent:'ai',mode:'auto',remind:'21:00'};
-const lang=()=>UI.session?prefs(UI.session).lang:UI.loginLang;
+const lang=()=>UI.session?prefs(viewerId()).lang:UI.loginLang;
 const t=k=>I18N[lang()][k];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
 function accentOf(id){const p=prefs(id);if(p.accent==='custom'&&p.custom){const c=p.custom;return{l:c,d:c,g2:c,b:[hexA(c,.5),hexA(c,.3),hexA(c,.25)]}}return ACCENTS[p.accent]||ACCENTS.ai}
 function applyTheme(){
-  const id=UI.session||'coach', p=UI.session?prefs(id):{mode:'auto',accent:'ai'}, a=UI.session?accentOf(id):ACCENTS.ai, r=document.documentElement.style;
+  const id=viewerId()||'coach', p=UI.session?prefs(id):{mode:'auto',accent:'ai'}, a=UI.session?accentOf(id):ACCENTS.ai, r=document.documentElement.style;
   r.setProperty('--acc-l',a.l);r.setProperty('--acc-d',a.d);
   r.setProperty('--acc-2',p.accent==='custom'?`color-mix(in oklab, ${a.l} 60%, #ff5fa2)`:a.g2);
   r.setProperty('--b1',a.b[0]);r.setProperty('--b2',a.b[1]);r.setProperty('--b3',a.b[2]);
@@ -684,9 +742,9 @@ function header(tabs){
     <div class="brand"><b>${L==='ja'?'柔道ノート':'Judo Note'}</b><small>${L==='ja'?'JUDO NOTE':'柔道ノート'}</small></div>
     <span class="sp"></span>
     <div class="who"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span></div>
-    <button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
-    <button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>
-  </div><nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
+    ${UI.previewAs?'':`<button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
+    <button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>`}
+  </div>${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
 }
 
 /* ---------- 選手の画面 ---------- */
@@ -842,7 +900,7 @@ function coachTeam(){
 function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid);
   return `<div class="stack"><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
-   <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div></div>
+   <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
    <div class="grid2"><div class="stack">${trendCharts(aid,L)}${eventsCard(aid,L)}</div><div class="stack">${entryList(aid,L,10,true)}${questions(aid,L,true)}</div></div></div>`;
 }
 function eventsCard(aid,L,ro){
@@ -946,7 +1004,8 @@ function settingsView(){
       <label class="sw" aria-pressed="${p.accent==='custom'}"><input type="color" id="custom-color" value="${p.custom||'#3552d4'}" aria-label="${T.custom}">${T.custom}</label>
     </div></div>
     <div class="opt-group"><span class="lbl">${T.mode}</span><div class="segbar">${[['auto',T.m_auto],['light',T.m_light],['dark',T.m_dark]].map(([v,l])=>`<button data-act="pref" data-k="mode" data-v="${v}" aria-pressed="${p.mode===v}">${l}</button>`).join('')}</div></div>
-    ${acct(UI.session).role==='athlete'?`<div class="opt-group"><label class="lbl" for="remind">${T.remind}</label><select class="inp" id="remind" data-act="remind">${['off','18:00','19:00','20:00','21:00','22:00'].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select><div class="small muted">${T.remind_note}</div></div>`:''}
+    ${pushBlock(T,p)}
+    ${['athlete','coach'].includes(acct(UI.session).role)?`<div class="opt-group"><label class="lbl" for="remind">${acct(UI.session).role==='coach'?T.remind_c:T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:18},(_,i)=>String(i+6).padStart(2,'0')+':00')].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select></div>`:''}
     ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}：${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
     <p class="small muted">${T.settings_note}</p>
     <div class="row" style="justify-content:space-between"><span class="small muted">${esc(me().name)} · ID <span class="mono">${esc(me().login)}</span></span><button class="btn sm" data-act="closeset">${T.close}</button></div>
@@ -1012,23 +1071,41 @@ function setupView(){
 }
 
 /* ---------- コーチ：選手の管理（招待コード・階級・パスワード再設定・削除） ---------- */
+function inviteMsg(code,L,guardianOf){
+  const link=location.origin+location.pathname+'#join-'+code, inv=(ST.invites||[]).find(i=>i.code===code);
+  const until=inv?fd(localDay(inv.expires_at),L):'';
+  if(guardianOf){const n=acct(guardianOf)?.name||'';
+    return L==='ja'?`柔道ノート（保護者用）への招待です。\n${n}さんの練習の記録を、見るだけのアカウントで確認できます。\n下のリンクを開いて、IDとパスワードを決めて登録してください（${until}まで有効）。\n${link}`
+      :`You’re invited to Judo Note as a parent/guardian.\nYou can view ${n}’s training records (read-only).\nOpen the link below and choose an ID and password to sign up (valid until ${until}).\n${link}`}
+  return L==='ja'?`柔道ノートへの招待です。\n下のリンクを開いて、自分のIDとパスワードを決めて登録してください（${until}まで有効）。\n${link}\n\n登録できたら、Safariの「共有」→「ホーム画面に追加」を押すと、アプリのように使えます。`
+    :`You’re invited to Judo Note.\nOpen the link below and choose your own ID and password to sign up (valid until ${until}).\n${link}\n\nAfter signing up, tap Share → “Add to Home Screen” in Safari to use it like an app.`;
+}
+function inviteBox(code,T,guardianOf,title){
+  const ML=UI.msgLang||lang(), msg=inviteMsg(code,ML,guardianOf);
+  return `<div class="invite-new">${title?`<div class="small">${esc(title)}</div>`:''}<div class="code mono">${esc(code)}</div>
+    <div class="row small"><span class="muted">${T.msg_lang}</span><div class="segbar" style="width:150px"><button type="button" data-act="msglang" data-l="ja" aria-pressed="${ML==='ja'}">日本語</button><button type="button" data-act="msglang" data-l="en" aria-pressed="${ML==='en'}">EN</button></div></div>
+    <textarea class="inp small" readonly rows="5" id="msg-${esc(code)}">${esc(msg)}</textarea>
+    <div class="row"><button class="btn sm" data-act="share" data-code="${esc(code)}" data-g="${guardianOf||''}">📤 ${T.share}</button><button class="btn ghost sm" data-act="copymsg" data-code="${esc(code)}" data-g="${guardianOf||''}">${T.copy}</button></div></div>`;
+}
 function membersView(){
   const L=lang(), T=I18N[L], base=location.origin+location.pathname;
   const inv=(ST.invites||[]).filter(i=>new Date(i.expires_at)>new Date());
   return `<div class="stack">
    <div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${T.t_members}</h1></div>
+   <details class="card guide" ${ATH.length?'':'open'}><summary><b>${T.inv_steps_t}</b></summary>
+     <ol><li>${T.inv_s1}</li><li>${T.inv_s2}</li><li>${T.inv_s3}</li><li>${T.inv_s4}</li></ol><p class="small muted" style="margin:0">${T.inv_note}</p></details>
    <div class="card"><h2>${T.inv_title}</h2>
      <form data-form="invite" class="row"><input class="inp" id="inv-memo" name="memo" placeholder="${esc(T.inv_memo_ph)}" maxlength="40" style="flex:1;min-width:160px" aria-label="${esc(T.inv_memo)}"><button class="btn sm" type="submit">${T.inv_make}</button></form>
-     ${UI.newInvite?`<div class="invite-new"><div class="code mono">${esc(UI.newInvite)}</div><div class="small muted">${T.inv_link}</div><div class="row" style="flex-wrap:nowrap"><input class="inp mono small" id="inv-link" readonly value="${esc(base+'#join-'+UI.newInvite)}"><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+UI.newInvite)}">${T.copy}</button></div></div>`:''}
+     ${UI.newInvite?inviteBox(UI.newInvite,T,null,''):''}
      <h3>${T.inv_list}</h3>
-     <div class="entries">${inv.length?inv.map(i=>`<div class="evrow"><div><b class="mono">${esc(i.code)}</b> <span class="small muted">${i.role==='guardian'?'👪 '+esc(T.guardians)+' · '+esc(acct(i.for_athlete)?.name||''):''} ${esc(i.memo)}</span><div class="small muted">${T.inv_until.replace('{d}',fd(localDay(i.expires_at),L))}</div></div><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+i.code)}">${T.copy}</button><button class="btn ghost sm" data-act="invdel" data-id="${esc(i.code)}">${T.inv_del}</button></div>`).join(''):`<div class="small muted">${T.inv_none}</div>`}</div>
+     <div class="entries">${inv.length?inv.map(i=>`<div class="evrow"><div><b class="mono">${esc(i.code)}</b> <span class="small muted">${i.role==='guardian'?'👪 '+esc(T.guardians)+' · '+esc(acct(i.for_athlete)?.name||''):''} ${esc(i.memo)}</span><div class="small muted">${T.inv_until.replace('{d}',fd(localDay(i.expires_at),L))}</div></div><button class="btn ghost sm" data-act="share" data-code="${esc(i.code)}" data-g="${i.role==='guardian'?i.for_athlete:''}">📤 ${T.share}</button><button class="btn ghost sm" data-act="invdel" data-id="${esc(i.code)}">${T.inv_del}</button></div>`).join(''):`<div class="small muted">${T.inv_none}</div>`}</div>
    </div>
    <div class="card"><h2>${T.members}</h2><div class="entries">${ATH.length?ATH.map(a=>`<div class="member">
      <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
      <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" step="0.1" value="${a.limit??''}" placeholder="kg" style="width:90px" aria-label="${T.wlimit}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
      <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
      <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span>${UI.confirmRemove===g.id?`<button class="btn sm danger-btn" data-act="remove" data-id="${g.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id}">${T.g_remove}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
-     ${UI.newGInvite?.aid===a.id?`<div class="invite-new"><div class="small">${esc(T.g_inv_made.replace('{n}',a.name))}</div><div class="code mono">${esc(UI.newGInvite.code)}</div><div class="row" style="flex-wrap:nowrap"><input class="inp mono small" readonly value="${esc(base+'#join-'+UI.newGInvite.code)}"><button class="btn ghost sm" data-act="copy" data-t="${esc(base+'#join-'+UI.newGInvite.code)}">${T.copy}</button></div></div>`:''}
+     ${UI.newGInvite?.aid===a.id?inviteBox(UI.newGInvite.code,T,a.id,T.g_inv_made.replace('{n}',a.name)):''}
      <div class="row">${UI.confirmRemove===a.id?`<span class="small" style="color:var(--bad)">${T.remove_q}</span><button class="btn sm danger-btn" data-act="remove" data-id="${a.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${a.id}">${T.remove}</button>`}</div>
    </div>`).join(''):`<div class="small muted">${T.no_athletes}</div>`}</div></div>
   </div>`;
@@ -1042,11 +1119,13 @@ function render(){
   if(!UI.session||!me()){app.innerHTML=loginView();return}
   const m=me();
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'');
+  if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
 function errText(e){
   const T=I18N[lang()], m=String(e?.message||e||'');
+  if(m.startsWith('__'))return m.slice(2);
   if(/Failed to fetch|NetworkError|network|Load failed/i.test(m))return T.e_net;
   if(/already registered|already exists|User already/i.test(m))return T.e_taken;
   if(/invalid invite/i.test(m))return T.code_bad;
@@ -1064,7 +1143,7 @@ async function afterSignIn(user){
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
   UI.loginLang=prefs(UI.session).lang; render(); window.scrollTo(0,0);
 }
-async function signOut(){await sb.auth.signOut().catch(()=>{});UI.session=null;UI.authUser=null;UI.settings=false;UI.auth=null;ACCOUNTS=[];ATH=[];render()}
+async function signOut(){await disablePush().catch(()=>{});await sb.auth.signOut().catch(()=>{});UI.session=null;UI.authUser=null;UI.settings=false;UI.auth=null;ACCOUNTS=[];ATH=[];render()}
 async function refreshData(){if(!me()||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))render()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
 
@@ -1077,6 +1156,7 @@ document.addEventListener('click',ev=>{
   const el=ev.target.closest('[data-act]'); if(!el)return;
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
+  if(UI.previewAs&&!['view','exitpreview','print','pym'].includes(a))return;   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
   else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
@@ -1086,9 +1166,18 @@ document.addEventListener('click',ev=>{
       if(box)box.hidden=ok&&data.role==='guardian'})}
   else if(a==='logout'){signOut()}
   else if(a==='view'){UI.view=el.dataset.v;UI.sel=null;render();window.scrollTo(0,0)}
+  else if(a==='preview'){UI.previewAs=el.dataset.id;UI.pAid=el.dataset.id;UI.draft=null;UI.view='today';render();window.scrollTo(0,0)}
+  else if(a==='exitpreview'){const id=UI.previewAs;UI.previewAs=null;UI.view='team';UI.sel=id;render();window.scrollTo(0,0)}
+  else if(a==='msglang'){UI.msgLang=el.dataset.l;render()}
+  else if(a==='share'||a==='copymsg'){const text=inviteMsg(el.dataset.code,UI.msgLang||lang(),el.dataset.g||null);
+    const copy=()=>(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>toast(t('msg_copied'))).catch(()=>{const ta=document.getElementById('msg-'+el.dataset.code);if(ta){ta.select()}});
+    if(a==='share'&&navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
   else if(a==='open'){UI.sel=el.dataset.id;render();window.scrollTo(0,0)}
   else if(a==='back'){UI.sel=null;render()}
-  else if(a==='settings'){UI.settings=true;render()}
+  else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
+  else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
+  else if(a==='pushoff'){run(async()=>{await disablePush();UI.pushState='off'})}
+  else if(a==='pushtest'){sb.functions.invoke('push',{body:{type:'test'}}).then(({data,error})=>{if(error)throw error;toast(data?.sent?t('n_test_sent'):t('n_sent0'))}).catch(e=>toast(errText(e)))}
   else if(a==='closeset'){UI.settings=false;render()}
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
@@ -1121,6 +1210,7 @@ function stashDraft(){const f=document.getElementById('today-form');if(!f)return
 
 document.addEventListener('submit',ev=>{
   ev.preventDefault();
+  if(UI.previewAs)return;
   const f=ev.target, fid=f.getAttribute('id'), fdt=new FormData(f);
   const LL=UI.loginLang, TT=I18N[LL], showErr=(id,msg)=>{UI.err=msg;const e=document.getElementById(id);if(e)e.textContent=msg};
   if(fid==='login-form'){
@@ -1182,6 +1272,7 @@ document.addEventListener('submit',ev=>{
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.settings){UI.settings=false;render()}});
 
 /* ---------- 起動 ---------- */
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 (async function boot(){
   const m=/^#join-([A-Za-z0-9]{6,12})$/.exec(location.hash);
   if(m){UI.auth='join';UI.join={code:m[1].toUpperCase()};history.replaceState(null,'',location.pathname)}
