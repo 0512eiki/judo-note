@@ -354,6 +354,21 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .acctrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}
 .acctrow.now{border-color:var(--accent);background:var(--tint)}
 .acchip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 13px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:inherit} .acchip.on{border-color:var(--accent);color:var(--accent);background:var(--tint)}
+.btn.saving{opacity:.7;cursor:wait}
+.savedbar{padding:10px 14px;border-radius:14px;background:var(--good-s);color:var(--good);font-size:14px;font-weight:600}
+.done{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;background:rgba(10,12,20,.25);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadein .15s ease-out}
+.done-card{width:min(360px,100%);text-align:center;background:var(--glass);border:1px solid var(--glass-bd);border-radius:26px;box-shadow:var(--shadow),var(--hi);padding:24px 22px 18px;-webkit-backdrop-filter:blur(30px) saturate(1.6);backdrop-filter:blur(30px) saturate(1.6);animation:pop .28s cubic-bezier(.2,1.4,.4,1)}
+.done-card.big{width:min(420px,100%);padding:30px 24px 22px}
+.done-check svg{width:64px;height:64px} .done-card.big .done-check svg{width:84px;height:84px}
+.done-check circle{fill:none;stroke:var(--good);stroke-width:3;stroke-dasharray:151;stroke-dashoffset:151;animation:draw .45s .05s ease-out forwards}
+.done-check path{fill:none;stroke:var(--good);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:36;stroke-dashoffset:36;animation:draw .3s .4s ease-out forwards}
+.done-title{font-size:20px;font-weight:800;margin-top:8px} .done-card.big .done-title{font-size:24px}
+.done-msg{font-size:16px;margin-top:6px;line-height:1.6} .done-sub{font-size:13px;color:var(--dim);margin-top:8px;font-weight:600}
+.done-actions{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+@keyframes draw{to{stroke-dashoffset:0}} @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}} @keyframes fadein{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.done,.done-card,.done-check circle,.done-check path{animation:none;stroke-dashoffset:0}}
+@media (max-width:520px){.tabs .tab{padding:6px 10px;font-size:13.5px}.tabs{gap:2px;padding-inline:10px}
+  .subtabs{-webkit-mask-image:linear-gradient(to right,#000 85%,transparent);mask-image:linear-gradient(to right,#000 85%,transparent);padding-right:24px}}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
@@ -362,6 +377,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 <body>
 <div id="app"></div>
 <div id="toast" class="toast noprint" role="status" hidden></div>
+<div id="done" class="done noprint" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
 <script>
 /* =============================================================
@@ -377,9 +393,9 @@ const I18N = {
   n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}に、チームのまとめ（記録した人数・未入力・欠席・痛みやケガ・未返信の質問）が1回だけ届きます。',
   n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
   pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
-  inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、LINEなどから選手に送る（日本語・英語を選べます）',
+  inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、メッセージアプリなどから選手に送る（日本語・英語を選べます）',
   inv_s3:'選手がリンクを開き、自分でIDとパスワードを決めて登録する → 下の「選手」に名前が出たら完了', inv_s4:'保護者は、選手の登録が終わってから、その選手の欄の「＋ 保護者用コード」で同じように送る',
-  inv_note:'招待リンクは1人1回・14日間有効です。使われなかったコードは「取り消す」で消せます。', msg_lang:'メッセージの言語', share:'送る', msg_copied:'メッセージをコピーしました。LINEなどに貼り付けて送ってください。',
+  inv_note:'招待リンクは1人1回・14日間有効です。使われなかったコードは「取り消す」で消せます。', msg_lang:'メッセージの言語', share:'送る', msg_copied:'メッセージをコピーしました。メッセージアプリなどに貼り付けて送ってください。',
   g_hello:'{n}さんの記録', g_sub:'保護者として見ています（見るだけ）', t_g_log:'記録', viewers:'あなたの記録を見られる人', viewers_list:'コーチ{g}', viewers_g:'・保護者（{n}）',
   coach_only:'コーチだけに見せる（保護者には見えません）', coach_only_pill:'コーチだけ', g_inv:'保護者用コード', g_inv_made:'{n}さんの保護者用コードです。保護者に渡してください。', guardians:'保護者', g_join:'{a}さんの保護者として登録します（見るだけ）', g_remove:'外す',
   loading:'読み込み中…', join:'招待コードで登録', join_title:'チームに参加する', code:'招待コード', code_check:'確認', code_ok:'「{t}」に参加します', code_bad:'この招待コードは使えません。コーチに新しいコードをもらってください。',
@@ -407,6 +423,20 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'タイムの推移（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
+  saving:'保存中…', done_ok:'OK', done_log:'記録を見る', done_saved_t:'保存しました！', done_saved_note:'✓ {d}の記録は保存済みです。直したいときは書き換えて、もう一度保存してください。',
+  ch_entry:['今日も記録ありがとう！明日もいっしょにがんばろう。','おつかれさま！書いたことが、きっと力になるよ。','記録完了！続けていることがいちばんの強さ。','ナイス記録！ゆっくり休んで、また明日。','今日もよくがんばったね。ちゃんと届いているよ！'],
+  ch_entry_y:['昨日の分も書けたね！えらい！','思い出して書けたのが立派！今日もがんばろう。'],
+  ch_head:'コーチの画面にしっかり表示されます。症状があるうちは稽古を休んで、病院で診てもらってください。お大事に。',
+  ch_streak:'記録 {n}日連続！', ch_stats:'調子 {s}/25 · 稽古 {m}分',
+  ch_ask_t:'質問を送りました！', ch_ask:['質問できるのはえらい！コーチからの返事を待っていてね。','いい質問！返事が来たら「質問」タブに数字が出るよ。'],
+  ch_reply_t:'返信を送りました', ch_reply_c:['選手にしっかり届きます。ありがとうございます！','ひとことが選手の力になります。'], ch_reply_a:['送りました！やりとりを続けていこう。'],
+  ch_cmt_t:'コメントを送りました', ch_cmt:['選手の励みになります。ありがとうございます！','選手の画面にすぐ表示されます。'],
+  ch_seen_t:'「見たよ」を送りました', ch_seen:['選手に「コーチが見ました」と表示されます。'],
+  ch_run_t:'ランニングを記録しました！', ch_run:['コツコツが力になる。ナイスラン！','よく走った！次も自分と勝負しよう。'], ch_pb_t:'🏅 自己ベスト更新！', ch_pb:['すごい！新しい記録だ！','努力が結果に出たね。おめでとう！'],
+  ch_mr_t:'振り返りを保存しました！', ch_mr:['試合のあとにふり返れるのは、強くなる選手の証拠。次につなげよう！','おつかれさま！書いたことを次の稽古に活かそう。'],
+  ch_goal_t:'今月の目標を保存しました！', ch_goal:['毎日少しずつ近づこう。応援しているよ！','目標があると練習が変わる。がんばろう！'],
+  ch_ev_t:'試合の予定を追加しました', ch_ev:['準備していこう！体調管理も大事だよ。'],
+  ch_inv_t:'招待コードを発行しました', ch_inv:['下の「📤 送る」から届けましょう。'],
   ed_edit:'編集', ed_mark:'（編集済み）', ed_save:'直す', ed_done:'直しました',
   ac_title:'この端末のアカウント', ac_help:'家族で1台のスマホを使うときは、ここで切り替えます。選手のアカウントは、親のスマホで使い終わると自動でログアウトします（次はパスワードが必要です）。', ac_add:'＋ 別の人がログインする',
   ac_needpw:'パスワードが必要', ac_now:'使用中', ac_role:{coach:'コーチ',athlete:'選手',guardian:'保護者'}, ac_saved:'この端末のアカウント', ac_forget:'この端末から外す', ac_switched:'{n}さんに切り替えました', ac_tap:'名前を押すと切り替えられます',
@@ -439,7 +469,7 @@ const I18N = {
   head_saved:'コーチに知らせました。症状があるうちは稽古を休み、医療機関で診てもらってください。',
   seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（kg）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
-  ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}kg）まで あと{w}kg', ev_ok:'階級内（{l}kg以下）', f_ev:'試合まで{d}日', ev_none:'予定はまだありません', ev_del:'削除',
+  ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}kg）まで あと{w}kg', ev_ok:'階級内（{l}kg以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'未返信の質問',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -464,10 +494,10 @@ const I18N = {
   n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Once a day at {h}: a team summary (logged, not logged, absent, pain/injury, unanswered questions).',
   n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
   pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
-  inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via LINE etc. (Japanese or English)',
+  inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via Messages or another app (Japanese or English)',
   inv_s3:'The athlete opens the link and picks their own ID and password → when their name appears under “Athletes”, you’re done', inv_s4:'For a parent/guardian: after the athlete has joined, tap “＋ Guardian code” in that athlete’s row and send it the same way',
-  inv_note:'Each invite link works once, for 14 days. Cancel unused codes with “Cancel code”.', msg_lang:'Message language', share:'Send', msg_copied:'Message copied — paste it into LINE or another app.',
-  g_hello:'{n}’s records', g_sub:'Viewing as a parent/guardian (read-only)', t_g_log:'Records', viewers:'Who can see your records', viewers_list:'Your coach{g}', viewers_g:', your guardian ({n})',
+  inv_note:'Each invite link works once, for 14 days. Cancel unused codes with “Cancel code”.', msg_lang:'Message language', share:'Send', msg_copied:'Message copied — paste it into Messages or another app.',
+  g_hello:'{n}’s records', g_sub:'Viewing as a parent/guardian (read-only)', t_g_log:'Records', viewers:'Who can see your records', viewers_list:'your coach{g}', viewers_g:', your guardian ({n})',
   coach_only:'Only my coach can see this (hidden from my guardian)', coach_only_pill:'Coach only', g_inv:'Guardian code', g_inv_made:'Guardian code for {n}. Give it to their parent/guardian.', guardians:'Guardians', g_join:'You’re registering as {a}’s guardian (read-only)', g_remove:'Remove',
   loading:'Loading…', join:'Join with invite code', join_title:'Join your team', code:'Invite code', code_check:'Check', code_ok:'You’re joining “{t}”', code_bad:'This invite code can’t be used. Ask your coach for a new one.',
   name:'Your name', name_ph:'e.g. Liam Carter', login_id:'ID (for signing in)', login_id_help:'3–20 characters: lowercase letters, numbers, - or _', pw2:'Password (again)', pw_help:'At least 8 characters',
@@ -494,6 +524,20 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'Your times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
+  saving:'Saving…', done_ok:'OK', done_log:'See history', done_saved_t:'Saved!', done_saved_note:'✓ The entry for {d} is saved. To change it, edit below and save again.',
+  ch_entry:['Thanks for logging today! Let’s keep going tomorrow.','Great work! What you wrote will help you grow.','Logged! Showing up every day is your biggest strength.','Nice! Rest well and see you tomorrow.','You worked hard today. Your coach will see it!'],
+  ch_entry_y:['You caught up on yesterday — well done!','Nice job remembering! Keep it up today.'],
+  ch_head:'It’s flagged on your coach’s screen. Don’t train while you have symptoms and please see a doctor. Take care.',
+  ch_streak:'{n}-day streak!', ch_stats:'Condition {s}/25 · Practice {m} min',
+  ch_ask_t:'Question sent!', ch_ask:['Asking questions is how you get better. Watch for your coach’s reply.','Good question! A number appears on the Questions tab when they reply.'],
+  ch_reply_t:'Reply sent', ch_reply_c:['It will reach your athlete. Thank you!','A few words go a long way.'], ch_reply_a:['Sent! Keep the conversation going.'],
+  ch_cmt_t:'Comment sent', ch_cmt:['This will encourage your athlete. Thank you!','It shows on the athlete’s screen right away.'],
+  ch_seen_t:'“Seen” sent', ch_seen:['The athlete sees “Coach has seen this”.'],
+  ch_run_t:'Run saved!', ch_run:['Consistency pays off. Nice run!','Great effort! Beat yourself again next time.'], ch_pb_t:'🏅 New personal best!', ch_pb:['Amazing — a new record!','Your hard work is paying off. Congratulations!'],
+  ch_mr_t:'Match review saved!', ch_mr:['Reviewing after a match is what strong athletes do. Carry it into the next one!','Well done! Use this in your next practice.'],
+  ch_goal_t:'Goals saved!', ch_goal:['Get a little closer every day. We’re cheering for you!','Goals change how you train. Let’s go!'],
+  ch_ev_t:'Match added', ch_ev:['Let’s prepare well — look after your body too.'],
+  ch_inv_t:'Invite code created', ch_inv:['Send it with the “📤 Send” button below.'],
   ed_edit:'Edit', ed_mark:'(edited)', ed_save:'Save', ed_done:'Updated',
   ac_title:'Accounts on this device', ac_help:'Switch here when your family shares one phone. An athlete’s account signs out automatically when they’re done on a parent’s phone (they’ll need their password next time).', ac_add:'＋ Someone else signs in',
   ac_needpw:'Password needed', ac_now:'In use', ac_role:{coach:'Coach',athlete:'Athlete',guardian:'Guardian'}, ac_saved:'Accounts on this device', ac_forget:'Remove from this device', ac_switched:'Switched to {n}', ac_tap:'Tap a name to switch',
@@ -526,7 +570,7 @@ const I18N = {
   head_saved:'Your coach has been notified. Don’t train while you have symptoms, and please see a doctor.',
   seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight (kg)', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
-  ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} kg to make {l} kg', ev_ok:'On weight (≤{l} kg)', f_ev:'Match in {d} d', ev_none:'No events yet', ev_del:'Delete',
+  ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} kg to make {l} kg', ev_ok:'On weight (≤{l} kg)', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'Unanswered',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -814,7 +858,7 @@ function flags(aid,L){
   const le=e||E(aid,addDays(TODAY,-1)); if(le&&le.pain.length){const p=le.pain.reduce((x,y)=>y.level>x.level?y:x);if(p.level>=2)f.push([p.level>=3?'bad':'warn',t.f_pain.replace('{p}',le.pain.map(q=>ptxt(q,t)).join('・'))])}
   const w=latestWeight(aid); if(w&&a.limit&&w>a.limit)f.push(['warn',t.f_w.replace('{d}',(w-a.limit).toFixed(1))]);
   if(e&&e.head&&e.head.length)f.unshift(['bad',t.f_head.replace('{s}',e.head.map(k=>t.hs[k]).join('・')),10]);
-  {const ne=nextEvent(aid);if(ne){const dd=dayDiff(TODAY,ne.date);if(dd<=14)f.push(['acc',t.f_ev.replace('{d}',dd)])}}
+  {const ne=nextEvent(aid);if(ne){const dd=dayDiff(TODAY,ne.date);if(dd<=14)f.push(['acc',dd?t.f_ev.replace('{d}',dd):t.f_ev0])}}
   if(e&&attOf(e)==='absent')f.push(['warn',t.f_abs.replace('{r}',e.absReason?t.ar[e.absReason]:t.att_l.absent)]);
   if(e&&attOf(e)==='watch')f.push(['acc',t.f_watch]);
   if(ST.threads.some(th=>th.aid===aid&&unanswered(th)))f.push(['acc',t.f_q]);
@@ -891,7 +935,7 @@ function trendCharts(aid,L,days=28){
   const wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
   const rr=ramp(aid,TODAY);
   return `<div class="card"><h2>${tt.last28}</h2><div class="stack">
-   <div class="chart"><div class="t">${tt.cond} <small>${tt.sleep}・${tt.energy}・${tt.soreness}・${tt.stress}・${tt.mood}（5〜25）</small></div>${chart(ds.map(d=>score(E(aid,d))),{min:5,max:25,ticks:[10,15,20,25],labels,marks})}</div>
+   <div class="chart"><div class="t">${tt.cond} <small>${[tt.sleep,tt.energy,tt.soreness,tt.stress,tt.mood].join(L==='ja'?'・':' · ')}${L==='ja'?'（5〜25）':' (5–25)'}</small></div>${chart(ds.map(d=>score(E(aid,d))),{min:5,max:25,ticks:[10,15,20,25],labels,marks})}</div>
    <div class="chart"><div class="t">${tt.load} <small>${tt.load_u}</small> <span class="sp"></span><span class="pill ${rr>1.5?'bad':rr>1.3?'warn':'good'}" title="${esc(tt.ramp_help)}">${tt.ramp} ×${rr?rr.toFixed(2):'—'}</span></div>${chart(ds.map(d=>load(E(aid,d))),{min:0,max:1800,kind:'bar',ticks:[0,600,1200,1800],labels,marks})}<div class="small muted">${tt.ramp_help}</div></div>
    <div class="chart"><div class="t">${tt.weight} <small>${esc(a.cls)}</small></div>${chart(ds.map(d=>E(aid,d)?.weight??null),{min:wmin,max:wmax,ticks:[wmin,Math.round((wmin+wmax)/2),wmax],labels,ref:a.limit||null,refLabel:a.limit?tt.limit+' '+a.limit+'kg':'',fill:false,marks})}</div>
   </div></div>`;
@@ -952,6 +996,7 @@ function athToday(){
   ${(()=>{const pe=(ST.events||[]).filter(e=>e.aids.includes(m.id)&&e.date<TODAY&&e.date>=addDays(TODAY,-3)&&!ST.mnotes[e.id]).sort((x,y)=>y.date.localeCompare(x.date))[0];
     return pe?`<div class="card row" style="justify-content:space-between"><span class="small">✍️ ${esc(T.mr_pending.replace('{n}',pe.name).replace('{d}',fd(pe.date,L)))}</span><button class="btn sm" data-act="mreview" data-ev="${pe.id}">${T.mr_write}</button></div>`:''})()}
   ${lastC?`<div class="card"><h2>${T.from_coach} · ${fd(lastC.d,L)}</h2><div>${esc(lastC.c.text)}</div></div>`:''}
+  ${E(m.id,day)?`<div class="savedbar">${esc(T.done_saved_note.replace('{d}',fd(day,L)))}</div>`:''}
   <div class="segbar noprint" style="max-width:320px">${[[TODAY,T.d_today],[Y,T.d_yday]].map(([d,l])=>`<button type="button" data-act="eday" data-v="${d}" aria-pressed="${day===d}">${l} ${md(d)}${E(m.id,d)?' ✓':''}</button>`).join('')}</div>
   <form id="today-form" class="stack">
    <div class="card"><h2>${T.cond}</h2><div class="cond">${['sleep','energy','soreness','stress','mood'].map(seg).join('')}</div></div>
@@ -1039,7 +1084,7 @@ function monthPicker(){const L=lang();return `<div class="printbar noprint"><div
 
 function viewersNote(aid,L){
   const T=I18N[L], gs=guardiansOf(aid);
-  return `<div class="card small"><b>🔒 ${T.viewers}</b>：${T.viewers_list.replace('{g}',gs.map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</div>`;
+  return `<div class="card small"><b>🔒 ${T.viewers}</b>${L==='ja'?'：':': '}${T.viewers_list.replace('{g}',gs.map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</div>`;
 }
 function guardianView(){
   const L=lang(), T=I18N[L], S=subject(), a=acct(S), kids=childrenOf(me().id);
@@ -1315,7 +1360,7 @@ function settingsView(){
     <div class="opt-group"><span class="lbl">${T.mode}</span><div class="segbar">${[['auto',T.m_auto],['light',T.m_light],['dark',T.m_dark]].map(([v,l])=>`<button data-act="pref" data-k="mode" data-v="${v}" aria-pressed="${p.mode===v}">${l}</button>`).join('')}</div></div>
     ${pushBlock(T,p)}
     ${['athlete','coach'].includes(acct(UI.session).role)?`<div class="opt-group"><label class="lbl" for="remind">${acct(UI.session).role==='coach'?T.remind_c:T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:18},(_,i)=>String(i+6).padStart(2,'0')+':00')].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select></div>`:''}
-    ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}：${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
+    ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}${L==='ja'?'：':': '}${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
     <p class="small"><a class="linkish" href="manual.html#${acct(UI.session).role==='coach'?'coach':(acct(UI.session).role==='guardian'?'parent':'athlete')+'-'+L}">📖 ${L==='ja'?'取扱説明書':'Manual'}</a></p>
     <p class="small muted">${T.settings_note}</p>
     <div class="row" style="justify-content:space-between"><span class="small muted">${esc(me().name)} · ID <span class="mono">${esc(me().login)}</span></span><button class="btn sm" data-act="closeset">${T.close}</button></div>
@@ -1495,12 +1540,28 @@ async function refreshData(){if(!me()||Date.now()-(UI.loadedAt||0)<30000)return;
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
 
 /* ---------- 操作 ---------- */
-async function run(fn,okMsg){
-  try{UI.busy=true;await fn();UI.busy=false;render();if(okMsg)toast(okMsg)}
-  catch(e){UI.busy=false;console.error(e);toast(errText(e));render()}
+/* 押したボタンを「保存中…」にして、終わったら ✓ とひとことを出す（保存できたかが必ずわかるように） */
+const pick1=a=>Array.isArray(a)?a[Math.floor(Math.random()*a.length)]:a;
+function pressBusy(btn){if(!btn||btn.disabled)return null;const o={b:btn,h:btn.innerHTML};btn.disabled=true;btn.classList.add('saving');btn.innerHTML=t('saving');return o}
+function pressDone(o){if(o&&o.b.isConnected){o.b.disabled=false;o.b.classList.remove('saving');o.b.innerHTML=o.h}}
+function celebrate(d){
+  if(!d)return; if(typeof d==='string')d={title:d};
+  const el=document.getElementById('done'); clearTimeout(celebrate.t);
+  el.innerHTML=`<div class="done-card ${d.big?'big':''}" role="alertdialog" aria-live="assertive"><div class="done-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></div>
+    <div class="done-title">${esc(d.title)}</div>${d.msg?`<div class="done-msg">${esc(d.msg)}</div>`:''}${d.sub?`<div class="done-sub">${esc(d.sub)}</div>`:''}
+    <div class="done-actions">${(d.actions||[]).map(([l,act,v])=>`<button class="btn ghost sm" data-act="${act}" data-v="${v||''}">${esc(l)}</button>`).join('')}<button class="btn sm" data-act="donehide">${t('done_ok')}</button></div></div>`;
+  el.hidden=false; if(!d.big)celebrate.t=setTimeout(()=>{el.hidden=true},3400);
+}
+async function run(fn,done,btn){
+  const o=pressBusy(btn||UI.pressed); UI.pressed=null;
+  try{UI.busy=true;const r=await fn();UI.busy=false;render();celebrate(typeof done==='function'?done(r):done)}
+  catch(e){UI.busy=false;pressDone(o);console.error(e);toast(errText(e));render()}
 }
 document.addEventListener('click',ev=>{
-  const el=ev.target.closest('[data-act]'); if(!el)return;
+  const el=ev.target.closest('[data-act]'); if(!el){if(ev.target.id==='done')document.getElementById('done').hidden=true;return}
+  if(el.dataset.act==='donehide'){document.getElementById('done').hidden=true;return}
+  if(el.dataset.act==='donego'){document.getElementById('done').hidden=true;UI.view=el.dataset.v;render();window.scrollTo(0,0);return}
+  UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
   if(UI.previewAs&&!['view','exitpreview','print','pym'].includes(a))return;   // 閲覧モードでは何も変えられない
@@ -1533,7 +1594,7 @@ document.addEventListener('click',ev=>{
   else if(a==='closeset'){UI.settings=false;render()}
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
-  else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),t('seen_sent'))}
+  else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),()=>({title:t('ch_seen_t'),msg:pick1(t('ch_seen'))}))}
   else if(a==='student'){toast(t('st_preparing'));run(enterStudentMode)}
   else if(a==='exitstudent'){run(exitStudentMode)}
   else if(a==='demoreset'){const id=demoAcct().id;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_remove_athlete',{athlete:id}));try{localStorage.removeItem(DEMO_PW_KEY)}catch(e){}await getDemoSb().auth.signOut().catch(()=>{});await loadAll()},t('st_reset_done'))}
@@ -1587,6 +1648,7 @@ function stashDraft(){const f=document.getElementById('today-form');if(!f)return
 document.addEventListener('submit',ev=>{
   ev.preventDefault();
   if(UI.previewAs)return;
+  UI.pressed=ev.submitter||ev.target.querySelector('button[type=submit],button:not([type])');
   const f=ev.target, fid=f.getAttribute('id'), fdt=new FormData(f);
   const LL=UI.loginLang, TT=I18N[LL], showErr=(id,msg)=>{UI.err=msg;const e=document.getElementById(id);if(e)e.textContent=msg};
   if(fid==='login-form'){
@@ -1647,21 +1709,26 @@ document.addEventListener('submit',ev=>{
   if(fid==='today-form'){
     const d=formToEntry(fdt); saveDraft(d);
     const day=UI.eday||TODAY, isY=day!==TODAY;
-    run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=TODAY;window.scrollTo(0,0)},d.head.length?t('head_saved'):isY?t('saved_y'):t('saved'))
+    run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=day;window.scrollTo(0,0)},()=>{
+      const T=I18N[lang()], e=E(UI.session,day), n=streak(UI.session), sc=score(e);
+      return {big:true,title:T.done_saved_t,msg:d.head.length?T.ch_head:pick1(isY?T.ch_entry_y:T.ch_entry),
+        sub:[sc!=null&&e.min?T.ch_stats.replace('{s}',sc).replace('{m}',e.min):'',n>1?T.ch_streak.replace('{n}',n):''].filter(Boolean).join('　'),
+        actions:[[T.done_log,'donego','log']]}})
       .then(()=>{if(loadDraft())toast(t('offline_saved'))});
     return;
   }
-  if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),t('sent'))}
-  if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),t('sent'))}
-  if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),t('sent'))}
-  if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),t('ev_added'))}
-  if(f.dataset.form==='run'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec)return;run(()=>addRun({day:fdt.get('day')||TODAY,dist:null,sec,note:(fdt.get('note')||'').trim()}),t('run_saved'))}
-  if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},t('mr_saved'))}
+  if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
+  if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
+  if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),()=>({title:t('ch_ask_t'),msg:pick1(t('ch_ask'))}))}
+  if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),()=>({title:t('ch_ev_t'),msg:pick1(t('ch_ev'))}))}
+  if(f.dataset.form==='run'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec)return;const prev=(ST.runs[UI.session]||[]).map(r=>r.sec), pb=prev.length&&sec<Math.min(...prev);
+    run(()=>addRun({day:fdt.get('day')||TODAY,dist:null,sec,note:(fdt.get('note')||'').trim()}),()=>pb?{title:t('ch_pb_t'),msg:pick1(t('ch_pb')),sub:fmtTime(sec)}:{title:t('ch_run_t'),msg:pick1(t('ch_run')),sub:fmtTime(sec)})}
+  if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
   if(f.dataset.form==='editcmt'){const v=(fdt.get('c')||'').trim();if(!v)return;run(async()=>{await editComment(f.dataset.aid,f.dataset.d,v);UI.cmtEdit=null},t('ed_done'))}
-  if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),t('goals_saved'))}
-  if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()})}
+  if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:t('ch_goal_t'),msg:pick1(t('ch_goal'))}))}
+  if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:+fdt.get('wlimit')||null}).eq('id',aid));await loadAll()},t('saved_cls'))}
   if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
 });
