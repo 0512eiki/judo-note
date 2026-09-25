@@ -320,6 +320,19 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .goalbar ol{margin:6px 0 0;padding-left:1.4em;display:grid;gap:2px;font-size:18px;font-weight:700;line-height:1.45}
 .goalbar ol li::marker{color:var(--accent);font-family:var(--mono);font-size:15px}
 .goalbar.empty{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
+.evitem{border-top:1px solid var(--line)} .evitem:first-child{border-top:0} .evitem .evrow{border-top:0}
+.evmore{display:grid;gap:8px;padding:0 0 12px}
+.refl{display:grid;gap:6px;padding:10px 12px;border-radius:12px;background:var(--panel2);font-size:14px} .refl p{margin:0;white-space:pre-wrap} .refl b{font-size:12px;color:var(--dim)}
+.cnote{padding:10px 12px;border-radius:12px;border:1px dashed var(--line2)} .cnote textarea{min-height:64px}
+.runtop{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:end}
+.rbig{font-size:40px;font-weight:600;line-height:1.05;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rbig2{font-size:26px;font-weight:600;line-height:1.1}
+.runlist{display:grid;gap:0} .runrow{display:grid;grid-template-columns:7em 4.5em 5.5em 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px} .runrow:first-child{border-top:0}
+.runform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
+@media (max-width:520px){.runrow{grid-template-columns:6.5em 4em 1fr auto}.runrow .muted{grid-column:1/-1}.rbig{font-size:34px}}
+.moncard .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap} .moncard .gk{font-size:14px;font-weight:700;color:var(--accent)}
+.moncard .monstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin-top:10px}
+.moncard .monstats .k{font-size:11px;color:var(--dim);font-weight:600} .moncard .monstats b{font-size:18px}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
 </style>
@@ -367,6 +380,11 @@ const I18N = {
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
+  mr_title:'試合の振り返り', mr_result:'結果', mr_result_ph:'例：2回戦敗退、ベスト8、優勝', mr_good:'よかったこと', mr_issues:'反省点', mr_next:'これからの課題', mr_write:'✍️ 振り返りを書く', mr_edit:'直す', mr_save:'振り返りを保存', mr_saved:'振り返りを保存しました', mr_none:'振り返りはまだ書かれていません',
+  cn_label:'🔒 コーチのメモ（自分だけ。選手と保護者には見えません）', cn_save:'メモを保存', cn_saved:'メモを保存しました', ev_past_hint:'終わった試合も登録して、振り返りを書けます。', cancel:'やめる',
+  run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
+  run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'{d}kmのタイム（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
+  mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
   goal_banner:'今月の目標', goal_empty:'今月の目標がまだありません。3つまで決めておこう。', goal_set:'目標を決める', goal_edit:'変える',
   hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？', yday_q:'昨日の練習をふり返ろう', d_today:'今日', d_yday:'昨日',
   yday_nudge:'昨日（{d}）の記録がまだです。次の練習までに書いておこう。', yday_btn:'昨日の分を書く', f_miss_y:'昨日の分がまだ', saved_y:'昨日の記録を保存しました',
@@ -438,6 +456,11 @@ const I18N = {
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
+  mr_title:'Match review', mr_result:'Result', mr_result_ph:'e.g. lost in round 2, best 8, won', mr_good:'What went well', mr_issues:'What went wrong', mr_next:'What to work on next', mr_write:'✍️ Write a review', mr_edit:'Edit', mr_save:'Save review', mr_saved:'Review saved', mr_none:'No review yet',
+  cn_label:'🔒 Coach’s note (only you — hidden from the athlete and guardians)', cn_save:'Save note', cn_saved:'Note saved', ev_past_hint:'You can also add a past match to write a review.', cancel:'Cancel',
+  run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
+  run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'{d} km times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
+  mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
   goal_banner:'This month’s goals', goal_empty:'No goals for this month yet. Set up to three.', goal_set:'Set goals', goal_edit:'Edit',
   hello:'Good work today, {n}', today_q:'How are you feeling?', yday_q:'Look back on yesterday’s practice', d_today:'Today', d_yday:'Yesterday',
   yday_nudge:'You haven’t logged yesterday ({d}) yet. Write it before your next practice.', yday_btn:'Log yesterday', f_miss_y:'Yesterday not logged yet', saved_y:'Yesterday’s entry saved',
@@ -515,7 +538,7 @@ let ACCOUNTS=[], ATH=[];
 const acct=id=>ACCOUNTS.find(a=>a.id===id);
 const guardiansOf=aid=>ACCOUNTS.filter(a=>a.role==='guardian'&&a.guardianOf===aid);
 const subject=()=>me()?.role==='guardian'?me().guardianOf:UI.session;   // 保護者は子どもの記録を見る
-let ST={entries:{},threads:[],goals:{},events:[],prefs:{},invites:[],team:null};
+let ST={entries:{},threads:[],goals:{},events:[],prefs:{},invites:[],team:null,runs:{},mnotes:{},cnotes:{}};
 let DAYS=[];
 const LOAD_DAYS=150;   // 何日前までの記録を読み込むか（冊子とグラフに十分な長さ）
 
@@ -528,7 +551,7 @@ function must(res){if(res.error)throw res.error;return res.data}
 
 async function loadAll(){
   const since=addDays(TODAY,-LOAD_DAYS);
-  const [pr,en,fb,th,ms,ev,go,tm]=await Promise.all([
+  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn]=await Promise.all([
     sb.from('profiles').select('*'),
     sb.from('entries').select('*').gte('day',since),
     sb.from('feedback').select('*'),
@@ -536,7 +559,10 @@ async function loadAll(){
     sb.from('messages').select('*').order('created_at'),
     sb.from('events').select('*'),
     sb.from('goals').select('*'),
-    sb.from('teams').select('*')]);
+    sb.from('teams').select('*'),
+    sb.from('runs').select('*').order('day',{ascending:false}).order('created_at',{ascending:false}),
+    sb.from('match_notes').select('*'),
+    sb.from('coach_notes').select('*')]);
   const profs=must(pr);
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at)}));
@@ -553,6 +579,9 @@ async function loadAll(){
   ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:role(e.created_by)==='coach'?'coach':'athlete',aids:[e.athlete_id]}));
   ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
   ST.team=must(tm)[0]||null;
+  ST.runs={};must(rn).forEach(r=>(ST.runs[r.athlete_id]||(ST.runs[r.athlete_id]=[])).push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}));
+  ST.mnotes={};must(mn).forEach(n=>ST.mnotes[n.event_id]=n);
+  ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
   if(acct(UI.session)?.role==='coach')ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));
   UI.loadedAt=Date.now();
@@ -630,6 +659,20 @@ function pushBlock(T,p){
 }
 async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI.pushState='unsupported'}if(UI.settings)render()}
 
+async function addRun(d){
+  const r=must(await sb.from('runs').insert({athlete_id:UI.session,day:d.day,distance_m:d.dist,time_sec:d.sec,note:d.note}).select().single());
+  const list=ST.runs[UI.session]||(ST.runs[UI.session]=[]);
+  list.push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}); list.sort((a,b)=>b.day.localeCompare(a.day));
+}
+async function delRun(id){must(await sb.from('runs').delete().eq('id',id));ST.runs[UI.session]=(ST.runs[UI.session]||[]).filter(r=>r.id!==id)}
+async function saveMNote(ev,f){
+  const row={event_id:ev,athlete_id:UI.session,...f,updated_at:new Date().toISOString()};
+  must(await sb.from('match_notes').upsert(row,{onConflict:'event_id'})); ST.mnotes[ev]=row;
+}
+async function saveCNote(ev,aid,body){
+  const row={event_id:ev,athlete_id:aid,coach_id:UI.session,body,updated_at:new Date().toISOString()};
+  must(await sb.from('coach_notes').upsert(row,{onConflict:'event_id'})); ST.cnotes[ev]=row;
+}
 async function addEvent(aid,name,date,weigh,target){
   const r=must(await sb.from('events').insert({athlete_id:aid,name,match_day:date,weigh_in:weigh||null,target_weight:target||null}).select().single());
   ST.events.push({id:r.id,name,date,weigh:weigh||'',target:target||null,by:me().role==='coach'?'coach':'athlete',aids:[aid]});
@@ -772,10 +815,10 @@ function athleteView(){
   const tabs=[['today',t('t_today')],['log',t('t_log')],['q',t('t_q'),newReplies||0],['note',t('t_note')]];
   let body='';
   if(UI.view==='today')body=athToday();
-  if(UI.view==='log')body=`<div class="grid2">${trendCharts(m.id,L)}${entryList(m.id,L,14,false)}</div>`;
+  if(UI.view==='log')body=`<div class="stack">${runsCard(m.id,L,!UI.previewAs)}<div class="grid2">${trendCharts(m.id,L)}${entryList(m.id,L,14,false)}</div></div>`;
   if(UI.view==='q')body=questions(m.id,L,false);
   if(UI.view==='note')body=athNote();
-  return header(tabs)+`<main>${UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}</div>`:''}${body}</main>`;
+  return header(tabs)+`<main>${UI.view!=='note'?`<div class="stack" style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}${UI.view==='today'?monthCard(m.id,L):''}</div>`:''}${body}</main>`;
 }
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
@@ -876,7 +919,7 @@ function guardianView(){
   const hello=`<div class="hello"><div class="sub">${esc(T.g_sub)}${a?.cls?' · '+esc(a.cls):''}</div><h1>${esc(T.g_hello.replace('{n}',a?.name||''))}</h1></div>`;
   let body='';
   if(!a)body=`<div class="card">${T.none}</div>`;
-  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${evCard(S,L,true)}<div class="grid2">${trendCharts(S,L)}${entryList(S,L,14,false)}</div></div>`;
+  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${evCard(S,L,true)}${monthCard(S,L)}${runsCard(S,L,false)}<div class="grid2">${trendCharts(S,L)}${entryList(S,L,14,false)}</div></div>`;
   else if(UI.view==='q')body=`<div class="stack">${hello}${questions(S,L,false,true)}</div>`;
   else {const g=ST.goals[S+'|'+curYm()];body=`<div class="stack">${hello}${eventsCard(S,L,true)}
     ${g?`<div class="card"><h2>${T.goals} · ${monthLabel(curYm(),L)}</h2><ul style="margin:0;padding-left:1.2em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>${g.review?`<p class="muted">${esc(g.review)}</p>`:''}</div>`:''}
@@ -923,18 +966,68 @@ function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid);
   return `<div class="stack"><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
    <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
-   <div class="grid2"><div class="stack">${trendCharts(aid,L)}${eventsCard(aid,L)}</div><div class="stack">${entryList(aid,L,10,true)}${questions(aid,L,true)}</div></div></div>`;
+   <div class="grid2"><div class="stack">${trendCharts(aid,L)}${runsCard(aid,L,false)}${eventsCard(aid,L)}</div><div class="stack">${entryList(aid,L,10,true)}${questions(aid,L,true)}</div></div></div>`;
 }
 function eventsCard(aid,L,ro){
-  const T=I18N[L], mine=UI.session===aid, list=(ST.events||[]).filter(ev=>ev.aids.includes(aid)).sort((x,y)=>x.date.localeCompare(y.date));
+  const T=I18N[L], mine=UI.session===aid&&!UI.previewAs, isCoach=acct(UI.session)?.role==='coach'&&!UI.previewAs;
+  const all=(ST.events||[]).filter(ev=>ev.aids.includes(aid));
+  const list=[...all.filter(e=>e.date>=TODAY).sort((x,y)=>x.date.localeCompare(y.date)),...all.filter(e=>e.date<TODAY).sort((x,y)=>y.date.localeCompare(x.date))];
+  const reflect=ev=>{
+    if(ev.date>TODAY)return '';
+    const n=ST.mnotes[ev.id], editing=mine&&!ro&&UI.mEdit===ev.id, cn=ST.cnotes[ev.id];
+    const view=n&&(n.result||n.good||n.issues||n.next_steps)?`<div class="refl">${[['result',T.mr_result],['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].filter(([k])=>n[k]).map(([k,l])=>`<div><b>${l}</b><p>${esc(n[k])}</p></div>`).join('')}</div>`:`<div class="small muted">${T.mr_none}</div>`;
+    const form=`<form class="stack refl-form" data-form="mnote" data-ev="${ev.id}">
+      <div class="field"><label for="mr-r-${ev.id}">${T.mr_result}</label><input class="inp" id="mr-r-${ev.id}" name="result" maxlength="200" placeholder="${esc(T.mr_result_ph)}" value="${esc(n?.result||'')}"></div>
+      ${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].map(([k,l])=>`<div class="field"><label for="mr-${k}-${ev.id}">${l}</label><textarea class="inp" id="mr-${k}-${ev.id}" name="${k}" maxlength="2000">${esc(n?.[k]||'')}</textarea></div>`).join('')}
+      <div class="row"><button class="btn sm" type="submit">${T.mr_save}</button><button class="btn ghost sm" type="button" data-act="medit" data-ev="">${T.cancel}</button></div></form>`;
+    return `<div class="evmore"><div class="lbl">${T.mr_title}</div>${editing?form:view}
+      ${mine&&!ro&&!editing?`<div><button class="btn ghost sm" data-act="medit" data-ev="${ev.id}">${n?T.mr_edit:T.mr_write}</button></div>`:''}
+      ${isCoach?`<form class="stack cnote" data-form="cnote" data-ev="${ev.id}" data-aid="${aid}"><label class="lbl" for="cn-${ev.id}">${T.cn_label}</label><textarea class="inp" id="cn-${ev.id}" name="body" maxlength="4000">${esc(cn?.body||'')}</textarea><div><button class="btn ghost sm" type="submit">${T.cn_save}</button></div></form>`:''}</div>`;
+  };
   return `<div class="card"><h2>${T.events}</h2>
-   <div class="entries">${list.length?list.map(ev=>`<div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+ev.target+'kg':''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
+   <div class="entries">${list.length?list.map(ev=>`<div class="evitem"><div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+ev.target+'kg':''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro||UI.previewAs?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>${reflect(ev)}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
    ${ro?'':`<form class="evform" data-form="event" data-aid="${aid}">
      <div class="field"><label for="ev-name">${T.ev_name}</label><input class="inp" id="ev-name" name="name" required></div>
-     <div class="field"><label for="ev-date">${T.ev_date}</label><input class="inp" id="ev-date" name="date" type="date" min="${TODAY}" required></div>
+     <div class="field"><label for="ev-date">${T.ev_date}</label><input class="inp" id="ev-date" name="date" type="date" required></div>
      <div class="field"><label for="ev-weigh">${T.ev_weigh}</label><input class="inp" id="ev-weigh" name="weigh" type="date"></div>
      <div class="field"><label for="ev-target">${T.ev_target}</label><input class="inp mono" id="ev-target" name="target" type="number" step="0.1" min="30" max="200" placeholder="${acct(aid).limit??''}"></div>
-     <div><button class="btn sm" type="submit">${T.ev_add}</button></div></form>`}</div>`;
+     <div><button class="btn sm" type="submit">${T.ev_add}</button></div><div class="small muted" style="grid-column:1/-1">${T.ev_past_hint}</div></form>`}</div>`;
+}
+
+/* ---------- ランニング（測ったときだけ入れる。最新・自己ベスト・これまで全部） ---------- */
+const fmtTime=sec=>{sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${pad(m)}:${pad(s)}`:`${m}:${pad(s)}`};
+const kmTxt=m=>String(+(m/1000).toFixed(2));
+function runsCard(aid,L,editable){
+  const T=I18N[L], rs=ST.runs[aid]||[], last=rs[0];
+  let top='', chartHtml='';
+  if(last){
+    const same=rs.filter(r=>r.dist===last.dist), best=same.reduce((a,b)=>b.sec<a.sec?b:a), prev=same[1], diff=prev?last.sec-prev.sec:null;
+    top=`<div class="runtop"><div><div class="lbl">${T.run_latest} · ${fd(last.day,L)} · ${kmTxt(last.dist)}km</div><div class="rbig mono">${fmtTime(last.sec)}</div>
+      <div class="small muted">${T.run_pace} ${fmtTime(last.sec/(last.dist/1000))}${diff==null?'':' · '+(diff<0?T.run_up.replace('{s}',fmtTime(-diff)):diff>0?T.run_down.replace('{s}',fmtTime(diff)):T.run_same)}</div></div>
+      <div><div class="lbl">🏅 ${T.run_best}（${kmTxt(best.dist)}km）</div><div class="rbig2 mono">${fmtTime(best.sec)}</div><div class="small muted">${fd(best.day,L)}</div></div></div>`;
+    if(same.length>1){const ch=same.slice().reverse(), vs=ch.map(r=>r.sec), mx=Math.max(...vs), mn=Math.min(...vs), pd=Math.max(5,(mx-mn)*.15);
+      chartHtml=`<div class="chart"><div class="t"><small>${esc(T.run_chart.replace('{d}',kmTxt(last.dist)))}</small></div>${chart(vs.map(v=>-v),{min:-(mx+pd),max:-(mn-pd),h:120,ticks:[],labels:ch.map((r,i)=>[i,md(r.day)]).filter((_,i,a)=>i===0||i===a.length-1||a.length<=6)})}</div>`}
+  }
+  const bestOf={};rs.forEach(r=>{if(!bestOf[r.dist]||r.sec<bestOf[r.dist])bestOf[r.dist]=r.sec});
+  const hist=rs.length?`<div class="lbl" style="margin-top:6px">${T.run_hist}</div><div class="runlist">${rs.map(r=>`<div class="runrow"><span class="mono">${fd(r.day,L)}</span><span class="mono">${kmTxt(r.dist)}km</span><b class="mono">${fmtTime(r.sec)}${r.sec===bestOf[r.dist]?' 🏅':''}</b><span class="small muted">${esc(r.note)}</span>${editable?`<button class="linkish danger" data-act="rundel" data-id="${r.id}">${T.run_del}</button>`:''}</div>`).join('')}</div>`:`<div class="small muted">${T.run_none}</div>`;
+  const form=editable?`<form class="runform" data-form="run">
+    <div class="field"><label for="rn-day">${T.run_date}</label><input class="inp" id="rn-day" name="day" type="date" max="${TODAY}" value="${TODAY}" required></div>
+    <div class="field"><label for="rn-dist">${T.run_dist}</label><input class="inp mono" id="rn-dist" name="dist" type="number" step="0.1" min="0.1" max="50" value="${last?kmTxt(last.dist):''}" required></div>
+    <div class="field"><span class="lbl">${T.run_time}</span><div class="row" style="flex-wrap:nowrap;gap:6px"><input class="inp mono" name="min" type="number" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required style="width:5em"><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" min="0" max="59" placeholder="34" aria-label="${T.run_sec}" style="width:4.5em"><span>${T.run_sec}</span></div></div>
+    <div class="field"><label for="rn-note">${T.run_note}</label><input class="inp" id="rn-note" name="note" maxlength="200"></div>
+    <div><button class="btn sm" type="submit">${T.run_add}</button></div></form>`:'';
+  return `<div class="card"><h2>🏃 ${T.run_title}</h2><div class="stack">${top}${chartHtml}${hist}${form}</div></div>`;
+}
+
+/* ---------- 月のまとめ（月末の3日間と、翌月の最初の5日間に出す） ---------- */
+function monthCard(aid,L){
+  const T=I18N[L], d=+TODAY.slice(8), last=monthDates(curYm()).length;
+  let ym=null; if(d>=last-2)ym=curYm(); else if(d<=5)ym=recentMonths(2)[1];
+  if(!ym)return '';
+  const st=monthStats(aid,ym), run=(ST.runs[aid]||[]).find(r=>r.day.startsWith(ym)), matches=(ST.events||[]).filter(e=>e.aids.includes(aid)&&e.date.startsWith(ym)&&e.date<=TODAY).length;
+  return `<div class="card moncard"><div class="goalhead"><span class="gk">${esc(T.mon_title.replace('{m}',monthLabel(ym,L)))}</span><button class="btn sm" data-act="openbook" data-ym="${ym}">${T.mon_open}</button></div>
+    <div class="monstats"><div><div class="k">${T.mon_days}</div><b class="mono">${st.days}${T.mon_day_u}</b></div><div><div class="k">${T.mon_time}</div><b class="mono">${fmtMin(st.min,L)}</b></div>
+    <div><div class="k">${T.mon_avg}</div><b class="mono">${st.avg?st.avg.toFixed(1):'—'}</b></div><div><div class="k">${T.mon_run}</div><b class="mono">${run?fmtTime(run.sec):'—'}</b></div><div><div class="k">${T.mon_match}</div><b class="mono">${matches}${T.mon_match_u}</b></div></div></div>`;
 }
 function coachPrint(){
   const L=lang(), T=I18N[L];
@@ -968,7 +1061,8 @@ function booklet(aid,ym){
       <div class="kpi"><div class="k">${T.total}</div><div class="v" style="font-size:10pt">${fmtMin(st.min,L)}</div></div>
       <div class="kpi"><div class="k">${T.avg}</div><div class="v">${st.avg?st.avg.toFixed(1):'—'}<small>/25</small></div></div>
       <div class="kpi"><div class="k">${T.wchg}</div><div class="v" style="font-size:9.5pt">${st.w0??'—'}→${st.w1??'—'}</div></div></div>
-    <h3 style="margin-top:8mm">${T.goals.toUpperCase?T.goals:''}</h3>
+    ${(()=>{const rr=(ST.runs[aid]||[]).filter(r=>r.day.startsWith(ym));return rr.length?`<h3 style="margin-top:6mm">${T.run_title}</h3><div style="font-size:8pt">${rr.slice().reverse().map(r=>`${md(r.day)}　${kmTxt(r.dist)}km　<b>${fmtTime(r.sec)}</b>`).join('　／　')}</div>`:''})()}
+    <h3 style="margin-top:6mm">${T.goals.toUpperCase?T.goals:''}</h3>
     <ul class="goal-list">${[0,1,2].map(i=>`<li><i></i><span>${esc(g.items[i]||'')}&nbsp;</span></li>`).join('')}</ul>
     <div class="pchart" style="margin-top:auto"><div class="t">${T.cond_trend}<small>5–25</small></div>${chart(all.map(d=>d<=TODAY?score(E(aid,d)):null),{...cc,min:5,max:25,ticks:[10,15,20,25],labels:lab,marks:eventMarks(aid,all),mc:acc})}</div>
   </div>`);
@@ -989,6 +1083,10 @@ function booklet(aid,ym){
       return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)} · ${e.weight}kg</small></div>
        <div><div class="mt">${esc(typeTxt(e,L))}${e.pain.length?' · '+e.pain.map(q=>esc(ptxt(q,T))+'('+T.lv[q.level]+')').join(' '):''}${e.head?.length?` · <b style="color:#c0392b">${e.head.map(k=>T.hs[k]).join('・')}</b>`:''}</div><div class="nt">${esc(e.note)}</div>${e.comment?`<div class="cm">${esc(e.comment.text)}</div>`:''}</div></div>`}).join('')}`);
   }
+  // 3.5 試合の振り返り（選手が書いたものだけ。コーチの非公開メモは載せない）
+  const mevs=(ST.events||[]).filter(e=>e.aids.includes(aid)&&e.date.startsWith(ym)&&e.date<=TODAY).sort((x,y)=>x.date.localeCompare(y.date));
+  if(mevs.length)pages.push(`<h2>${T.mr_title}<small>MATCH REVIEW</small></h2><div class="rule"></div>${mevs.map(e=>{const n=ST.mnotes[e.id]||{};
+    return `<div class="qa"><div class="dd">${fd(e.date,L)}</div><div class="q">${esc(e.name)}${n.result?'　— '+esc(n.result):''}</div>${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].filter(([k])=>n[k]).map(([k,l])=>`<div class="a"><span class="dd">${l}</span><br>${esc(n[k])}</div>`).join('')||`<div class="lines" style="height:22mm"></div>`}</div>`}).join('')}`);
   // 4. 対話
   const qs=ST.threads.filter(th=>th.aid===aid&&th.date.startsWith(ym));
   pages.push(`<h2>${T.dia}<small>${T.dia_sub}</small></h2><div class="rule"></div>${qs.length?qs.map(q=>`<div class="qa"><div class="dd">${fd(q.date,L)}</div><div class="q">Q. ${esc(q.text)}</div>${q.replies.map(r=>`<div class="a"><span class="dd">${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}</span><br>${esc(r.text)}</div>`).join('')}</div>`).join(''):`<p style="color:#5a5f6b">${T.none}</p>`}
@@ -1205,6 +1303,9 @@ document.addEventListener('click',ev=>{
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
   else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),t('seen_sent'))}
+  else if(a==='medit'){UI.mEdit=el.dataset.ev||null;render()}
+  else if(a==='rundel'){run(()=>delRun(el.dataset.id))}
+  else if(a==='openbook'){UI.view='note';UI.pYm=el.dataset.ym;render();window.scrollTo(0,0)}
   else if(a==='gpw'){UI.gpw=el.dataset.id;render()}
   else if(a==='eday'){UI.eday=el.dataset.v;UI.draft=E(UI.session,UI.eday)?null:loadDraft();render();window.scrollTo(0,0)}
   else if(a==='att'){const v=el.dataset.v;document.getElementById('f-att').value=v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));document.getElementById('abs-fields').hidden=v!=='absent';document.getElementById('prac-fields').hidden=v==='absent'||v==='off';stashDraft()}
@@ -1290,6 +1391,9 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),t('sent'))}
   if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,!!fdt.get('private')),t('sent'))}
   if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),t('ev_added'))}
+  if(f.dataset.form==='run'){const km=+fdt.get('dist'), sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!km||!sec)return;run(()=>addRun({day:fdt.get('day')||TODAY,dist:Math.round(km*1000),sec,note:(fdt.get('note')||'').trim()}),t('run_saved'))}
+  if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},t('mr_saved'))}
+  if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),t('goals_saved'))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()})}
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:+fdt.get('wlimit')||null}).eq('id',aid));await loadAll()},t('saved_cls'))}
