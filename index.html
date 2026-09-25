@@ -190,8 +190,15 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .ent .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
 .ent p{margin:4px 0 0}
 .cmt{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--tint);font-size:14px}
+.cmt .txt,.bubble .txt,.ent p,.paper .cm,.paper .nt{white-space:pre-wrap;overflow-wrap:anywhere}   /* 改行をそのまま見せる */
 .cmt b{font-size:12px;color:var(--accent);display:block}
 .cform{display:flex;gap:8px;margin-top:8px}
+.compose{display:grid;gap:8px;margin-top:8px;width:100%;min-width:0}
+.cw-edit,.cw-prev{display:grid;gap:8px}
+.cw-ta{min-height:44px;resize:none;overflow:hidden;line-height:1.55;padding:9px 12px}
+.cw-bar{gap:8px}
+.cw-lbl{font-size:12px;font-weight:700;color:var(--dim);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.cw-lbl small{font-weight:500;color:var(--faint)}
+.cw-text{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:14px;padding:10px 13px;font-size:15px;line-height:1.6;cursor:text}
 .cform .inp{padding:7px 10px;font-size:16px}
 @media (max-width:520px){.ent{grid-template-columns:1fr;gap:4px}}
 
@@ -550,6 +557,7 @@ const I18N = {
   ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'未返信の質問',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
+  cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
   waiting:'返信待ち', answered:'返信済み', back:'← 選手一覧', goals:'今月の目標', goals_save:'目標を保存', goals_saved:'目標を保存しました',
   booklet:'選手用・月刊ノート（A5）', report:'コーチ用・チームレポート（A4）', month:'月', athlete:'選手', kind:'種類',
@@ -669,6 +677,7 @@ const I18N = {
   ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'Unanswered',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
+  cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
   waiting:'Awaiting reply', answered:'Answered', back:'← Team', goals:'This month’s goals', goals_save:'Save goals', goals_saved:'Goals saved',
   booklet:'Athlete notebook (A5)', report:'Team report for coach (A4)', month:'Month', athlete:'Athlete', kind:'Type',
@@ -1327,19 +1336,36 @@ function entryList(aid,L,n,coach){
       ${stamp(e,T)}
       ${e.comment?cmtBlock(aid,d,e,T):''}
       ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
-      ${coach&&!e.comment?`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="c-${aid}-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`:''}
+      ${coach&&!e.comment?composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`c-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}):''}
     </div></div>`;}
   return `<div class="card"><h2>${T.recent}</h2><div class="entries">${rows}</div></div>`;
 }
+/* ---------- 書く欄：打っている間は大きく広がって全文が見える → 「完了」で確認 → 「送信」か「直す」 ---------- */
+function composer({form,attrs,id,name,ph,value,send,extra,cancel}){
+  const T=I18N[lang()], st=(UI.cw||(UI.cw={}))[id], v=st?st.v:(value||''), prev=!!st?.prev;
+  return `<form class="compose" data-form="${form}" ${attrs} data-cw="${id}">
+    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="2000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
+      <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${cancel||''}${extra||''}</div></div>
+    <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl">${T.cw_check}<small>${T.cw_tap}</small></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
+      <div class="row"><button class="btn sm" type="submit">${send}</button><button type="button" class="btn ghost sm" data-act="cwedit">${T.cw_edit}</button>${cancel||''}</div></div></form>`;
+}
+function cwGrow(ta){ta.style.height='auto';ta.style.height=Math.max(ta.scrollHeight+2,ta.classList.contains('has')||document.activeElement===ta?120:44)+'px'}
+function cwMode(f,prev){const ta=f.querySelector('.cw-ta');f.querySelector('.cw-edit').hidden=prev;f.querySelector('.cw-prev').hidden=!prev;
+  UI.cw[f.dataset.cw]={v:ta.value,prev};
+  if(prev)f.querySelector('.cw-text').textContent=ta.value;
+  else{ta.focus();const n=ta.value.length;try{ta.setSelectionRange(n,n)}catch(e){}cwGrow(ta)}}
+document.addEventListener('input',ev=>{const ta=ev.target.closest?.('.cw-ta');if(!ta)return;ta.classList.toggle('has',!!ta.value);cwGrow(ta);(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:ta.value,prev:false}});
+document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta'))cwGrow(ev.target)});
+document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
 function bubble(m,cls,by,T,ro){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
-  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp" name="body" id="em-${m.id}" maxlength="2000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
-  return `<div class="bubble ${cls}"><div class="by">${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}${mine?` <button class="linkish" data-act="msgedit" data-id="${m.id}">${T.ed_edit}</button>`:''}</div>${esc(m.text)}</div>`;
+  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="2000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
+  return `<div class="bubble ${cls}"><div class="by">${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}${mine?` <button class="linkish" data-act="msgedit" data-id="${m.id}">${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
 }
 function cmtBlock(aid,d,e,T){   // コーチのコメント（コーチは直せる）
   const canEdit=acct(UI.session)?.role==='coach'&&!UI.previewAs, key=aid+'|'+d;
-  if(canEdit&&UI.cmtEdit===key)return `<form class="cform" data-form="editcmt" data-aid="${aid}" data-d="${d}"><input class="inp" name="c" id="ec-${d}" value="${esc(e.comment.text)}"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="cmtedit" data-k="">${T.cancel}</button></form>`;
-  return `<div class="cmt"><b>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}${canEdit?` <button class="linkish" data-act="cmtedit" data-k="${key}">${T.ed_edit}</button>`:''}</b>${esc(e.comment.text)}</div>`;
+  if(canEdit&&UI.cmtEdit===key)return composer({form:'editcmt',attrs:`data-aid="${aid}" data-d="${d}"`,id:`ec-${aid}-${d}`,name:'c',value:e.comment.text,send:T.ed_save,cancel:`<button class="btn ghost sm" type="button" data-act="cmtedit" data-k="">${T.cancel}</button>`});
+  return `<div class="cmt"><b>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}${canEdit?` <button class="linkish" data-act="cmtedit" data-k="${key}">${T.ed_edit}</button>`:''}</b><div class="txt">${esc(e.comment.text)}</div></div>`;
 }
 function questions(aid,L,coach,ro){
   const T=I18N[L];
@@ -1348,7 +1374,7 @@ function questions(aid,L,coach,ro){
     return `<div class="thread"><div class="thead">${coach?`<b>${esc(a.name)}</b>`:''}<span class="muted mono">${fd(q.date,L)}</span><span class="pill ${un?(coach?'bad':'warn'):'good'}">${un?T.waiting:T.answered}</span></div>
       ${bubble({id:q.mid,author:q.author,text:q.text,edited:q.edited},'',esc(a.name),T,ro)}
       ${q.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,ro)).join('')}
-      ${ro?'':`<form class="cform" data-form="reply" data-id="${q.id}"><input class="inp" id="r-${q.id}" name="r" placeholder="${esc(T.reply_ph)}"><button class="btn sm ghost" type="submit">${T.reply}</button></form>`}</div>`}).join('');
+      ${ro?'':composer({form:'reply',attrs:`data-id="${q.id}"`,id:`r-${q.id}`,name:'r',ph:T.reply_ph,send:T.reply})}</div>`}).join('');
   const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
   return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
 }
@@ -1459,7 +1485,7 @@ function entryModal(aid,d,L){
    ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
    ${xDayBlock(aid,d,L)}
    ${stamp(e,T)}
-   <div style="margin-top:12px">${e.comment?cmtBlock(aid,d,e,T):`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="mc-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
+   <div style="margin-top:12px">${e.comment?cmtBlock(aid,d,e,T):composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`mc-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`})}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
 }
 function accountsSheet(){
   if(!UI.acctSheet)return ''; const T=I18N[lang()], reg=regLoad(), cur=curKey();
@@ -1819,7 +1845,7 @@ function render(){
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
-  drawHealth();
+  drawHealth(); document.querySelectorAll('.cw-ta').forEach(cwGrow);
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
@@ -1889,8 +1915,8 @@ function celebrate(d){
 }
 async function run(fn,done,btn){
   const o=pressBusy(btn||UI.pressed); UI.pressed=null;
-  try{UI.busy=true;const r=await fn();UI.busy=false;render();celebrate(typeof done==='function'?done(r):done)}
-  catch(e){UI.busy=false;pressDone(o);console.error(e);toast(errText(e));render()}
+  try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;render();celebrate(typeof done==='function'?done(r):done)}
+  catch(e){UI.busy=false;UI.cwSending=null;pressDone(o);console.error(e);toast(errText(e));render()}
 }
 document.addEventListener('click',ev=>{
   const el=ev.target.closest('[data-act]'); if(!el){if(ev.target.id==='done')document.getElementById('done').hidden=true;return}
@@ -1944,6 +1970,8 @@ document.addEventListener('click',ev=>{
   else if(a==='gunlink'){const g=el.dataset.id, aid=el.dataset.aid;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_unlink_guardian',{guardian:g,athlete:aid}));await loadAll()},t('removed'))}
   else if(a==='hcr'){UI.hc={r:el.dataset.v,o:0,sel:null};hcRefresh(el)}
   else if(a==='hcnav'){hcGo(+el.dataset.v,el)}
+  else if(a==='cwdone'){const f=el.closest('form'),v=f.querySelector('.cw-ta').value.trim();if(!v){toast(t('cw_empty'));f.querySelector('.cw-ta').focus();return}cwMode(f,true)}
+  else if(a==='cwedit'){cwMode(el.closest('form'),false)}
   else if(a==='ctab'){UI.ctab=el.dataset.v;render();window.scrollTo(0,0)}
   else if(a==='range'){UI[el.dataset.key]=+el.dataset.v;render()}
   else if(a==='bigchart'){UI.modal={type:'chart',aid:el.dataset.aid,k:el.dataset.k};render()}
@@ -2070,6 +2098,7 @@ document.addEventListener('submit',ev=>{
       .then(()=>{if(loadDraft())toast(t('offline_saved'))});
     return;
   }
+  UI.cwSending=f.dataset.cw||null;   // 送れたときだけ下書きを消す（電波が悪くて失敗しても文章は残る）
   if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
   if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
   if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),()=>({title:t('ch_ask_t'),msg:pick1(t('ch_ask'))}))}
@@ -2088,6 +2117,7 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&(UI.settings||UI.modal)){UI.settings=false;UI.modal=null;render()}
+  if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches?.('.cw-text')){ev.preventDefault();ev.target.click()}
   if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches?.('[data-act=bigchart]')){ev.preventDefault();ev.target.click()}});
 
 /* ---------- 起動 ---------- */
