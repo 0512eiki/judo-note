@@ -383,7 +383,10 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .hsum.sel .v{color:var(--mc)}
 .hdelta{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:3px;white-space:nowrap}
 .hdelta.up{background:var(--good-s);color:var(--good)} .hdelta.down{background:var(--bad-s);color:var(--bad)} .hdelta.flat{background:var(--panel2);color:var(--dim)}
-.hchart{touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer;min-width:0;overflow:hidden}
+.hswipe{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-width:0;overflow:hidden}
+.hchart{cursor:pointer}
+.hsl{will-change:transform}
+.hl .hlp{color:var(--dim);font-weight:500}
 .hchart svg{display:block;width:100%;height:auto}
 .hnav{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .hnav span{font-size:12px;color:var(--faint);font-weight:600;text-align:center}
@@ -478,8 +481,8 @@ const I18N = {
   hc_r:{w:'週',m:'月',q:'3ヶ月',a:'すべて'}, hc_pw:{w:'前の週',m:'前の月',q:'前の3ヶ月'}, hc_avg:'平均', hc_total:'合計', hc_wavg:'週平均', hc_range:'範囲', hc_latest:'最新', hc_logged:'記録 {n}日',
   hc_vs:'{w}より', hc_same:'{w}と同じ', hc_none:'記録なし', hc_sum5:'調子の合計（5項目）', hc_pavg:'この期間の平均', hc_perwk:'/ 週', hc_wkload:'1週間あたりの負荷', hc_minrpe:'{m}分 × きつさ {r}',
   hc_over:'上限まで あと {w}', hc_in:'階級内', hc_limit:'上限 {w}', hc_brk:'調子の内訳', hc_help:'グラフをタップするとその日の値、左右にスワイプすると前後の期間に移ります。', hc_prev:'前の期間', hc_next:'次の期間', hc_rest:'休み',
-  hl_title:'ハイライト', hl_none:'この期間の記録はまだありません。', hl_avg:'この期間の調子は平均 {b} でした。', hl_up:'{w}より調子が上がっています（平均 {a} → {b}）。', hl_down:'{w}より調子が下がっています（平均 {a} → {b}）。', hl_flat:'調子は{w}とほぼ同じです（平均 {b}）。',
-  hl_logged:'📝 記録した日：{n} / {m}日', hl_low:'⚠️ 調子が低かった日：{d}', hl_more:' ほか{n}日', hl_nolow:'✓ 調子が大きく下がった日はありません', hl_match:'🥋 試合：{d}',
+  hl_title:'ハイライト', hl_none:'この期間の記録はまだありません。', hl_cond:'コンディションの平均：{b}', hl_load:'練習負荷の{t}：{b}', hl_prev:'（{w}：{a}）',
+  hl_logged:'📝 記録した日：{n} / {m}日', hl_match:'🥋 試合：{d}',
   unread:'未読 {n}', new_tag:'NEW', unread_help:'前回この選手の画面を開いてから、新しく書かれたもの',
   wunit:'体重の単位', st_logged:'記録', st_edited:'直した',
   stk_on:'{n}日連続！', stk_on_sub:'ナイス継続。明日もこの調子で。', stk_go:'{n}日連続中', stk_go_sub:'今日書くと {m}日連続！', stk_start:'連続記録をスタートしよう', stk_start_sub:'今日の記録をつけると1日目。', stk_best:'ベスト {n}日', stk_ro:'{n}日連続で記録中', stk_ro0:'連続記録はまだありません',
@@ -597,8 +600,8 @@ const I18N = {
   hc_r:{w:'Week',m:'Month',q:'3 Mo',a:'All'}, hc_pw:{w:'last week',m:'last month',q:'the previous 3 months'}, hc_avg:'Average', hc_total:'Total', hc_wavg:'Weekly avg', hc_range:'Range', hc_latest:'Latest', hc_logged:'{n} days logged',
   hc_vs:'vs {w}', hc_same:'same as {w}', hc_none:'No entry', hc_sum5:'Total of 5 items', hc_pavg:'Average for this period', hc_perwk:'/ wk', hc_wkload:'Load per week', hc_minrpe:'{m} min × effort {r}',
   hc_over:'{w} over the limit', hc_in:'On weight', hc_limit:'Limit {w}', hc_brk:'Condition breakdown', hc_help:'Tap a chart to see that day. Swipe left or right to change the period.', hc_prev:'Previous period', hc_next:'Next period', hc_rest:'Rest',
-  hl_title:'Highlights', hl_none:'No entries in this period yet.', hl_avg:'Average condition for this period: {b}.', hl_up:'Condition is up from {w} (avg {a} → {b}).', hl_down:'Condition is down from {w} (avg {a} → {b}).', hl_flat:'Condition is about the same as {w} (avg {b}).',
-  hl_logged:'📝 Days logged: {n} / {m}', hl_low:'⚠️ Low days: {d}', hl_more:' and {n} more', hl_nolow:'✓ No big dips in condition', hl_match:'🥋 Match: {d}',
+  hl_title:'Highlights', hl_none:'No entries in this period yet.', hl_cond:'Average condition: {b}', hl_load:'Training load ({t}): {b}', hl_prev:' ({w}: {a})',
+  hl_logged:'📝 Days logged: {n} / {m}', hl_match:'🥋 Match: {d}',
   unread:'{n} new', new_tag:'NEW', unread_help:'Added since you last opened this athlete',
   wunit:'Weight unit', st_logged:'Logged', st_edited:'edited',
   stk_on:'{n}-day streak!', stk_on_sub:'Great consistency. Keep it going tomorrow.', stk_go:'{n}-day streak', stk_go_sub:'Log today to make it {m}!', stk_start:'Start a streak', stk_start_sub:'Log today for day 1.', stk_best:'Best: {n} days', stk_ro:'{n}-day logging streak', stk_ro0:'No streak yet',
@@ -1086,7 +1089,7 @@ function hcVals(aid,days,k){return days.filter(d=>d<=TODAY).map(d=>E(aid,d)).fil
 const hcAvg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null, hcSum=a=>a.reduce((x,y)=>x+y,0);
 function hcNiceMax(v){if(v<=0)return 600;const p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1.5?1.5:n<=2?2:n<=3?3:n<=5?5:10)*p}
 function hcDelta(now,prev,word,T,better,fmt=v=>v.toFixed(1)){if(now==null||prev==null||!word)return '';const d=now-prev;if(Math.abs(d)<.05)return `<span class="hdelta flat">${T.hc_same.replace('{w}',word)}</span>`;
-  const cls=better==='none'?'flat':(d>0)===(better==='up')?'up':'down';return `<span class="hdelta ${cls}">${T.hc_vs.replace('{w}',word)} ${d>0?'+':'−'}${fmt(Math.abs(d))}</span>`}
+  const cls='flat';return `<span class="hdelta ${cls}">${T.hc_vs.replace('{w}',word)} ${d>0?'+':'−'}${fmt(Math.abs(d))}</span>`}
 function healthCharts(aid,L,mode){
   const T=I18N[L], st=UI.hc||(UI.hc={r:'w',o:0,sel:null}), P=hcPeriod(aid,L,st.r,st.o), PP=st.r==='a'?null:hcPeriod(aid,L,st.r,st.o+1);
   const days=P.b.flatMap(b=>b.days), pdays=PP?PP.b.flatMap(b=>b.days):[], word=T.hc_pw[st.r], future=P.b.map(b=>b.days[0]>TODAY), labels=P.b.map(b=>b.lab);
@@ -1096,7 +1099,7 @@ function healthCharts(aid,L,mode){
   const nav=`<div class="hnav"><button type="button" data-act="hcnav" data-v="1" aria-label="${T.hc_prev}" ${canPrev?'':'disabled'}>‹</button><span>${esc(P.label)}</span><button type="button" data-act="hcnav" data-v="-1" aria-label="${T.hc_next}" ${st.o>0?'':'disabled'}>›</button></div>`;
   const card=(k,title,sub,color,sumHtml,right,spec)=>{HC[aid+'|'+k]={...spec,color,labels,future,marks,sel:sel.k===k?sel.i:null};
     return `<section class="card hcard" style="--mc:${color}"><div class="hhead"><span class="hdot" style="background:${color}"></span>${title}${sub?`<small>${sub}</small>`:''}<span class="sp"></span>${right||''}</div>
-      <div class="hsum ${sel.k===k?'sel':''}">${sumHtml}</div><div class="hchart" data-hc="${aid}|${k}" data-k="${k}"></div>${nav}</section>`};
+      <div class="hsum ${sel.k===k?'sel':''}">${sumHtml}</div><div class="hchart hswipe" data-hc="${aid}|${k}" data-k="${k}"></div>${nav}</section>`};
   const selHead=(k)=>`<div class="k">${esc(P.b[sel.i].full)}</div>`;
   // コンディション
   const cs=agg('cond'), ca=hcAvg(hcVals(aid,days,'cond')), cpa=PP?hcAvg(hcVals(aid,pdays,'cond')):null, logged=days.filter(d=>d<=TODAY&&E(aid,d)).length;
@@ -1120,18 +1123,18 @@ function healthCharts(aid,L,mode){
     :`<div class="k">${T.hc_range}</div><div class="v">${have.length?`${Math.min(...have).toFixed(1)}–${Math.max(...have).toFixed(1)}`:'—'}<small>${u}</small></div><div class="r">${esc(P.label)}${last!=null?`${L==='ja'?'・':' · '}${T.hc_latest} ${wfmt(last)}`:''}${last!=null&&over(last)?`<span class="hdelta down">${T.hc_over.replace('{w}',wfmt(last-lim))}</span>`:''}</div>`;
   const wCard=card('weight',T.weight,esc(a?.cls||''),'var(--c-weight)',wSum,wToggle(),{series:ws,min:wmn,max:wmx,ticks:[wmn,Math.round((wmn+wmx)/2),wmx],kind:'line',ref:lim,refLabel:lim!=null?T.hc_limit.replace('{w}',wfmt(lim)):''});
   if(mode==='compact')return `<div class="hc" data-aid="${aid}" data-l="${L}" data-mode="${mode}">${hcSeg(T,st)}${cCard}${lCard}${wCard}</div>`;
-  // ハイライト
-  const low=days.filter(d=>d<=TODAY&&E(aid,d)&&score(E(aid,d))>=5&&score(E(aid,d))<14), evs=(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&days.includes(ev.date));
-  const lead0=ca==null?T.hl_none:cpa==null?T.hl_avg.replace('{b}',ca.toFixed(1)):(ca>=cpa+.3?T.hl_up:ca<=cpa-.3?T.hl_down:T.hl_flat).replace('{w}',word).replace('{a}',cpa.toFixed(1)).replace('{b}',ca.toFixed(1));
-  const hl=`<section class="card hl"><div class="hlt">${T.hl_title}</div><p>${esc(lead0)}</p><ul>
+  // ハイライト（良い・悪いの言葉は使わず、数字だけ）
+  const evs=(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&days.includes(ev.date)), prevTxt=(v,f)=>v==null||!word?'':T.hl_prev.replace('{w}',word).replace('{a}',f(v));
+  const lf=v=>Math.round(v).toLocaleString();
+  const hl=`<section class="card hl"><div class="hlt">${T.hl_title}</div>${ca==null?`<p>${T.hl_none}</p>`:`<p>${T.hl_cond.replace('{b}',ca.toFixed(1))}<span class="hlp">${prevTxt(cpa,v=>v.toFixed(1))}</span></p>`}<ul>
+    ${lt||plv?`<li>${T.hl_load.replace('{t}',wk?T.hc_wavg:T.hc_total).replace('{b}',lf(lv))}${prevTxt(plv,lf)}</li>`:''}
     <li>${T.hl_logged.replace('{n}',logged).replace('{m}',days.filter(d=>d<=TODAY&&d>=(a?.joined||'')).length)}</li>
-    <li>${low.length?esc(T.hl_low.replace('{d}',low.slice(0,3).map(d=>fd(d,L)).join(L==='ja'?'、':', '))+(low.length>3?T.hl_more.replace('{n}',low.length-3):'')):T.hl_nolow}</li>
     ${evs.map(ev=>`<li>${esc(T.hl_match.replace('{d}',`${ev.name}（${fd(ev.date,L)}）`))}</li>`).join('')}</ul></section>`;
   // 調子の内訳
-  const brk=`<section class="card hcard"><div class="hhead"><span class="hdot" style="background:var(--accent)"></span>${T.hc_brk}<small>${L==='ja'?'1〜5・':'1–5 · '}${esc(P.label)}</small></div><div class="hbrk">${['sleep','energy','soreness','stress','mood'].map(k=>{
+  const brk=`<section class="card hcard"><div class="hhead"><span class="hdot" style="background:var(--accent)"></span>${T.hc_brk}<small>${L==='ja'?'1〜5':'1–5'}</small></div><div class="hbrk hswipe"><div class="hsl">${['sleep','energy','soreness','stress','mood'].map(k=>{
       const ser=agg(k), av=hcAvg(hcVals(aid,days,k)), n=ser.length, W=300, H=30, stp=W/n, bw=Math.max(2,Math.min(14,stp*.6));
       const bars=ser.map((v,i)=>v==null?(future[i]?'':`<rect x="${stp*i+stp/2-bw/2}" y="${H-2}" width="${bw}" height="2" rx="1" fill="var(--line2)"/>`):`<rect x="${stp*i+stp/2-bw/2}" y="${H-v/5*H}" width="${bw}" height="${v/5*H}" rx="${Math.min(3,bw/2)}" fill="var(--accent)" opacity="${(.35+v/5*.65).toFixed(2)}"/>`).join('');
-      return `<div class="hbrow"><span class="n">${T[k]}</span><span class="a">${av!=null?av.toFixed(1):'—'}</span><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${bars}</svg></div>`}).join('')}</div></section>`;
+      return `<div class="hbrow"><span class="n">${T[k]}</span><span class="a">${av!=null?av.toFixed(1):'—'}</span><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${bars}</svg></div>`}).join('')}</div></div>${nav}</section>`;
   return `<div class="hc full" data-aid="${aid}" data-l="${L}" data-mode="${mode}">${hcSeg(T,st)}${hl}${cCard}${lCard}${wCard}${brk}<div class="small muted hhelp">${T.hc_help}</div></div>`;
 }
 function hcSeg(T,st){return `<div class="segbar hseg" role="tablist">${['w','m','q','a'].map(r=>`<button type="button" data-act="hcr" data-v="${r}" aria-pressed="${st.r===r}">${T.hc_r[r]}</button>`).join('')}</div>`}
@@ -1153,24 +1156,43 @@ function drawHC(host){
     s+=`<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".5"/>`;
     series.forEach((v,i)=>{if(v!=null)s+=`<circle cx="${x(i)}" cy="${y(v)}" r="${sel===i?5.5:n>40?2.4:3.6}" fill="${color}" stroke="var(--base)" stroke-width="${n>40?0:1.5}" opacity="${sel!=null&&sel!==i?.35:1}"/>`})}
   labels.forEach((l,i)=>{if(l)s+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="11" font-weight="600" fill="${sel===i?'var(--text)':'var(--faint)'}">${esc(l)}</text>`});
-  host.innerHTML=s+'</svg>'; host.dataset.n=n; host.dataset.pl=pl; host.dataset.step=step; host.dataset.w=W;
+  host.innerHTML='<div class="hsl">'+s+'</svg></div>'; host.dataset.n=n; host.dataset.pl=pl; host.dataset.step=step; host.dataset.w=W;
 }
 function drawHealth(){document.querySelectorAll('.hchart').forEach(drawHC)}
 function hcRefresh(){const w=document.querySelector('.hc');if(!w)return;w.outerHTML=healthCharts(w.dataset.aid,w.dataset.l,w.dataset.mode);drawHealth()}
 function hcIndex(ch,clientX){const r=ch.getBoundingClientRect(),k=r.width/(+ch.dataset.w||r.width);return Math.max(0,Math.min(+ch.dataset.n-1,Math.floor((clientX-r.left-(+ch.dataset.pl)*k)/((+ch.dataset.step)*k))))}
-let hcDrag=null;
-document.addEventListener('pointerdown',ev=>{const ch=ev.target.closest('.hchart');
-  if(!ch){if(UI.hc?.sel&&!ev.target.closest('.hc button')){UI.hc.sel=null;hcRefresh()}return}
-  const k=ch.dataset.k,i=hcIndex(ch,ev.clientX), cur=UI.hc.sel;
-  UI.hc.sel=cur&&cur.k===k&&cur.i===i?null:{k,i}; hcDrag={k,x0:ev.clientX,y0:ev.clientY,t:Date.now(),moved:false}; hcRefresh()});
-document.addEventListener('pointermove',ev=>{if(!hcDrag)return;if(Math.abs(ev.clientX-hcDrag.x0)>6)hcDrag.moved=true;
-  if(hcDrag.moved&&Date.now()-hcDrag.t>250){const ch=document.querySelector(`.hchart[data-k="${hcDrag.k}"]`);if(!ch)return;const i=hcIndex(ch,ev.clientX);if(UI.hc.sel?.i!==i){UI.hc.sel={k:hcDrag.k,i};hcRefresh()}}});
-document.addEventListener('pointerup',ev=>{if(!hcDrag)return;const dx=ev.clientX-hcDrag.x0;
-  if(Date.now()-hcDrag.t<=250&&Math.abs(dx)>45&&Math.abs(dx)>Math.abs(ev.clientY-hcDrag.y0)){   // すばやく横にスワイプ → 前後の期間
-    const w=document.querySelector('.hc'), P=w&&hcPeriod(w.dataset.aid,w.dataset.l,UI.hc.r,UI.hc.o);
-    if(dx>0&&UI.hc.r!=='a'&&P&&P.start>DAYS[0])UI.hc.o++;else if(dx<0&&UI.hc.o>0)UI.hc.o--;UI.hc.sel=null;hcRefresh()}
-  hcDrag=null});
-document.addEventListener('pointercancel',()=>{hcDrag=null});
+function hcSoft(){   // 選んだ日だけ変わるとき：数字の欄とグラフだけを描き直す（指で触っている要素は残す）
+  const w=document.querySelector('.hc');if(!w)return;const t=document.createElement('div');t.innerHTML=healthCharts(w.dataset.aid,w.dataset.l,w.dataset.mode);
+  const a=w.querySelectorAll('.hsum'),b=t.querySelectorAll('.hsum');a.forEach((el,i)=>{if(b[i]){el.className=b[i].className;el.innerHTML=b[i].innerHTML}});drawHealth()}
+function hcSelect(ch,x,toggle){const k=ch.dataset.k,i=hcIndex(ch,x),cur=UI.hc.sel;const next=toggle&&cur&&cur.k===k&&cur.i===i?null:{k,i};
+  if(JSON.stringify(next)!==JSON.stringify(cur)){UI.hc.sel=next;hcSoft()}}
+const hcMotion=()=>!matchMedia('(prefers-reduced-motion: reduce)').matches;
+function hcCan(dir){const w=document.querySelector('.hc');if(!w)return false;if(dir<0)return UI.hc.o>0;if(UI.hc.r==='a')return false;return hcPeriod(w.dataset.aid,w.dataset.l,UI.hc.r,UI.hc.o).start>DAYS[0]}
+function hcSlides(){return [...document.querySelectorAll('.hc .hsl')]}
+function hcShift(dx,anim){hcSlides().forEach(el=>{el.style.transition=anim?'transform .22s cubic-bezier(.2,.8,.2,1),opacity .22s':'none';el.style.transform=`translateX(${dx}px)`;el.style.opacity=anim==='out'?'0':''})}
+function hcGo(dir){   // dir=1：前の期間（右へスワイプ）、-1：次の期間
+  if(!hcCan(dir)){hcShift(0,'back');return}
+  const W=document.querySelector('.hc .hsl')?.parentElement.clientWidth||320;
+  const done=()=>{UI.hc.o+=dir;UI.hc.sel=null;hcRefresh();if(!hcMotion())return;
+    hcSlides().forEach(el=>{el.style.transition='none';el.style.transform=`translateX(${-dir*W*.45}px)`;el.style.opacity='0';void el.offsetWidth;   // 反対側から入ってくる
+      el.style.transition='transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s';el.style.transform='translateX(0)';el.style.opacity='1'})};
+  if(!hcMotion())return done();
+  hcShift(dir*W,'out');setTimeout(done,200);
+}
+let hcG=null;
+document.addEventListener('pointerdown',ev=>{const area=ev.target.closest('.hswipe');
+  if(!area){if(UI.hc?.sel&&!ev.target.closest('.hc button')){UI.hc.sel=null;hcSoft()}return}
+  hcG={area,x0:ev.clientX,y0:ev.clientY,lastX:ev.clientX,t:Date.now(),mode:null,id:ev.pointerId};
+  if(area.classList.contains('hchart'))hcG.timer=setTimeout(()=>{if(hcG&&!hcG.mode){hcG.mode='scrub';hcSelect(area,hcG.lastX,false)}},280)});   // 長押し → なぞって日を移動
+document.addEventListener('pointermove',ev=>{if(!hcG||ev.pointerId!==hcG.id)return;const dx=ev.clientX-hcG.x0,dy=ev.clientY-hcG.y0;hcG.lastX=ev.clientX;
+  if(!hcG.mode){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){hcG.mode='swipe';clearTimeout(hcG.timer);try{hcG.area.setPointerCapture(hcG.id)}catch(e){}}
+    else if(Math.abs(dy)>10){clearTimeout(hcG.timer);hcG=null;return}}
+  if(hcG.mode==='swipe'){ev.preventDefault();hcShift(hcCan(dx>0?1:-1)?dx:dx*.25)}   // 指についてくる（その先に期間がなければ少しだけ）
+  else if(hcG.mode==='scrub'){const ch=document.querySelector(`.hchart[data-k="${hcG.area.dataset.k}"]`);if(ch)hcSelect(ch,ev.clientX,false)}});
+function hcEnd(ev){if(!hcG||ev.pointerId!==hcG.id)return;clearTimeout(hcG.timer);const g=hcG;hcG=null;const dx=ev.clientX-g.x0,v=Math.abs(dx)/Math.max(1,Date.now()-g.t);
+  if(g.mode==='swipe'){if(Math.abs(dx)>70||(v>.45&&Math.abs(dx)>30))hcGo(dx>0?1:-1);else hcShift(0,'back')}
+  else if(!g.mode&&ev.type==='pointerup'&&g.area.classList.contains('hchart'))hcSelect(g.area,ev.clientX,true)}   // 軽くタップ → その日の値
+document.addEventListener('pointerup',hcEnd);document.addEventListener('pointercancel',ev=>{if(hcG&&hcG.mode==='swipe')hcShift(0,'back');hcEnd(ev)});
 addEventListener('resize',()=>{clearTimeout(drawHealth.t);drawHealth.t=setTimeout(drawHealth,120)});
 function trendCharts(aid,L,days=28){
   const tt=I18N[L], ds=[];for(let i=days-1;i>=0;i--)ds.push(addDays(TODAY,-i));
@@ -1914,7 +1936,7 @@ document.addEventListener('click',ev=>{
   else if(a==='child'){UI.child=el.dataset.id;UI.pAid=el.dataset.id;UI.mEdit=null;render();window.scrollTo(0,0)}
   else if(a==='gunlink'){const g=el.dataset.id, aid=el.dataset.aid;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_unlink_guardian',{guardian:g,athlete:aid}));await loadAll()},t('removed'))}
   else if(a==='hcr'){UI.hc={r:el.dataset.v,o:0,sel:null};hcRefresh()}
-  else if(a==='hcnav'){UI.hc.o=Math.max(0,UI.hc.o+ +el.dataset.v);UI.hc.sel=null;hcRefresh()}
+  else if(a==='hcnav'){hcGo(+el.dataset.v)}
   else if(a==='ctab'){UI.ctab=el.dataset.v;render();window.scrollTo(0,0)}
   else if(a==='range'){UI[el.dataset.key]=+el.dataset.v;render()}
   else if(a==='bigchart'){UI.modal={type:'chart',aid:el.dataset.aid,k:el.dataset.k};render()}
