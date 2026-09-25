@@ -349,6 +349,10 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .dnote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
 @media (max-width:760px){.drow{grid-template-columns:6.5em 1fr 3em 4.5em}.drow>span:nth-child(5),.drow>span:nth-child(7){display:none}.drow .dnote{grid-column:1/-1}.drow.dhead{display:none}}
 .cbar{display:grid;grid-template-columns:7.5em 1fr 1.5em;gap:8px;align-items:center;font-size:14px;margin:4px 0} .cbar-t{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden} .cbar-t i{display:block;height:100%;background:var(--grad)}
+.whobtn{border:0;background:none;padding:4px 6px;border-radius:12px;cursor:pointer;font:inherit} .whobtn:hover{background:var(--tint)} .whobtn:disabled{cursor:default;background:none} .whobtn .caret{font-size:11px;color:var(--dim)}
+.acctrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}
+.acctrow.now{border-color:var(--accent);background:var(--tint)}
+.acchip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 13px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:inherit} .acchip.on{border-color:var(--accent);color:var(--accent);background:var(--tint)}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
@@ -402,6 +406,8 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'タイムの推移（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
+  ac_title:'この端末のアカウント', ac_help:'家族で1台のスマホを使うときは、ここで切り替えます。選手のアカウントは、親のスマホで使い終わると自動でログアウトします（次はパスワードが必要です）。', ac_add:'＋ 別の人がログインする',
+  ac_needpw:'パスワードが必要', ac_now:'使用中', ac_role:{coach:'コーチ',athlete:'選手',guardian:'保護者'}, ac_saved:'この端末のアカウント', ac_forget:'この端末から外す', ac_switched:'{n}さんに切り替えました', ac_tap:'名前を押すと切り替えられます',
   pain_none:'痛みや不調はなし', ct_over:'概要', ct_days:'毎日の記録', ct_charts:'グラフ', ct_qa:'質問・目標', rg_2w:'2週間', rg_4w:'4週間', rg_3m:'3ヶ月', rg_all:'すべて', tap_big:'タップで大きく表示',
   ov_today:'今日の調子', ov_avg7:'7日間の平均', ov_week:'この7日の稽古', ov_ramp:'負荷の増え方', ov_weight:'最新の体重', ov_run:'ランニング最新', ov_next:'次の試合', ov_unans:'未返信の質問', ov_open:'詳しく',
   cmp_title:'調子の内訳', d_att:'出欠', d_cond:'調子', d_prac:'稽古', d_note:'感想', d_coach:'コーチ', d_load:'負荷', close2:'閉じる', goals_all:'これまでの目標', no_data:'記録なし', 
@@ -486,6 +492,8 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'Your times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
+  ac_title:'Accounts on this device', ac_help:'Switch here when your family shares one phone. An athlete’s account signs out automatically when they’re done on a parent’s phone (they’ll need their password next time).', ac_add:'＋ Someone else signs in',
+  ac_needpw:'Password needed', ac_now:'In use', ac_role:{coach:'Coach',athlete:'Athlete',guardian:'Guardian'}, ac_saved:'Accounts on this device', ac_forget:'Remove from this device', ac_switched:'Switched to {n}', ac_tap:'Tap a name to switch',
   pain_none:'No pain or illness', ct_over:'Overview', ct_days:'Daily log', ct_charts:'Charts', ct_qa:'Questions & goals', rg_2w:'2 weeks', rg_4w:'4 weeks', rg_3m:'3 months', rg_all:'All', tap_big:'Tap to enlarge',
   ov_today:'Today', ov_avg7:'7-day average', ov_week:'Last 7 days', ov_ramp:'Load ramp', ov_weight:'Latest weight', ov_run:'Latest run', ov_next:'Next match', ov_unans:'Unanswered', ov_open:'Details',
   cmp_title:'Condition breakdown', d_att:'Att.', d_cond:'Cond.', d_prac:'Practice', d_note:'Notes', d_coach:'Coach', d_load:'Load', close2:'Close', goals_all:'Past goals', no_data:'No entry', 
@@ -563,7 +571,16 @@ const SUPABASE_URL='https://ktwunswfyxozcultprnq.supabase.co';
 const SUPABASE_KEY='sb_publishable_P_UMeGV4gB54MjRBfjUIrA_E7drptd5';   // 公開用のキー（アプリに入れてよい値）
 const VAPID_PUBLIC='BChblwq2SoS3NVeX2FjxGFMSOeHKVrf0K7fiwRVWOb0NFEEOZW772YZGAr2dJ_ZGAU4eRwGFpdcNNkF9cP6XHnE';   // 通知の公開鍵（秘密鍵は Supabase 側だけ）
 const ID_DOMAIN='players.judo-note.app';                               // ID を Supabase のログイン用メールに変える
-let sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-note-auth'}});
+/* 1台のスマホを家族で使えるよう、アカウントごとに別の保存場所（storageKey）でログイン状態を持つ */
+const REG_KEY='judo-accounts', CUR_KEY='judo-current', LEGACY_KEY='judo-note-auth';
+const regLoad=()=>{try{return JSON.parse(localStorage.getItem(REG_KEY)||'[]')}catch(e){return []}};
+const regSave=r=>{try{localStorage.setItem(REG_KEY,JSON.stringify(r))}catch(e){}};
+const curKey=()=>{try{return localStorage.getItem(CUR_KEY)||LEGACY_KEY}catch(e){return LEGACY_KEY}};
+const setCurKey=k=>{try{localStorage.setItem(CUR_KEY,k)}catch(e){}};
+const keyFor=login=>regLoad().find(r=>r.login===login)?.key||('judo-auth-'+login);
+const CLIENTS={};
+const clientFor=k=>CLIENTS[k]||(CLIENTS[k]=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:k}}));
+let sb=clientFor(curKey());
 const idToEmail=id=>`${id.trim().toLowerCase()}@${ID_DOMAIN}`;
 const ID_RE=/^[a-z0-9_-]{3,20}$/;
 
@@ -583,7 +600,14 @@ function mapEntry(r,fb){
 }
 function must(res){if(res.error)throw res.error;return res.data}
 
+// ログイン直後は、Supabase のサーバー間の時計のずれで「JWT issued at future」が一瞬出ることがある。少し待って読み直す
 async function loadAll(){
+  for(let i=0;;i++){
+    try{return await loadAllOnce()}
+    catch(e){if(i<4&&/issued at future|JWT/i.test(String(e?.message||e))){await new Promise(r=>setTimeout(r,1200*(i+1)));continue}throw e}
+  }
+}
+async function loadAllOnce(){
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
   const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl]=await Promise.all([
@@ -681,7 +705,7 @@ async function enablePush(){
 }
 async function disablePush(){
   if(!pushSupported())return; const reg=await navigator.serviceWorker.getRegistration(); const sub=reg&&await reg.pushManager.getSubscription();
-  if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}
+  if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);if(regLoad().filter(r=>r.key!==curKey()).length===0)await sub.unsubscribe()}
 }
 function pushBlock(T,p){
   const role=acct(UI.session).role; if(role==='guardian'||UI.student)return '';
@@ -877,7 +901,7 @@ function header(tabs){
   return `<header class="top noprint"><div class="top-in">
     <div class="brand"><b>${L==='ja'?'柔道ノート':'Judo Note'}</b><small>${L==='ja'?'JUDO NOTE':'柔道ノート'}</small></div>
     <span class="sp"></span>
-    <div class="who"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span></div>
+    <button class="who whobtn" ${UI.student||UI.previewAs?'disabled':''} data-act="accounts" aria-label="${esc(t('ac_title'))}"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span>${UI.student||UI.previewAs?'':'<span class="caret">▾</span>'}</button>
     ${UI.previewAs?'':`<button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
     ${UI.student?'':`<button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>`}`}
   </div>${UI.student?`<div class="pv-bar st-bar"><span>${esc(I18N[UI.coachLang||'ja'].st_banner)}</span><button class="btn sm" data-act="exitstudent">${I18N[UI.coachLang||'ja'].st_exit}</button></div>`:''}${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
@@ -1071,6 +1095,14 @@ function entryModal(aid,d,L){
      ${e.head?.length?`<div><div class="lbl">${T.head}</div>${e.head.map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join(' ')}</div>`:''}</div></div>
    ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
    <div style="margin-top:12px">${e.comment?`<div class="cmt"><b>${T.from_coach}</b>${esc(e.comment.text)}</div>`:`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="mc-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
+}
+function accountsSheet(){
+  if(!UI.acctSheet)return ''; const T=I18N[lang()], reg=regLoad(), cur=curKey();
+  return `<div class="scrim noprint" data-act="closeacct"><div class="sheet-ui" role="dialog" aria-modal="true" data-stop>
+    <h3>${T.ac_title}</h3><p class="small muted" style="margin-top:0">${T.ac_help}</p>
+    <div class="stack" style="gap:8px">${reg.map(r=>`<button class="acctrow ${r.key===cur?'now':''}" data-act="${r.key===cur?'closeacct':'switchacct'}" data-login="${esc(r.login)}"><span class="avatar">${esc([...r.name][0]||'?')}</span><span><b>${esc(r.name)}</b><span class="small muted"> · ${T.ac_role[r.role]||''}</span></span><span class="small ${r.key===cur?'':'muted'}">${r.key===cur?T.ac_now:r.pw?'🔒 '+T.ac_needpw:''}</span></button>`).join('')}</div>
+    <div class="row" style="justify-content:space-between;margin-top:14px"><button class="btn sm" data-act="addacct">${T.ac_add}</button><button class="btn ghost sm" data-act="closeacct">${T.close}</button></div>
+  </div></div>`;
 }
 function modalView(){
   const m=UI.modal, L=lang(), T=I18N[L]; if(!m)return '';
@@ -1277,7 +1309,8 @@ function loginView(){
   if(UI.auth==='setup')return setupView();
   return `<div class="login"><form class="card stack" id="login-form" autocomplete="on">
     ${brandBlock()}
-    <div class="field"><label for="lg-id">${T.id}</label><input class="inp" id="lg-id" name="uid" autocapitalize="off" autocomplete="username" autocorrect="off" spellcheck="false"></div>
+    ${regLoad().length?`<div class="field"><span class="lbl">${T.ac_saved}</span><div class="chips">${regLoad().map(r=>`<button type="button" class="acchip ${UI.prefill===r.login?'on':''}" data-act="switchacct" data-login="${esc(r.login)}">${esc(r.name)}${r.pw||r.role==='athlete'?' 🔒':''}</button>`).join('')}</div><div class="small muted">${T.ac_tap}</div></div>`:''}
+    <div class="field"><label for="lg-id">${T.id}</label><input class="inp" id="lg-id" name="uid" autocapitalize="off" autocomplete="username" autocorrect="off" spellcheck="false" value="${esc(UI.prefill||'')}"></div>
     <div class="field"><label for="lg-pw">${T.pw}</label><input class="inp" id="lg-pw" name="pass" type="password" autocomplete="current-password"></div>
     <div class="err" id="lg-err">${esc(UI.err)}</div>
     <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.signin}</button>
@@ -1383,7 +1416,7 @@ function render(){
   if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;return}
   if(!UI.session||!me()){app.innerHTML=loginView();return}
   const m=me();
-  app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView();
+  app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
@@ -1400,6 +1433,26 @@ function errText(e){
   if(/Invalid login credentials/i.test(m))return T.login_err;
   return T.e_generic.replace('{m}',m);
 }
+// ほかの人に切り替える前に：親のスマホで使っていた選手のアカウントは、ログアウトしておく（兄弟でも勝手に開けないように）
+async function leaveCurrent(){
+  const reg=regLoad(), cur=reg.find(r=>r.key===curKey());
+  if(cur&&cur.role==='athlete'&&reg.some(r=>r.key!==cur.key)){await sb.auth.signOut({scope:'local'}).catch(()=>{});cur.pw=true;regSave(reg)}
+}
+// この端末の一覧に、今のアカウントを記録する
+function rememberCurrent(key){
+  const m=me(); if(!m)return;
+  const reg=regLoad().filter(r=>r.key!==key); reg.unshift({key,login:m.login,name:m.name,role:m.role,pw:false}); regSave(reg);
+}
+async function activate(key,user){   // このアカウントを使う
+  sb=clientFor(key); setCurKey(key); await afterSignIn(user); rememberCurrent(key);
+}
+async function switchTo(login){
+  const r=regLoad().find(x=>x.login===login); if(!r)return;
+  await leaveCurrent();
+  const c=clientFor(r.key), {data}=await c.auth.getSession();
+  if(data.session){UI.acctSheet=false;await activate(r.key,data.session.user);toast(t('ac_switched').replace('{n}',r.name));return}
+  UI.acctSheet=false;UI.session=null;UI.auth=null;UI.prefill=login;UI.err='';render();document.getElementById('lg-pw')?.focus();   // パスワードが必要
+}
 async function afterSignIn(user){
   UI.authUser=user; UI.session=user.id;
   await loadAll();
@@ -1409,7 +1462,13 @@ async function afterSignIn(user){
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
   UI.loginLang=prefs(UI.session).lang; render(); window.scrollTo(0,0);
 }
-async function signOut(){await disablePush().catch(()=>{});await sb.auth.signOut().catch(()=>{});UI.session=null;UI.authUser=null;UI.settings=false;UI.auth=null;ACCOUNTS=[];ATH=[];render()}
+async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
+  const key=curKey(); await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
+  const reg=regLoad().filter(r=>r.key!==key); regSave(reg);
+  Object.assign(UI,{session:null,authUser:null,settings:false,auth:null,acctSheet:false}); ACCOUNTS=[]; ATH=[];
+  for(const r of reg){const c=clientFor(r.key),{data}=await c.auth.getSession();if(data.session&&r.role!=='athlete'){await activate(r.key,data.session.user);return}}
+  setCurKey('judo-auth-none'); sb=clientFor('judo-auth-none'); render();
+}
 async function refreshData(){if(!me()||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))render()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
 
@@ -1432,6 +1491,10 @@ document.addEventListener('click',ev=>{
       if(box)box.hidden=ok&&data.role==='guardian';
       const lk=document.getElementById('link-form'); if(lk)lk.hidden=!(ok&&data.role==='guardian')})}
   else if(a==='logout'){signOut()}
+  else if(a==='accounts'){UI.acctSheet=true;render()}
+  else if(a==='closeacct'){if(el.classList.contains('scrim')&&ev.target.closest('[data-stop]'))return;UI.acctSheet=false;render()}
+  else if(a==='switchacct'){run(()=>switchTo(el.dataset.login))}
+  else if(a==='addacct'){run(async()=>{await leaveCurrent();Object.assign(UI,{acctSheet:false,session:null,auth:null,prefill:'',err:''});setCurKey('judo-auth-none');sb=clientFor('judo-auth-none')})}
   else if(a==='view'){UI.view=el.dataset.v;UI.sel=null;render();window.scrollTo(0,0)}
   else if(a==='preview'){UI.previewAs=el.dataset.id;UI.pAid=el.dataset.id;UI.draft=null;UI.view='today';render();window.scrollTo(0,0)}
   else if(a==='exitpreview'){const id=UI.previewAs;UI.previewAs=null;UI.view='team';UI.sel=id;render();window.scrollTo(0,0)}
@@ -1505,8 +1568,8 @@ document.addEventListener('submit',ev=>{
   if(fid==='login-form'){
     const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
     if(!id||!pw)return showErr('lg-err',TT.login_err);
-    UI.busy=true;
-    sb.auth.signInWithPassword({email:idToEmail(id),password:pw}).then(async({data,error})=>{UI.busy=false;if(error)throw error;await afterSignIn(data.user)})
+    UI.busy=true; const key=keyFor(id), c=clientFor(key);
+    c.auth.signInWithPassword({email:idToEmail(id),password:pw}).then(async({data,error})=>{UI.busy=false;if(error)throw error;UI.prefill='';await activate(key,data.user)})
       .catch(e=>{UI.busy=false;showErr('lg-err',errText(e))});
     return;
   }
@@ -1522,12 +1585,13 @@ document.addEventListener('submit',ev=>{
         const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
         if(!ID_RE.test(id))throw new Error('__'+TT.e_id); if(pw.length<8)throw new Error('__'+TT.e_pw); if(pw!==fdt.get('pass2'))throw new Error('__'+TT.e_pw2);
         const team=must(await sb.rpc('check_invite',{invite_code:code})); if(!team)throw new Error('invalid invite');
-        const {data,error}=await sb.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
+        const key=keyFor(id), c=clientFor(key);   // 新しい人は新しい保存場所で（親のログインはそのまま）
+        const {data,error}=await c.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
         if(!data.session)throw new Error('__'+TT.e_conf);
-        user=data.user; args.login=id;
+        await leaveCurrent(); sb=c; setCurKey(key); user=data.user; args.login=id;
       }else args.login=(user.email||'').split('@')[0];
       must(await sb.rpc('redeem_invite',args));
-      UI.busy=false; UI.join=null; await afterSignIn(user);
+      UI.busy=false; UI.join=null; await afterSignIn(user); rememberCurrent(curKey());
     })().catch(e=>{UI.busy=false;const m=String(e?.message||'');showErr('jn-err',m.startsWith('__')?m.slice(2):errText(e))});
     return;
   }
@@ -1535,10 +1599,11 @@ document.addEventListener('submit',ev=>{
     const code=(document.getElementById('jn-code')?.value||'').trim().toUpperCase(), id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
     (async()=>{
       UI.busy=true;
-      const {data,error}=await sb.auth.signInWithPassword({email:idToEmail(id),password:pw}); if(error)throw error;
-      const r=await sb.rpc('link_child',{invite_code:code});
-      if(r.error){await sb.auth.signOut();throw new Error(/guardian only/.test(r.error.message)?'__'+TT.e_not_guardian:r.error.message)}
-      UI.busy=false; UI.join=null; UI.child=r.data; await afterSignIn(data.user); toast(t('lk_done'));
+      const key=keyFor(id), c=clientFor(key);
+      const {data,error}=await c.auth.signInWithPassword({email:idToEmail(id),password:pw}); if(error)throw error;
+      const r=await c.rpc('link_child',{invite_code:code});
+      if(r.error){await c.auth.signOut({scope:'local'});throw new Error(/guardian only/.test(r.error.message)?'__'+TT.e_not_guardian:r.error.message)}
+      UI.busy=false; UI.join=null; UI.child=r.data; await leaveCurrent(); await activate(key,data.user); toast(t('lk_done'));
     })().catch(e=>{UI.busy=false;const m=String(e?.message||'');showErr('lk-err',m.startsWith('__')?m.slice(2):errText(e))});
     return;
   }
@@ -1547,10 +1612,11 @@ document.addEventListener('submit',ev=>{
     (async()=>{
       if(!ID_RE.test(id))throw new Error('__'+TT.e_id); if(pw.length<8)throw new Error('__'+TT.e_pw); if(pw!==fdt.get('pass2'))throw new Error('__'+TT.e_pw2);
       UI.busy=true;
-      const {data,error}=await sb.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
+      const key=keyFor(id), c=clientFor(key);
+      const {data,error}=await c.auth.signUp({email:idToEmail(id),password:pw}); if(error)throw error;
       if(!data.session)throw new Error('__'+TT.e_conf);
-      must(await sb.rpc('create_team',{team_name:(fdt.get('team')||'').trim(),login:id,name:(fdt.get('name')||'').trim()}));
-      UI.busy=false; await afterSignIn(data.user);
+      must(await c.rpc('create_team',{team_name:(fdt.get('team')||'').trim(),login:id,name:(fdt.get('name')||'').trim()}));
+      UI.busy=false; await activate(key,data.user);
     })().catch(e=>{UI.busy=false;const m=String(e?.message||'');showErr('su-err',m.startsWith('__')?m.slice(2):errText(e))});
     return;
   }
@@ -1585,8 +1651,8 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
   try{
     const {data}=await sb.auth.getSession();
     UI.booting=false;
-    if(data.session&&!m){await afterSignIn(data.session.user);return}
-    if(data.session&&m){await sb.auth.signOut().catch(()=>{})}
+    if(data.session&&!m){await afterSignIn(data.session.user);rememberCurrent(curKey());return}
+    if(m)UI.authUser=null;
   }catch(e){UI.booting=false;UI.err=errText(e)}
   render();
   if(UI.join?.code)document.querySelector('[data-act=checkcode]')?.click();
