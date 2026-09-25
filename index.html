@@ -331,7 +331,8 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .rbig{font-size:40px;font-weight:600;line-height:1.05;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rbig2{font-size:26px;font-weight:600;line-height:1.1}
 .runlist{display:grid;gap:0} .runrow{display:grid;grid-template-columns:7em 5.5em 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px} .runrow:first-child{border-top:0}
-.timein{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:6px;align-items:center}
+.timein{display:grid;grid-template-columns:minmax(4.5em,7em) auto minmax(4.5em,7em) auto;gap:6px;align-items:center;justify-content:start}
+.runform .timef{grid-column:1/-1}
 .runform{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
 @media (max-width:520px){.runrow{grid-template-columns:6.5em 4.5em minmax(0,1fr) auto}.runrow .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rbig{font-size:34px}}
 .moncard .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap} .moncard .gk{font-size:14px;font-weight:700;color:var(--accent)}
@@ -343,7 +344,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .chart.tap{cursor:zoom-in;border-radius:12px;transition:background .15s} .chart.tap:hover{background:var(--tint)}
 .ovgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
 .ovc{text-align:left;cursor:pointer;font:inherit;color:inherit} .ovc:hover{outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent)} .ovc .v{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .ovc .v small{font-size:13px;color:var(--dim)}
-.drow{display:grid;grid-template-columns:7.5em 6em 3.5em 5em 4.5em minmax(0,1fr) 2em;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 6px;border:0;border-top:1px solid var(--line);background:none;font:inherit;color:inherit;cursor:pointer}
+.drow{display:grid;grid-template-columns:7.5em 6em 3.5em 5em 4.5em minmax(0,1fr) 4em;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 6px;border:0;border-top:1px solid var(--line);background:none;font:inherit;color:inherit;cursor:pointer}
 .drow:hover{background:var(--tint)} .drow.empty{cursor:default;opacity:.55} .drow.empty:hover{background:none} .drow.empty span:nth-child(2){grid-column:2/-1}
 .drow.dhead{cursor:default;font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.05em;border-top:0} .drow.dhead:hover{background:none}
 .dnote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
@@ -433,7 +434,7 @@ const I18N = {
   limit:'階級上限', recent:'最近の記録', rest:'休養日', no_entry:'未入力', score:'調子',
   f_miss:'{n}日 未入力', f_miss1:'今日 未入力', f_drop:'調子低下 {d}', f_ramp:'負荷急増 ×{v}', f_pain:'痛み・体調：{p}', f_w:'減量 あと{d}kg', f_q:'未返信の質問', f_abs:'今日 欠席：{r}', f_watch:'今日 見学',
   att:'出欠', att_l:{present:'参加',watch:'見学',absent:'欠席',off:'休み（オフ）'}, abs_reason:'欠席の理由', ar:{sick:'体調不良',injury:'ケガ',school:'学校・仕事',personal:'用事',other:'その他'}, abs_note:'ひとこと（任意）', abs_note_ph:'例：熱が38度あるので休みます', c_abs:'欠席',
-  remind:'毎日のお知らせ', remind_off:'なし', remind_note:'本番版では、この時刻に「今日の記録」のお知らせがスマホに届きます（iPhoneはホーム画面に追加すると届きます）。', streak:'記録 {n}日連続',
+  remind:'毎日のお知らせ', remind_off:'なし', remind_note:'この時刻に、記録がまだならお知らせが届きます（iPhoneはホーム画面に追加して、通知をオンにしてください）。', streak:'記録 {n}日連続',
   head:'頭のケガ', head_help:'稽古中に頭を打ったとき、あとから症状が出たときは必ずチェック', hs:{hit:'頭を打った',headache:'頭痛',nausea:'吐き気',dizzy:'めまい',foggy:'ぼんやりする'}, f_head:'頭部：{s}',
   head_saved:'コーチに知らせました。症状があるうちは稽古を休み、医療機関で診てもらってください。',
   seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（kg）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
@@ -444,7 +445,7 @@ const I18N = {
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
   waiting:'返信待ち', answered:'返信済み', back:'← 選手一覧', goals:'今月の目標', goals_save:'目標を保存', goals_saved:'目標を保存しました',
   booklet:'選手用・月刊ノート（A5）', report:'コーチ用・チームレポート（A4）', month:'月', athlete:'選手', kind:'種類',
-  print_hint:'1ヶ月分を冊子の形にまとめたプレビューです。本番版ではここからPDFを保存して印刷します。ノートの言語と色は、その選手の設定に合わせています。',
+  print_hint:'1ヶ月分を冊子の形にまとめたものです。「印刷・PDFで保存」から印刷できます（パソコンのChromeがおすすめ）。ノートの言語と色は、その選手の設定に合わせています。',
   my_note_hint:'毎月この冊子を印刷して、手元に残せます。',
   nb:'柔道ノート', nb_sub:'JUDO NOTE', days:'稽古日数', total:'総稽古時間', avg:'平均コンディション', wchg:'体重',
   cal:'月間カレンダー', cal_sub:'MONTH', daily:'日々の記録', daily_sub:'DAILY LOG', dia:'コーチとの対話', dia_sub:'DIALOGUE', ref:'月末の振り返り', ref_sub:'REVIEW',
@@ -520,7 +521,7 @@ const I18N = {
   limit:'Weight limit', recent:'Recent entries', rest:'Rest day', no_entry:'No entry', score:'Condition',
   f_miss:'No entry for {n} days', f_miss1:'No entry today', f_drop:'Condition down {d}', f_ramp:'Load spike ×{v}', f_pain:'Pain/illness: {p}', f_w:'{d} kg to make weight', f_q:'Unanswered question', f_abs:'Absent today: {r}', f_watch:'Watching today',
   att:'Attendance', att_l:{present:'Training',watch:'Watching',absent:'Absent',off:'Day off'}, abs_reason:'Reason', ar:{sick:'Sick',injury:'Injury',school:'School/work',personal:'Personal',other:'Other'}, abs_note:'Note (optional)', abs_note_ph:'e.g. I have a fever, staying home', c_abs:'Absent',
-  remind:'Daily reminder', remind_off:'Off', remind_note:'In the full version your phone gets a reminder to log your day at this time (on iPhone, add the app to your Home Screen first).', streak:'{n}-day streak',
+  remind:'Daily reminder', remind_off:'Off', remind_note:'At this time you get a reminder if you haven’t logged yet (on iPhone, add the app to your Home Screen and turn on notifications).', streak:'{n}-day streak',
   head:'Head injury', head_help:'Always check this if you hit your head in practice or notice symptoms later', hs:{hit:'Hit my head',headache:'Headache',nausea:'Nausea',dizzy:'Dizziness',foggy:'Feeling foggy'}, f_head:'Head: {s}',
   head_saved:'Your coach has been notified. Don’t train while you have symptoms, and please see a doctor.',
   seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight (kg)', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
@@ -531,7 +532,7 @@ const I18N = {
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
   waiting:'Awaiting reply', answered:'Answered', back:'← Team', goals:'This month’s goals', goals_save:'Save goals', goals_saved:'Goals saved',
   booklet:'Athlete notebook (A5)', report:'Team report for coach (A4)', month:'Month', athlete:'Athlete', kind:'Type',
-  print_hint:'A preview of one month bound as a booklet. In the full version you save it as a PDF and print from here. Each notebook uses that athlete’s language and color.',
+  print_hint:'One month bound as a booklet. Print it with “Print / save as PDF” (Chrome on a computer works best). Each notebook uses that athlete’s language and color.',
   my_note_hint:'Print this booklet every month and keep it on your shelf.',
   nb:'柔道ノート', nb_sub:'JUDO NOTE', days:'Training days', total:'Total time', avg:'Avg. condition', wchg:'Weight',
   cal:'Month at a glance', cal_sub:'MONTH', daily:'Daily log', daily_sub:'DAILY LOG', dia:'Talks with coach', dia_sub:'DIALOGUE', ref:'Monthly review', ref_sub:'REVIEW',
@@ -1201,7 +1202,7 @@ function runsCard(aid,L,editable){
   const hist=rs.length?`<div class="lbl" style="margin-top:6px">${T.run_hist}</div><div class="runlist">${rs.map(r=>`<div class="runrow"><span class="mono">${fd(r.day,L)}</span><b class="mono">${fmtTime(r.sec)}${r.sec===bestSec?' 🏅':''}</b><span class="small muted">${esc(r.note)}</span>${editable?`<button class="linkish danger" data-act="rundel" data-id="${r.id}">${T.run_del}</button>`:''}</div>`).join('')}</div>`:`<div class="small muted">${T.run_none}</div>`;
   const form=editable?`<form class="runform" data-form="run">
     <div class="field"><label for="rn-day">${T.run_date}</label><input class="inp" id="rn-day" name="day" type="date" max="${TODAY}" value="${TODAY}" required></div>
-    <div class="field"><span class="lbl">${T.run_time}</span><div class="timein"><input class="inp mono" name="min" type="number" inputmode="numeric" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" inputmode="numeric" min="0" max="59" placeholder="34" aria-label="${T.run_sec}"><span>${T.run_sec}</span></div></div>
+    <div class="field timef"><span class="lbl">${T.run_time}</span><div class="timein"><input class="inp mono" name="min" type="number" inputmode="numeric" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" inputmode="numeric" min="0" max="59" placeholder="34" aria-label="${T.run_sec}"><span>${T.run_sec}</span></div></div>
     <div class="field"><label for="rn-note">${T.run_note}</label><input class="inp" id="rn-note" name="note" maxlength="200"></div>
     <div><button class="btn sm" type="submit">${T.run_add}</button></div></form>`:'';
   return `<div class="card"><h2>🏃 ${T.run_title}</h2><div class="stack">${top}${chartHtml}${hist}${form}</div></div>`;
@@ -1315,6 +1316,7 @@ function settingsView(){
     ${pushBlock(T,p)}
     ${['athlete','coach'].includes(acct(UI.session).role)?`<div class="opt-group"><label class="lbl" for="remind">${acct(UI.session).role==='coach'?T.remind_c:T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:18},(_,i)=>String(i+6).padStart(2,'0')+':00')].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select></div>`:''}
     ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}：${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
+    <p class="small"><a class="linkish" href="manual.html#${acct(UI.session).role==='coach'?'coach':(acct(UI.session).role==='guardian'?'parent':'athlete')+'-'+L}">📖 ${L==='ja'?'取扱説明書':'Manual'}</a></p>
     <p class="small muted">${T.settings_note}</p>
     <div class="row" style="justify-content:space-between"><span class="small muted">${esc(me().name)} · ID <span class="mono">${esc(me().login)}</span></span><button class="btn sm" data-act="closeset">${T.close}</button></div>
   </div></div>`;
@@ -1334,7 +1336,7 @@ function loginView(){
     <div class="field"><label for="lg-pw">${T.pw}</label><input class="inp" id="lg-pw" name="pass" type="password" autocomplete="current-password"></div>
     <div class="err" id="lg-err">${esc(UI.err)}</div>
     <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.signin}</button>
-    <p class="small muted" style="margin:0">🔒 ${T.privacy} <a class="linkish" href="guide.html#${UI.loginLang==='en'?'athlete-en':'athlete-ja'}">${T.howto}</a></p>
+    <p class="small muted" style="margin:0">🔒 ${T.privacy} <a class="linkish" href="manual.html">${T.howto}</a></p>
     <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost sm" data-act="auth" data-v="join">${T.join}</button><button type="button" class="linkish" data-act="auth" data-v="setup">${T.setup}</button></div>
   </form></div>`;
 }

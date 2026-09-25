@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>柔道ノート 取扱説明書</title>
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* 柔道ノートの取扱説明書（コーチ用・選手用・保護者用）。画面で読むことも、PDFにして印刷することもできる */
+:root{--ink:#16181f;--dim:#555b68;--faint:#8a8fa0;--line:#dde0e7;--soft:#f2f4f9;--acc:#3552d4;--acc2:#8b5cf6;--good:#1f8a4c;--warn:#b86e00;--bad:#cf3434;--paper:#fff;--ground:#eceef4;
+  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;--mincho:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e9ebf2;--dim:#a8aebd;--faint:#7d8394;--line:#2d3342;--soft:#1c2130;--acc:#8ea2ff;--paper:#141824;--ground:#0c0f17;color-scheme:dark}}
+:root[data-theme="dark"]{--ink:#e9ebf2;--dim:#a8aebd;--faint:#7d8394;--line:#2d3342;--soft:#1c2130;--acc:#8ea2ff;--paper:#141824;--ground:#0c0f17;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:24px 16px 60px}
+.doc{background:var(--paper);border-radius:20px;padding:36px 40px;box-shadow:0 10px 36px rgba(20,24,40,.08)}
+@media (max-width:640px){.doc{padding:24px 18px;border-radius:16px}}
+.cover{display:flex;gap:16px;align-items:center;margin-bottom:10px}
+.cover img{width:64px;height:64px;border-radius:15px}
+.cover h1{font-family:var(--mincho);font-weight:800;font-size:32px;margin:0;line-height:1.15;letter-spacing:.04em}
+.cover .for{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:999px;padding:3px 12px}
+.meta{font-size:13px;color:var(--dim);margin:0 0 18px}
+.meta a{color:var(--acc)}
+.toc{background:var(--soft);border-radius:14px;padding:14px 18px;margin:18px 0 28px}
+.toc b{font-size:13px;color:var(--dim)}
+.toc ol{margin:6px 0 0;padding-left:1.4em;columns:2;column-gap:28px;font-size:15px}
+@media (max-width:640px){.toc ol{columns:1}}
+.toc a{color:var(--ink);text-decoration:none} .toc a:hover{color:var(--acc)}
+h2{font-size:22px;margin:40px 0 12px;padding-top:14px;border-top:2px solid var(--ink);display:flex;gap:10px;align-items:baseline;text-wrap:balance}
+h2 .n{font-family:var(--mono);font-size:14px;color:var(--acc)}
+h3{font-size:17px;margin:24px 0 6px}
+p{margin:8px 0}
+ol.steps{padding-left:0;list-style:none;counter-reset:s;display:grid;gap:10px;margin:10px 0}
+ol.steps>li{display:grid;grid-template-columns:30px 1fr;gap:10px;counter-increment:s}
+ol.steps>li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center;font-family:var(--mono);margin-top:2px}
+ul{padding-left:1.3em;margin:8px 0} li{margin:3px 0}
+.with{display:grid;grid-template-columns:1fr 250px;gap:24px;align-items:start;margin:12px 0}
+.with.wide{grid-template-columns:1fr}
+@media (max-width:700px){.with{grid-template-columns:1fr}.with figure{max-width:300px;margin-inline:auto}}
+figure{margin:0}
+figure img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(20,24,40,.10)}
+figcaption{font-size:12px;color:var(--dim);margin-top:6px;text-align:center}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:12px 0}
+.note,.tip,.warn{border-radius:12px;padding:12px 16px;margin:12px 0;font-size:15px}
+.tip{background:color-mix(in srgb,var(--acc) 9%,var(--paper));border-left:4px solid var(--acc)}
+.warn{background:color-mix(in srgb,var(--warn) 10%,var(--paper));border-left:4px solid var(--warn)}
+.note{background:var(--soft)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left;vertical-align:top}
+th{font-size:12.5px;color:var(--dim);font-weight:700;border-bottom:2px solid var(--ink)}
+.tbl{overflow-x:auto} .tbl td:first-child{white-space:nowrap}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 9px;border-radius:999px;white-space:nowrap}
+.pill.bad{background:rgba(207,52,52,.12);color:var(--bad)} .pill.warn{background:rgba(214,138,0,.15);color:var(--warn)} .pill.acc{background:color-mix(in srgb,var(--acc) 13%,transparent);color:var(--acc)} .pill.good{background:rgba(31,138,76,.13);color:var(--good)}
+kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;white-space:nowrap}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+/* 目次ページ */
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:20px}
+.pick a{display:block;background:var(--paper);border-radius:18px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:0 6px 20px rgba(20,24,40,.07);border:1px solid var(--line)}
+.pick a:hover{border-color:var(--acc)} .pick b{display:block;font-size:18px;margin-bottom:4px} .pick span{font-size:13.5px;color:var(--dim)}
+.book{display:none} .book.show{display:block} #home.hide{display:none}
+@media print{
+  @page{size:A4;margin:14mm 13mm}
+  body{background:#fff;font-size:10.5pt;line-height:1.6;color:#16181f} .wrap{max-width:none;padding:0} .doc{box-shadow:none;padding:0;border-radius:0;background:#fff}
+  #home,.noprint{display:none!important}
+  h2{break-after:avoid;page-break-after:avoid} .with,figure,table,.tip,.warn,.note{break-inside:avoid}
+  .with{grid-template-columns:1fr 200px} figure img{box-shadow:none}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= 目次 ================= -->
+<div id="home">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>柔道ノート 取扱説明書</h1><span class="for">Judo Note manuals</span></div></div>
+  <p class="meta">読む人に合わせて選んでください。 / Choose the manual for you.</p>
+  <div class="pick">
+    <a href="#athlete-ja"><b>選手用</b><span>毎日の記録のつけ方、ランニング、試合の振り返り、質問のしかた</span></a>
+    <a href="#parent-ja"><b>保護者用</b><span>登録のしかた、兄弟姉妹の切り替え、お子さんの記録の見方、プライバシー</span></a>
+    <a href="#coach"><b>コーチ用</b><span>招待、毎日の見方、目印の意味、コメント、印刷ノート、選手の管理</span></a>
+    <a href="#athlete-en"><b>For athletes (English)</b><span>How to log each day, running, match reviews and questions</span></a>
+    <a href="#parent-en"><b>For parents (English)</b><span>Sign-up, switching between children, viewing records, privacy</span></a>
+  </div>
+</div>
+
+<!-- ======================================================================
+     選手用（日本語）
+     ====================================================================== -->
+<article class="book doc" id="athlete-ja" lang="ja">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>柔道ノート</h1><span class="for">選手用 取扱説明書</span></div></div>
+  <p class="meta">アプリ：<a href="./">https://0512eiki.github.io/judo-note/</a>　・　WJA コーチ 古谷映輝（Eiki Furuya）</p>
+  <nav class="toc noprint"><b>もくじ</b><ol>
+    <li><a href="#aj1">柔道ノートとは</a></li><li><a href="#aj2">はじめかた（最初に1回）</a></li><li><a href="#aj3">画面の見方</a></li><li><a href="#aj4">毎日の記録のつけ方</a></li>
+    <li><a href="#aj5">書き忘れたとき・直したいとき</a></li><li><a href="#aj6">記録タブ（グラフ・ランニング）</a></li><li><a href="#aj7">質問のしかた</a></li><li><a href="#aj8">ノートタブ（目標・試合・冊子）</a></li>
+    <li><a href="#aj9">月末のまとめ</a></li><li><a href="#aj10">通知と設定</a></li><li><a href="#aj11">親のスマホで使うとき</a></li><li><a href="#aj12">困ったとき</a></li></ol></nav>
+
+  <h2 id="aj1"><span class="n">01</span>柔道ノートとは</h2>
+  <p>毎日の調子・練習の感想・体重・ケガ、コーチへの質問を記録して、コーチと共有するアプリです。書いたことはグラフになり、月末には1ヶ月分が冊子にまとまります。</p>
+  <div class="tip">🔒 <b>記録を見られるのは、あなた・コーチ・（登録していれば）あなたの保護者だけ</b>です。ほかの選手や、その家族、兄弟姉妹にも見えません。</div>
+
+  <h2 id="aj2"><span class="n">02</span>はじめかた（最初に1回）</h2>
+  <ol class="steps">
+    <li><div><b>コーチから届いた「招待リンク」を開く</b><br>LINEなどで届きます。リンクがないときは、アプリを開いて「招待コードで登録」に8文字のコードを入れます。</div></li>
+    <li><div><b>名前・ID・パスワード・階級を入れて「登録してはじめる」</b><br>IDは自分で決めます（英小文字・数字で3〜20文字）。パスワードは8文字以上です。iPhoneで「パスワードを保存」と出たら保存しておくと安心です。</div></li>
+    <li><div><b>18歳未満の人は、保護者の方に説明してから</b>、保護者の名前を入れて同意のチェックをつけます。</div></li>
+    <li><div><b>ホーム画面に追加する</b><br>iPhone：Safariで開いて <span class="ui">共有</span> → <span class="ui">ホーム画面に追加</span>。Android：Chromeのメニュー → <span class="ui">ホーム画面に追加</span>。「柔」のアイコンから開けます。</div></li>
+    <li><div><b>通知をオンにする</b>（おすすめ）<br>右上の歯車 → <span class="ui">🔔 この端末で通知を受け取る</span> → <span class="ui">許可</span>。毎日決まった時刻（はじめは21時）に、記録がまだならお知らせが届きます。</div></li>
+  </ol>
+
+  <h2 id="aj3"><span class="n">03</span>画面の見方</h2>
+  <div class="with"><div>
+    <p>画面の上に4つのタブがあります。</p>
+    <ul><li><b>今日</b>：その日の記録をつける</li><li><b>記録</b>：グラフ・ランニング・これまでの記録</li><li><b>質問</b>：コーチに質問する、返事を見る</li><li><b>ノート</b>：今月の目標、試合の予定と振り返り、月の冊子</li></ul>
+    <p>いちばん上にはいつも<b>今月の目標</b>が出ます。試合が近いと「あと◯日」、コーチからのコメントもここに出ます。</p>
+  </div><figure><img src="manual-img/a-today.jpg" alt="今日の画面" loading="lazy"><figcaption>今日のタブ</figcaption></figure></div>
+
+  <h2 id="aj4"><span class="n">04</span>毎日の記録のつけ方</h2>
+  <p>練習のあとに「今日」のタブで記録します。慣れると1〜2分で終わります。</p>
+  <div class="pair">
+    <figure><img src="manual-img/a-form1.jpg" alt="出欠と稽古" loading="lazy"><figcaption>出欠・稽古の内容・きつさ</figcaption></figure>
+    <figure><img src="manual-img/a-form2.jpg" alt="体の状態" loading="lazy"><figcaption>体重・痛み・頭のケガ</figcaption></figure>
+    <figure><img src="manual-img/a-form3.jpg" alt="感想" loading="lazy"><figcaption>感想・質問・保存</figcaption></figure>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>項目</th><th>書き方</th></tr>
+    <tr><td>コンディション</td><td>睡眠・元気・筋肉痛・ストレス・気分を <b>1〜5</b> で。5がいちばん良い状態です。</td></tr>
+    <tr><td>出欠</td><td>参加・見学・欠席・休み（オフ）から選びます。欠席のときは理由も選びます。</td></tr>
+    <tr><td>稽古の内容</td><td>技術練習・打ち込み・投げ込み・乱取り・寝技・トレーニング・試合形式から、やったものを全部。</td></tr>
+    <tr><td>時間・きつさ</td><td>稽古の時間（分）と、稽古全体のきつさを <b>0〜10</b> で（0＝安静、10＝限界）。</td></tr>
+    <tr><td>体重</td><td>その日に量った体重（kg）。</td></tr>
+    <tr><td>痛むところ・体調</td><td>何もなければ <span class="ui">✓ 痛みや不調はなし</span> のままでOK。痛いところがあれば部位と強さを選びます。風邪・腹痛などは「その他・体調」に書きます。</td></tr>
+    <tr><td>頭のケガ</td><td><b>頭を打ったとき、頭痛・吐き気・めまい・ぼんやりがあるときは必ずチェック</b>。コーチの画面のいちばん上に赤い印で出ます。症状があるうちは稽古を休み、病院で診てもらってください。</td></tr>
+    <tr><td>感想・気づき</td><td>うまくいったこと、課題、次に意識すること。短くても大丈夫です。</td></tr>
+    <tr><td>コーチへの質問</td><td>あれば書きます（なくてもOK）。</td></tr>
+  </table></div>
+  <p>最後に <span class="ui">今日の記録を保存</span> を押します。</p>
+  <div class="note">電波が悪くて保存できなかったときも、書いた内容はスマホに残ります。電波のよいところでもう一度「保存」を押してください。</div>
+
+  <h2 id="aj5"><span class="n">05</span>書き忘れたとき・直したいとき</h2>
+  <ul>
+    <li><b>書き忘れた</b>：次の練習までに書けばOKです。「今日」タブの上の <span class="ui">昨日</span> を押して、昨日の分を書きます。</li>
+    <li><b>記録を直したい</b>：今日・昨日の分は、同じ日を選んで直してから、もう一度「保存」を押すと上書きされます。</li>
+    <li><b>質問を直したい</b>：自分の質問の名前の横にある <span class="ui">編集</span> から直せます（「編集済み」と表示されます）。</li>
+  </ul>
+
+  <h2 id="aj6"><span class="n">06</span>記録タブ（グラフ・ランニング）</h2>
+  <div class="with"><div>
+    <h3>ランニング</h3>
+    <p>いつものコースのタイムを測ったら、<b>測った日とタイム（分・秒）</b>を入れて <span class="ui">記録を追加</span>。距離は入れなくて大丈夫です。</p>
+    <ul><li>最新のタイムと、前回より何秒速い・遅いかが出ます。</li><li>🏅 が自己ベストです。これまでの記録は全部さかのぼれます。</li><li>グラフは上にいくほど速いタイムです。</li></ul>
+    <h3>グラフ</h3>
+    <p>直近4週間の調子（5〜25）、練習負荷（きつさ×分）、体重の変化が見られます。試合の日には縦線が入ります。</p>
+  </div><figure><img src="manual-img/a-run.jpg" alt="ランニングとグラフ" loading="lazy"><figcaption>記録タブ</figcaption></figure></div>
+
+  <h2 id="aj7"><span class="n">07</span>質問のしかた</h2>
+  <div class="with"><div>
+    <p>「質問」タブで書いて <span class="ui">質問する</span>。今日の記録の「コーチへの質問」に書いても同じです。</p>
+    <p>コーチから返事がくると、タブに数字が出ます。返事にさらに返信もできます。質問のやりとりは、あなたとコーチ、保護者の方が見られます。</p>
+  </div><figure><img src="manual-img/a-q.jpg" alt="質問" loading="lazy"><figcaption>質問タブ</figcaption></figure></div>
+
+  <h2 id="aj8"><span class="n">08</span>ノートタブ（目標・試合・冊子）</h2>
+  <div class="with"><div>
+    <h3>今月の目標</h3>
+    <p>毎月はじめに3つまで決めて <span class="ui">目標を保存</span>。画面のいちばん上にいつも出ます。月末には「月末の振り返り」も書けます（冊子に載ります）。</p>
+    <h3>試合の予定</h3>
+    <p>大会名・試合日・計量日・目標体重を入れて <span class="ui">予定を追加</span>。「今日」タブに「あと◯日・目標まであと◯kg」が出ます。</p>
+    <h3>試合の振り返り</h3>
+    <p><b>試合の当日から</b>書けます。「今日」タブの試合のカードにある <span class="ui">✍️ 試合の振り返りを書く</span> から、結果・よかったこと・反省点・これからの課題を書きます。終わった試合も登録すれば、あとから書けます。</p>
+  </div><figure><img src="manual-img/a-note.jpg" alt="試合と振り返り" loading="lazy"><figcaption>ノートタブ</figcaption></figure></div>
+
+  <h2 id="aj9"><span class="n">09</span>月末のまとめ</h2>
+  <p>月末の夜に「📘 ◯月のまとめができました」という通知が届きます。「ノート」タブで、その月の冊子（表紙・カレンダー・毎日の記録・試合の振り返り・コーチとのやりとり・手書きの振り返り欄）が見られ、<span class="ui">印刷・PDFで保存</span> で印刷できます。</p>
+
+  <h2 id="aj10"><span class="n">10</span>通知と設定</h2>
+  <p>右上の歯車から変えられます。自分の画面だけに反映されます。</p>
+  <ul><li><b>言語</b>：日本語 / English</li><li><b>テーマカラー</b>：藍・桜・抹茶・夕焼け・墨、または好きな色</li><li><b>明るさ</b>：自動・ライト・ダーク</li><li><b>毎日のお知らせ</b>：6時〜23時から選べます（なしにもできます）</li></ul>
+
+  <h2 id="aj11"><span class="n">11</span>自分のスマホがないとき（親のスマホで使う）</h2>
+  <ol class="steps">
+    <li><div>親のスマホで柔道ノートを開き、画面の上の名前を押します。</div></li>
+    <li><div><span class="ui">＋ 別の人がログインする</span> を押して、<b>自分のIDとパスワード</b>で入ります。</div></li>
+    <li><div>記録が終わったら、名前を押して親の名前を押し、親に戻します。</div></li>
+  </ol>
+  <p>親に戻すと、あなたのアカウントは<b>自動でログアウト</b>します。兄弟姉妹が同じスマホを使っても、あなたの記録は見られません。次に使うときは、自分のパスワードで入ります（IDは覚えているので、パスワードだけでOK）。</p>
+
+  <h2 id="aj12"><span class="n">12</span>困ったとき</h2>
+  <div class="tbl"><table>
+    <tr><th>こんなとき</th><th>こうする</th></tr>
+    <tr><td>IDやパスワードを忘れた</td><td>コーチに伝えてください。新しいパスワードにしてもらえます。</td></tr>
+    <tr><td>通知が届かない</td><td>ホーム画面の「柔」から開いて、歯車 → 通知をオンにしたか確認。「テスト通知を送る」で試せます。</td></tr>
+    <tr><td>画面が大きく表示される・古いまま</td><td>アプリを一度閉じて、開き直してください。</td></tr>
+    <tr><td>おかしな動きをした</td><td>画面のスクリーンショットを撮って、いつ・何をしたかを添えてコーチに送ってください。</td></tr>
+  </table></div>
+  <div class="foot"><span>柔道ノート JUDO NOTE ・ 選手用</span><span>WJA コーチ 古谷映輝（Eiki Furuya）</span></div>
+</article>
+
+<!-- ======================================================================
+     For athletes (English)
+     ====================================================================== -->
+<article class="book doc" id="athlete-en" lang="en">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>Judo Note</h1><span class="for">Manual for athletes</span></div></div>
+  <p class="meta">App: <a href="./">https://0512eiki.github.io/judo-note/</a> · WJA · Coach Eiki Furuya</p>
+  <nav class="toc noprint"><b>Contents</b><ol>
+    <li><a href="#ae1">What Judo Note is</a></li><li><a href="#ae2">Getting started (once)</a></li><li><a href="#ae3">Finding your way</a></li><li><a href="#ae4">Logging each day</a></li>
+    <li><a href="#ae5">Forgot to log / fixing mistakes</a></li><li><a href="#ae6">History: charts and running</a></li><li><a href="#ae7">Asking your coach</a></li><li><a href="#ae8">Notebook: goals, matches, booklet</a></li>
+    <li><a href="#ae9">Month-end summary</a></li><li><a href="#ae10">Notifications and settings</a></li><li><a href="#ae11">Using a parent’s phone</a></li><li><a href="#ae12">Troubleshooting</a></li></ol></nav>
+
+  <h2 id="ae1"><span class="n">01</span>What Judo Note is</h2>
+  <p>An app where you log your daily condition, how practice went, your weight, injuries and questions — and share them with your coach. Your entries turn into charts, and each month becomes a printable notebook.</p>
+  <div class="tip">🔒 <b>Only you, your coach and (if registered) your parent/guardian can see your records.</b> Other athletes, their families and even your siblings can’t.</div>
+
+  <h2 id="ae2"><span class="n">02</span>Getting started (once)</h2>
+  <ol class="steps">
+    <li><div><b>Open the invite link from your coach</b><br>It arrives via LINE or similar. No link? Open the app, tap “Join with invite code” and enter the 8-character code.</div></li>
+    <li><div><b>Enter your name, ID, password and weight class, then tap “Create account”</b><br>Choose your own ID (3–20 lowercase letters or numbers) and a password of 8+ characters. Save the password on your phone when it asks.</div></li>
+    <li><div><b>Under 18?</b> Talk to your parent/guardian first, then enter their name and tick the consent box.</div></li>
+    <li><div><b>Add it to your Home Screen</b><br>iPhone: Safari → <span class="ui">Share</span> → <span class="ui">Add to Home Screen</span>. Android: Chrome menu → <span class="ui">Add to Home screen</span>.</div></li>
+    <li><div><b>Turn on notifications</b> (recommended)<br>Gear icon → <span class="ui">🔔 Get notifications on this device</span> → <span class="ui">Allow</span>. Once a day (9 pm at first) you get a reminder if you haven’t logged.</div></li>
+  </ol>
+
+  <h2 id="ae3"><span class="n">03</span>Finding your way</h2>
+  <div class="with"><div>
+    <p>Four tabs at the top:</p>
+    <ul><li><b>Today</b>: log the day</li><li><b>History</b>: charts, running and past entries</li><li><b>Questions</b>: ask your coach and read replies</li><li><b>Notebook</b>: monthly goals, matches and reviews, the monthly booklet</li></ul>
+    <p>Your <b>goals for the month</b> always sit at the top. Upcoming matches (“10 days to …”) and your coach’s latest comment appear there too.</p>
+  </div><figure><img src="manual-img/a-today-en.jpg" alt="Today tab" loading="lazy"><figcaption>Today tab</figcaption></figure></div>
+
+  <h2 id="ae4"><span class="n">04</span>Logging each day</h2>
+  <p>After practice, fill in the “Today” tab. It takes a minute or two.</p>
+  <div class="pair">
+    <figure><img src="manual-img/a-form1-en.jpg" alt="" loading="lazy"><figcaption>Attendance, practice, effort</figcaption></figure>
+    <figure><img src="manual-img/a-form2-en.jpg" alt="" loading="lazy"><figcaption>Weight, pain, head injury</figcaption></figure>
+    <figure><img src="manual-img/a-form3-en.jpg" alt="" loading="lazy"><figcaption>Reflections, question, save</figcaption></figure>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>Item</th><th>How to fill it in</th></tr>
+    <tr><td>Condition</td><td>Sleep, energy, soreness, stress and mood from <b>1 to 5</b> (5 is best).</td></tr>
+    <tr><td>Attendance</td><td>Training, watching, absent or day off. If absent, pick the reason.</td></tr>
+    <tr><td>What you did</td><td>Tick everything: technique, uchikomi, nagekomi, randori, newaza, strength, match sim.</td></tr>
+    <tr><td>Duration and effort</td><td>Minutes, and how hard the whole session was from <b>0 to 10</b> (0 = rest, 10 = maximal).</td></tr>
+    <tr><td>Weight</td><td>Today’s weight in kg.</td></tr>
+    <tr><td>Pain & illness</td><td>Leave <span class="ui">✓ No pain or illness</span> if you’re fine. Otherwise pick the body part and level. Colds, stomach aches etc. go in “Other / illness”.</td></tr>
+    <tr><td>Head injury</td><td><b>Always tick this if you hit your head or have a headache, nausea, dizziness or feel foggy.</b> It’s flagged in red at the top of your coach’s screen. Don’t train while you have symptoms and see a doctor.</td></tr>
+    <tr><td>Reflections</td><td>What worked, what to fix, what to focus on next. Short is fine.</td></tr>
+    <tr><td>Question for the coach</td><td>Optional.</td></tr>
+  </table></div>
+  <p>Finally tap <span class="ui">Save today’s entry</span>.</p>
+  <div class="note">If the signal is too weak to save, your entry stays on your phone — tap Save again later.</div>
+
+  <h2 id="ae5"><span class="n">05</span>Forgot to log / fixing mistakes</h2>
+  <ul><li><b>Forgot?</b> Log it before your next practice: tap <span class="ui">Yesterday</span> at the top of the Today tab.</li>
+    <li><b>Wrong entry?</b> Today’s and yesterday’s entries can be changed — pick the day, fix it and save again.</li>
+    <li><b>Wrong question?</b> Tap <span class="ui">Edit</span> next to your name on the message (it shows “edited”).</li></ul>
+
+  <h2 id="ae6"><span class="n">06</span>History: charts and running</h2>
+  <div class="with"><div>
+    <h3>Running</h3>
+    <p>After a timed run on the usual course, enter the <b>date and time (min, sec)</b> and tap <span class="ui">Add record</span>. No distance needed.</p>
+    <ul><li>You see your latest time and how much faster or slower it was than last time.</li><li>🏅 marks your personal best. Every past record is listed.</li><li>In the chart, higher means faster.</li></ul>
+    <h3>Charts</h3>
+    <p>Condition (5–25), training load (effort × minutes) and weight for the last four weeks. Match days show as vertical lines.</p>
+  </div><figure><img src="manual-img/a-run-en.jpg" alt="" loading="lazy"><figcaption>History tab</figcaption></figure></div>
+
+  <h2 id="ae7"><span class="n">07</span>Asking your coach</h2>
+  <div class="with"><div>
+    <p>Write on the “Questions” tab and tap <span class="ui">Ask</span> (or use “Question for the coach” when logging). A number on the tab tells you a reply has arrived, and you can reply back. Your parent/guardian can read these conversations too.</p>
+  </div><figure><img src="manual-img/a-q-en.jpg" alt="" loading="lazy"><figcaption>Questions tab</figcaption></figure></div>
+
+  <h2 id="ae8"><span class="n">08</span>Notebook: goals, matches, booklet</h2>
+  <div class="with"><div>
+    <h3>Goals for the month</h3><p>Set up to three at the start of each month and tap <span class="ui">Save goals</span>. They stay at the top of your screen. You can also write a monthly review (it goes in the booklet).</p>
+    <h3>Matches</h3><p>Add the event name, match day, weigh-in and target weight. The Today tab then shows “N days to …” and how far you are from your target weight.</p>
+    <h3>Match review</h3><p>You can write it <b>from match day</b>: on the Today tab tap <span class="ui">✍️ Write your match review</span> and fill in the result, what went well, what went wrong and what to work on. You can add past matches too.</p>
+  </div><figure><img src="manual-img/a-note-en.jpg" alt="" loading="lazy"><figcaption>Notebook tab</figcaption></figure></div>
+
+  <h2 id="ae9"><span class="n">09</span>Month-end summary</h2>
+  <p>On the last evening of the month you get “📘 Your … summary is ready”. The Notebook tab shows that month’s booklet (cover, calendar, daily log, match reviews, conversations with your coach and space to write by hand). Print it with <span class="ui">Print / save as PDF</span>.</p>
+
+  <h2 id="ae10"><span class="n">10</span>Notifications and settings</h2>
+  <p>Use the gear icon. Changes only affect your own screen: language (日本語 / English), theme color, appearance (auto / light / dark) and the daily reminder time (6 am–11 pm, or off).</p>
+
+  <h2 id="ae11"><span class="n">11</span>No phone? Use a parent’s phone</h2>
+  <ol class="steps"><li><div>Open Judo Note on your parent’s phone and tap the name at the top.</div></li><li><div>Tap <span class="ui">＋ Someone else signs in</span> and sign in with <b>your own ID and password</b>.</div></li><li><div>When you’re done, tap the name again and choose your parent.</div></li></ol>
+  <p>Switching back <b>signs you out automatically</b>, so siblings using the same phone can’t see your records. Next time just enter your password (your ID is remembered).</p>
+
+  <h2 id="ae12"><span class="n">12</span>Troubleshooting</h2>
+  <div class="tbl"><table><tr><th>If…</th><th>Do this</th></tr>
+    <tr><td>You forgot your ID or password</td><td>Tell your coach — they can set a new password.</td></tr>
+    <tr><td>No notifications</td><td>Open from the Home Screen icon, check notifications are on in the gear menu, then try “Send a test”.</td></tr>
+    <tr><td>The screen looks zoomed in or out of date</td><td>Close the app and open it again.</td></tr>
+    <tr><td>Something behaves strangely</td><td>Take a screenshot and send it to your coach with what you did and when.</td></tr></table></div>
+  <div class="foot"><span>Judo Note · for athletes</span><span>WJA · Coach Eiki Furuya</span></div>
+</article>
+
+<!-- ======================================================================
+     保護者用（日本語）
+     ====================================================================== -->
+<article class="book doc" id="parent-ja" lang="ja">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>柔道ノート</h1><span class="for">保護者用 取扱説明書</span></div></div>
+  <p class="meta">アプリ：<a href="./">https://0512eiki.github.io/judo-note/</a>　・　WJA コーチ 古谷映輝（Eiki Furuya）</p>
+  <nav class="toc noprint"><b>もくじ</b><ol>
+    <li><a href="#pj1">保護者のアカウントでできること</a></li><li><a href="#pj2">登録のしかた</a></li><li><a href="#pj3">お子さんが2人以上いるとき</a></li><li><a href="#pj4">ご両親それぞれのスマホで見るとき</a></li>
+    <li><a href="#pj5">画面の見方</a></li><li><a href="#pj6">お子さんがスマホを持っていないとき</a></li><li><a href="#pj7">プライバシーについて</a></li><li><a href="#pj8">困ったとき</a></li></ol></nav>
+
+  <h2 id="pj1"><span class="n">01</span>保護者のアカウントでできること</h2>
+  <p>お子さんの練習の記録を、<b>見るだけ</b>のアカウントで確認できます（無料・書き込みはできません）。</p>
+  <ul><li>毎日の調子・練習の記録・体重・ケガや体調</li><li>コーチからのコメントと、質問のやりとり</li><li>今月の目標、試合の予定と振り返り、ランニングの記録</li><li>1ヶ月ごとのまとめ（冊子として印刷もできます）</li></ul>
+
+  <h2 id="pj2"><span class="n">02</span>登録のしかた</h2>
+  <ol class="steps">
+    <li><div>お子さんの登録が終わったあと、コーチから<b>保護者用の招待リンク</b>が届きます。</div></li>
+    <li><div>リンクを開くと「◯◯さんの保護者として登録します」と出ます。お名前・ID・パスワードを決めて <span class="ui">登録してはじめる</span>。</div></li>
+    <li><div>Safariの <span class="ui">共有</span> → <span class="ui">ホーム画面に追加</span> で、アプリのように開けます。</div></li>
+  </ol>
+
+  <h2 id="pj3"><span class="n">03</span>お子さんが2人以上いるとき</h2>
+  <ol class="steps">
+    <li><div>コーチから、お子さんごとに保護者用リンクが届きます（例：姉用・妹用の2本）。</div></li>
+    <li><div>1本目のリンクから、上の「登録のしかた」のとおりに登録します。</div></li>
+    <li><div>2本目のリンクを開き、画面の下の <b>「すでに保護者として登録している方（2人目以降のお子さん）」</b> に、1本目で決めた<b>同じIDとパスワード</b>を入れて <span class="ui">ログインして追加</span>。（上の新規登録の欄は使いません）</div></li>
+    <li><div>画面の上に「姉 ／ 妹」の切り替えが出て、ワンタップで行き来できます。</div></li>
+  </ol>
+  <div class="tip">お子さんどうしは、お互いの記録を見られません。見られるのは保護者の方だけです。</div>
+
+  <h2 id="pj4"><span class="n">04</span>ご両親それぞれのスマホで見るとき</h2>
+  <p>コーチに保護者用リンクを人数分（例：お母さん用・お父さん用）もらい、それぞれ自分のIDで登録してください。1つのアカウントを2台のスマホで使うこともできます。</p>
+
+  <h2 id="pj5"><span class="n">05</span>画面の見方</h2>
+  <div class="with"><div>
+    <ul><li><b>記録</b>：今月の目標、試合までの日数、ランニング、調子・負荷・体重のグラフ、毎日の記録とコーチのコメント</li><li><b>質問</b>：お子さんとコーチのやりとり</li><li><b>ノート</b>：試合の予定と振り返り、目標、月の冊子（<span class="ui">印刷・PDFで保存</span>）</li></ul>
+    <p>「痛み」「頭のケガ」などが記録されると、その日の記録に表示されます。頭のケガは、コーチの画面のいちばん上にも赤い印で出ます。</p>
+  </div><figure><img src="manual-img/p-log.jpg" alt="保護者の画面" loading="lazy"><figcaption>保護者の画面（上でお子さんを切り替え）</figcaption></figure></div>
+
+  <h2 id="pj6"><span class="n">06</span>お子さんがスマホを持っていないとき</h2>
+  <div class="with"><div>
+    <ol class="steps">
+      <li><div>保護者のスマホで、画面の上のお名前を押します。</div></li>
+      <li><div><span class="ui">＋ 別の人がログインする</span> を押し、<b>お子さん本人のIDとパスワード</b>で入って記録します。</div></li>
+      <li><div>終わったら、お名前を押して保護者の名前を押すと、パスワードなしで保護者に戻れます。</div></li>
+    </ol>
+    <p>保護者に戻すと、お子さんのアカウントは<b>自動でログアウト</b>します。兄弟姉妹で交代して使っても、お互いの記録は見えません。1台のスマホで、保護者とお子さん全員分の通知も受け取れます（通知の見出しにお名前が入ります）。</p>
+  </div><figure><img src="manual-img/p-acct.jpg" alt="アカウントの切り替え" loading="lazy"><figcaption>この端末のアカウント</figcaption></figure></div>
+
+  <h2 id="pj7"><span class="n">07</span>プライバシーについて</h2>
+  <ul>
+    <li>記録を見られるのは、お子さん本人・コーチ・保護者の方だけです。<b>ほかの選手やご家庭、兄弟姉妹には一切共有されません</b>（体重も含みます）。</li>
+    <li>コーチとのやりとり（質問・返信・コメント）は、保護者の方も同じものを見られます。</li>
+    <li>18歳未満の選手は、登録のときに保護者の方のお名前と同意の確認が必要です。</li>
+    <li>卒業・退部のときは、コーチが記録を削除するか、PDFにしてお渡しします。</li>
+  </ul>
+
+  <h2 id="pj8"><span class="n">08</span>困ったとき</h2>
+  <div class="tbl"><table><tr><th>こんなとき</th><th>こうする</th></tr>
+    <tr><td>IDやパスワードを忘れた</td><td>コーチにご連絡ください。新しいパスワードを設定します。</td></tr>
+    <tr><td>2人目のお子さんが出てこない</td><td>2人目のリンクで「すでに保護者として登録している方」から、同じIDでログインしたか確認してください。</td></tr>
+    <tr><td>画面が古いまま・大きく表示される</td><td>アプリを一度閉じて、開き直してください。</td></tr>
+  </table></div>
+  <div class="foot"><span>柔道ノート JUDO NOTE ・ 保護者用</span><span>WJA コーチ 古谷映輝（Eiki Furuya）</span></div>
+</article>
+
+<!-- ======================================================================
+     For parents (English)
+     ====================================================================== -->
+<article class="book doc" id="parent-en" lang="en">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>Judo Note</h1><span class="for">Manual for parents & guardians</span></div></div>
+  <p class="meta">App: <a href="./">https://0512eiki.github.io/judo-note/</a> · WJA · Coach Eiki Furuya</p>
+  <nav class="toc noprint"><b>Contents</b><ol>
+    <li><a href="#pe1">What your account can do</a></li><li><a href="#pe2">Signing up</a></li><li><a href="#pe3">Two or more children</a></li><li><a href="#pe4">Both parents on their own phones</a></li>
+    <li><a href="#pe5">Finding your way</a></li><li><a href="#pe6">If your child has no phone</a></li><li><a href="#pe7">Privacy</a></li><li><a href="#pe8">Troubleshooting</a></li></ol></nav>
+
+  <h2 id="pe1"><span class="n">01</span>What your account can do</h2>
+  <p>You get a <b>read-only</b> account to follow your child’s training (free — you can’t change anything):</p>
+  <ul><li>Daily condition, practice log, weight, pain or illness</li><li>Comments from the coach and their questions and replies</li><li>Monthly goals, matches and match reviews, running times</li><li>A monthly summary you can print as a booklet</li></ul>
+
+  <h2 id="pe2"><span class="n">02</span>Signing up</h2>
+  <ol class="steps"><li><div>After your child has signed up, the coach sends you a <b>guardian invite link</b>.</div></li>
+    <li><div>Open it — it says you’re registering as your child’s guardian. Choose your name, ID and password and tap <span class="ui">Create account</span>.</div></li>
+    <li><div>In Safari tap <span class="ui">Share</span> → <span class="ui">Add to Home Screen</span> to open it like an app.</div></li></ol>
+
+  <h2 id="pe3"><span class="n">03</span>Two or more children</h2>
+  <ol class="steps"><li><div>The coach sends one guardian link per child.</div></li><li><div>Sign up with the first link as above.</div></li>
+    <li><div>Open the second link and use <b>“Already registered as a guardian?”</b> at the bottom: sign in with the <b>same ID and password</b> and tap <span class="ui">Sign in and add</span>. (Don’t use the new sign-up form.)</div></li>
+    <li><div>Switch between your children with one tap at the top of the screen.</div></li></ol>
+  <div class="tip">Your children can’t see each other’s records — only you can.</div>
+
+  <h2 id="pe4"><span class="n">04</span>Both parents on their own phones</h2>
+  <p>Ask the coach for one guardian link per parent and each sign up with your own ID. You can also use one account on two phones.</p>
+
+  <h2 id="pe5"><span class="n">05</span>Finding your way</h2>
+  <div class="with"><div>
+    <ul><li><b>Records</b>: monthly goals, days to the next match, running, charts, daily entries and the coach’s comments</li><li><b>Questions</b>: your child’s conversations with the coach</li><li><b>Notebook</b>: matches and reviews, goals, the monthly booklet (<span class="ui">Print / save as PDF</span>)</li></ul>
+    <p>Pain and head injuries appear on that day’s entry. A head injury is also flagged in red at the top of the coach’s screen.</p>
+  </div><figure><img src="manual-img/p-log-en.jpg" alt="" loading="lazy"><figcaption>Guardian view (switch children at the top)</figcaption></figure></div>
+
+  <h2 id="pe6"><span class="n">06</span>If your child has no phone</h2>
+  <div class="with"><div>
+    <ol class="steps"><li><div>On your phone, tap your name at the top.</div></li><li><div>Tap <span class="ui">＋ Someone else signs in</span> and let your child sign in with <b>their own ID and password</b>.</div></li><li><div>When they’re done, tap the name and choose yours — no password needed to switch back.</div></li></ol>
+    <p>Switching back <b>signs your child out automatically</b>, so siblings sharing the phone can’t see each other’s records. One phone can receive notifications for you and all your children (each shows the child’s name).</p>
+  </div><figure><img src="manual-img/p-acct-en.jpg" alt="" loading="lazy"><figcaption>Accounts on this device</figcaption></figure></div>
+
+  <h2 id="pe7"><span class="n">07</span>Privacy</h2>
+  <ul><li>Only your child, the coach and you can see the records. <b>Nothing — including weight — is shared with other athletes, families or siblings.</b></li>
+    <li>You see the same questions, replies and comments your child does.</li><li>Athletes under 18 need a guardian’s name and consent to sign up.</li>
+    <li>When an athlete graduates or leaves, the coach deletes the records or gives them to you as a PDF.</li></ul>
+
+  <h2 id="pe8"><span class="n">08</span>Troubleshooting</h2>
+  <div class="tbl"><table><tr><th>If…</th><th>Do this</th></tr>
+    <tr><td>You forgot your ID or password</td><td>Contact the coach — they can set a new password.</td></tr>
+    <tr><td>Your second child doesn’t appear</td><td>Open the second link and sign in with the same ID under “Already registered as a guardian?”.</td></tr>
+    <tr><td>The screen looks out of date or zoomed in</td><td>Close the app and open it again.</td></tr></table></div>
+  <div class="foot"><span>Judo Note · for parents & guardians</span><span>WJA · Coach Eiki Furuya</span></div>
+</article>
+
+<!-- ======================================================================
+     コーチ用
+     ====================================================================== -->
+<article class="book doc" id="coach" lang="ja">
+  <div class="cover"><img src="icon-192.png" alt=""><div><h1>柔道ノート</h1><span class="for">コーチ用 取扱説明書</span></div></div>
+  <p class="meta">アプリ：<a href="./">https://0512eiki.github.io/judo-note/</a>　・　WJA　・　パソコン・iPadでも使えます</p>
+  <nav class="toc noprint"><b>もくじ</b><ol>
+    <li><a href="#c1">全体のしくみ</a></li><li><a href="#c2">はじめに（ホーム画面・通知）</a></li><li><a href="#c3">選手を招待する</a></li><li><a href="#c4">保護者を招待する</a></li>
+    <li><a href="#c5">毎日の見方（選手一覧と目印）</a></li><li><a href="#c6">選手の詳しい画面</a></li><li><a href="#c7">コメント・見たよ・返信</a></li><li><a href="#c8">試合と非公開メモ</a></li>
+    <li><a href="#c9">月末の印刷ノート</a></li><li><a href="#c10">生徒モード・選手の画面で見る</a></li><li><a href="#c11">選手の管理</a></li><li><a href="#c12">数値の意味</a></li>
+    <li><a href="#c13">プライバシーの約束</a></li><li><a href="#c14">困ったとき</a></li></ol></nav>
+
+  <h2 id="c1"><span class="n">01</span>全体のしくみ</h2>
+  <div class="tbl"><table>
+    <tr><th></th><th>できること</th><th>見られる範囲</th></tr>
+    <tr><td><b>コーチ</b></td><td>選手一覧・詳しい画面・コメント・返信・印刷・選手と保護者の招待と管理</td><td>チーム全員</td></tr>
+    <tr><td><b>選手</b></td><td>毎日の記録・ランニング・目標・試合と振り返り・質問</td><td>自分の記録だけ</td></tr>
+    <tr><td><b>保護者</b></td><td>見るだけ（書き込みはできない）</td><td>自分の子どもの記録だけ（兄弟は切り替え）</td></tr>
+  </table></div>
+  <p>コーチの画面（選手一覧・目印・非公開メモ・レポート・招待コード）は、選手や保護者には見えません。共有されるのは、<b>コメント・質問への返信・「見たよ」・コーチが登録した試合予定</b>だけです。</p>
+
+  <h2 id="c2"><span class="n">02</span>はじめに（ホーム画面・通知）</h2>
+  <ol class="steps">
+    <li><div>スマホで開いて、Safariの <span class="ui">共有</span> → <span class="ui">ホーム画面に追加</span>。</div></li>
+    <li><div>ホーム画面の「柔」から開いて、右上の歯車 → <span class="ui">🔔 この端末で通知を受け取る</span>。</div></li>
+    <li><div>「毎日のまとめの時刻」を選びます（はじめは21時）。その時刻に、チームのまとめ（記録した人数・昨日の分がまだの人・欠席・痛みやケガ・未返信の質問）が1日1回届きます。</div></li>
+  </ol>
+  <div class="note">パソコンやiPadでは、ブラウザで同じURLを開いてログインします。選手の詳しい画面や印刷は、大きな画面のほうが見やすいです。</div>
+
+  <h2 id="c3"><span class="n">03</span>選手を招待する</h2>
+  <div class="with"><div>
+    <ol class="steps">
+      <li><div><span class="ui">選手の管理</span> タブを開きます。</div></li>
+      <li><div>「誰に渡すか」に選手の名前を書いて <span class="ui">発行する</span>（メモなので選手には見えません）。</div></li>
+      <li><div>できた招待メッセージの言語（日本語 / EN）を選んで <span class="ui">📤 送る</span>。スマホの共有メニューから、LINEなどでそのまま送れます。</div></li>
+      <li><div>選手がリンクを開いて自分でIDとパスワードを決めて登録すると、「選手」の欄に名前が出ます。</div></li>
+    </ol>
+    <p>招待リンクは<b>1人1回・14日間</b>有効です。使われなかったコードは「まだ使われていない招待コード」から <span class="ui">取り消す</span> で消せます。</p>
+  </div><figure><img src="manual-img/c-invite.jpg" alt="招待コードの発行" loading="lazy"><figcaption>選手の管理 → 招待コードを発行</figcaption></figure></div>
+
+  <h2 id="c4"><span class="n">04</span>保護者を招待する</h2>
+  <div class="with"><div>
+    <ol class="steps">
+      <li><div>選手の登録が終わったら、「選手の管理」のその選手の欄で <span class="ui">＋ 保護者用コード</span>。</div></li>
+      <li><div>保護者用のメッセージを <span class="ui">📤 送る</span> で保護者に送ります。</div></li>
+    </ol>
+    <ul>
+      <li><b>兄弟姉妹</b>：子どもごとに保護者用コードを発行して、同じ保護者に送ります。保護者は2本目以降を「すでに保護者として登録している方」から同じIDで追加します。</li>
+      <li><b>両親それぞれ</b>：同じ選手に保護者用コードを人数分発行します。</li>
+      <li><b>スマホを持っていない選手</b>：保護者のスマホで「別の人がログインする」から本人のIDで使えます。親に戻すと自動でログアウトします。</li>
+    </ul>
+  </div><figure><img src="manual-img/c-ginvite.jpg" alt="保護者用コード" loading="lazy"><figcaption>その選手の欄の「保護者用コード」</figcaption></figure></div>
+
+  <h2 id="c5"><span class="n">05</span>毎日の見方（選手一覧と目印）</h2>
+  <figure><img src="manual-img/c-team.jpg" alt="選手一覧" loading="lazy"><figcaption>選手一覧（気になる選手ほど上に並びます）</figcaption></figure>
+  <p>上に「本日の入力」「要チェック」「未返信の質問」の数、その下に選手ごとの14日間の調子の線・今日の調子・負荷比・体重と、目印が並びます。<b>赤い目印の選手ほど上</b>に出ます。</p>
+  <div class="tbl"><table>
+    <tr><th>目印</th><th>意味</th><th>おすすめの対応</th></tr>
+    <tr><td><span class="pill bad">頭部：頭を打った・頭痛</span></td><td>頭のケガの記録（いちばん上に出ます。夜のまとめ通知にも入ります）</td><td>本人に確認。症状があるうちは練習させず、受診をすすめる</td></tr>
+    <tr><td><span class="pill bad">調子低下 -5</span> / <span class="pill warn">-3</span></td><td>今日の調子が、その選手の14日平均より3以上低い（5以上で赤）</td><td>声をかける・練習量を調整</td></tr>
+    <tr><td><span class="pill warn">負荷急増 ×1.41</span></td><td>直近7日の練習負荷が、28日平均の1.3倍を超えた（1.5倍で赤）</td><td>ケガの予防のため本数・強度を調整</td></tr>
+    <tr><td><span class="pill warn">痛み・体調：膝</span></td><td>痛みが「中くらい」以上、または体調不良</td><td>様子を聞く</td></tr>
+    <tr><td><span class="pill warn">減量 あと1.1kg</span></td><td>最新の体重が階級の上限を超えている</td><td>減量の進め方を確認</td></tr>
+    <tr><td><span class="pill warn">今日 欠席：体調不良</span> / <span class="pill acc">今日 見学</span></td><td>その日の出欠</td><td>—</td></tr>
+    <tr><td><span class="pill acc">昨日の分がまだ</span> / <span class="pill bad">2日 未入力</span></td><td>前日の分は次の練習までに書けばよい。2日続けて書いていないと赤</td><td>一声かける</td></tr>
+    <tr><td><span class="pill acc">試合まで10日</span></td><td>14日以内に試合がある</td><td>調整の相談</td></tr>
+    <tr><td><span class="pill acc">未返信の質問</span></td><td>選手からの質問に、まだ返信していない</td><td>返信する</td></tr>
+  </table></div>
+  <p>今日まだ書いていないだけでは目印は出ません（夜に書く選手も多いため）。</p>
+
+  <h2 id="c6"><span class="n">06</span>選手の詳しい画面</h2>
+  <p>選手一覧で選手を押すと、詳しい画面になります。上のタブで切り替えます。</p>
+  <figure><img src="manual-img/c-detail.jpg" alt="概要" loading="lazy"><figcaption>概要：カードを押すと、それぞれ詳しいタブへ</figcaption></figure>
+  <div class="tbl"><table>
+    <tr><th>タブ</th><th>中身</th></tr>
+    <tr><td>概要</td><td>今日の調子・7日平均・この7日の稽古・負荷の増え方・体重・ランニング・次の試合・未返信。直近4週間のグラフと最近の記録。</td></tr>
+    <tr><td>毎日の記録</td><td>1日1行の表（2週間〜すべて）。<b>行を押すとその日の詳細</b>（調子5項目・稽古・痛み・感想）が開き、そこからコメント・見たよ。</td></tr>
+    <tr><td>グラフ</td><td>調子・負荷・体重・調子の内訳。<b>グラフを押すと大きく</b>なり、4週間・3ヶ月・すべてを切り替えられます。</td></tr>
+    <tr><td>ランニング／試合／質問・目標</td><td>それぞれの記録。目標は過去の月もさかのぼれます。</td></tr>
+  </table></div>
+  <div class="pair">
+    <figure><img src="manual-img/c-modal.jpg" alt="1日の詳細" loading="lazy"><figcaption>毎日の記録 → 行を押すと詳細</figcaption></figure>
+    <figure><img src="manual-img/c-chart.jpg" alt="グラフの拡大" loading="lazy"><figcaption>グラフ → 押すと拡大</figcaption></figure>
+  </div>
+
+  <h2 id="c7"><span class="n">07</span>コメント・見たよ・返信</h2>
+  <ul>
+    <li><b>コメント</b>：記録の下の欄に書いて <span class="ui">送信</span>。選手と保護者に見えます。</li>
+    <li><b>見たよ</b>：言葉がいらない日（欠席・休みの日など）も、<span class="ui">見たよ</span> で「コーチが見ました」と伝わります。</li>
+    <li><b>質問への返信</b>：<span class="ui">質問</span> タブ、または選手の画面の「質問・目標」から。</li>
+    <li><b>直す</b>：送ったコメントや返信は、名前の横の <span class="ui">編集</span> から直せます（「編集済み」と表示されます）。自分が書いたものだけ直せます。</li>
+  </ul>
+
+  <h2 id="c8"><span class="n">08</span>試合と非公開メモ</h2>
+  <p>試合予定は、選手が自分で登録するのが基本です（コーチも登録できます）。試合の当日から、選手は振り返り（結果・よかったこと・反省点・これからの課題）を書けます。</p>
+  <div class="tip">🔒 選手の画面の「試合の予定」には、試合ごとに <b>コーチのメモ</b> 欄があります。<b>ここに書いたことは、選手にも保護者にも見えず、冊子にも載りません</b>。自分用の記録として使えます。</div>
+
+  <h2 id="c9"><span class="n">09</span>月末の印刷ノート</h2>
+  <figure><img src="manual-img/c-print.jpg" alt="印刷ノート" loading="lazy"><figcaption>印刷ノート（選手用・月刊ノート A5）</figcaption></figure>
+  <ol class="steps">
+    <li><div><span class="ui">印刷ノート</span> タブで、種類（選手用A5冊子 / チームレポートA4）・選手・月を選びます。</div></li>
+    <li><div><span class="ui">印刷・PDFで保存</span> を押します。<b>パソコンのChromeがおすすめ</b>です。印刷の画面で「送信先」を「PDFに保存」にすると、PDFとして残せます。</div></li>
+  </ol>
+  <p>選手用の冊子は、表紙（目標・ランニング・稽古日数など）→ 月間カレンダーとグラフ → 日々の記録（コーチのコメント付き）→ 試合の振り返り → コーチとの対話 → 手書きの振り返り欄とサイン欄、の順です。<b>冊子はその選手の言語と色</b>で作られます。</p>
+
+  <h2 id="c10"><span class="n">10</span>生徒モード・選手の画面で見る</h2>
+  <div class="with"><div>
+    <h3>🎓 生徒モード（実際に操作できる）</h3>
+    <p>選手一覧の <span class="ui">🎓 生徒モードで操作する</span> で、コーチ専用の<b>練習用の選手アカウント</b>に切り替わります。記録・ランニング・振り返り・質問を、選手とまったく同じ画面で試せます。説明のときや、バグ探しに使えます。</p>
+    <ul><li>練習用アカウントは選手一覧の一番下に「🎓 生徒モード」として出ます。コメントを送って、選手側の見え方も確かめられます。</li><li>人数・レポート・通知には数えません。ほかの人からも見えません。</li><li>「選手の管理」で <span class="ui">作り直す</span> と、書いた内容を全部消せます。</li><li>上の <span class="ui">コーチ画面に戻る</span> で戻ります。</li></ul>
+    <h3>👀 選手の画面で見る（見るだけ）</h3>
+    <p>選手の詳しい画面の <span class="ui">👀 選手の画面で見る</span> で、実在の選手の画面をそのまま見られます（何も変えられません）。</p>
+  </div><figure><img src="manual-img/c-student.jpg" alt="生徒モード" loading="lazy"><figcaption>生徒モード</figcaption></figure></div>
+
+  <h2 id="c11"><span class="n">11</span>選手の管理</h2>
+  <div class="with"><div>
+    <ul>
+      <li><b>階級</b>：「男子 -73kg」と上限（kg）を入れて <span class="ui">階級を保存</span>。減量の目印やグラフの線に使われます。</li>
+      <li><b>パスワードを忘れた選手・保護者</b>：新しいパスワード（8文字以上）を入れて <span class="ui">パスワード再設定</span>。<b>本人に直接</b>伝えてください。</li>
+      <li><b>保護者を外す</b>：保護者の名前の横の <span class="ui">外す</span>。ほかの子どももいる保護者なら、アカウント自体は残ります。</li>
+      <li><b>卒業・退部</b>：<span class="ui">この選手を削除</span>。記録はすべて消え、その子だけの保護者アカウントも消えます。<b>残したいときは、先に印刷ノートでPDFを保存</b>してください。</li>
+    </ul>
+  </div><figure><img src="manual-img/c-members.jpg" alt="選手の管理" loading="lazy"><figcaption>選手の管理</figcaption></figure></div>
+
+  <h2 id="c12"><span class="n">12</span>数値の意味</h2>
+  <div class="tbl"><table>
+    <tr><th>数値</th><th>意味</th></tr>
+    <tr><td>調子（5〜25）</td><td>睡眠・元気・筋肉痛・ストレス・気分（各1〜5）の合計。20以上が良い状態、15以下は低い。</td></tr>
+    <tr><td>きつさ（0〜10）</td><td>稽古全体をふり返った主観的なきつさ（0＝安静、10＝限界）。</td></tr>
+    <tr><td>練習負荷</td><td>きつさ × 稽古時間（分）。1日の負荷の目安。</td></tr>
+    <tr><td>負荷の増え方（×）</td><td>直近7日の平均負荷 ÷ 28日の平均負荷。<b>0.8〜1.3が目安</b>、1.3を超えると注意、1.5を超えるとケガのリスクが高い。記録が3週間分たまってから表示されます。</td></tr>
+    <tr><td>調子低下</td><td>今日の調子が、その選手の直近14日の平均より3以上低いとき。</td></tr>
+  </table></div>
+
+  <h2 id="c13"><span class="n">13</span>プライバシーの約束</h2>
+  <ul>
+    <li>選手の記録（体重を含む）を見られるのは、本人・その保護者・コーチだけ。ほかの選手や家庭、兄弟姉妹どうしでも見えません。データベースのルールで守っているので、画面の操作で見えることはありません。</li>
+    <li>コーチの画面・非公開メモ・レポート・招待コードは、選手と保護者には見えません。</li>
+    <li>18歳未満の選手は、登録時に保護者の名前と同意を記録しています（選手の管理に表示）。</li>
+    <li>卒業・退部のときは、記録を削除するか、PDFにして渡します。</li>
+  </ul>
+
+  <h2 id="c14"><span class="n">14</span>困ったとき</h2>
+  <div class="tbl"><table><tr><th>こんなとき</th><th>こうする</th></tr>
+    <tr><td>選手がログインできない</td><td>IDは「選手の管理」で確認できます。パスワードは再設定して本人に伝えます。</td></tr>
+    <tr><td>通知が届かない</td><td>ホーム画面の「柔」から開いているか、歯車の通知がオンか確認し、「テスト通知を送る」で試します。</td></tr>
+    <tr><td>画面が古いまま・大きく表示される</td><td>アプリを一度閉じて、開き直します。</td></tr>
+    <tr><td>自分（コーチ）のパスワードを忘れた</td><td>アプリの中では戻せません。Claudeに「コーチのパスワードを再設定して」と頼んでください。</td></tr>
+    <tr><td>しばらく使わない時期がある</td><td>無料プランは、長く使わないとSupabaseが一時停止することがあります。記録は消えず、Supabaseの画面から再開できます。</td></tr>
+    <tr><td>バグを見つけた</td><td>スクリーンショットと、「いつ・誰の画面で・何をしたら」を添えてClaudeに伝えてください。生徒モードで再現できると早く直せます。</td></tr>
+  </table></div>
+  <div class="foot"><span>柔道ノート JUDO NOTE ・ コーチ用</span><span>WJA コーチ 古谷映輝（Eiki Furuya）</span></div>
+</article>
+
+</div>
+<script>
+// #athlete-ja などで開くと、その説明書だけを表示（見出しへのリンク #aj3 なども、その説明書を開く）
+function show(){
+  const h=decodeURIComponent(location.hash.slice(1)); const t=h&&document.getElementById(h);
+  const book=t?(t.classList.contains('book')?t:t.closest('.book')):null;
+  document.querySelectorAll('.book').forEach(b=>b.classList.toggle('show',b===book));
+  document.getElementById('home').classList.toggle('hide',!!book);
+  if(book){document.documentElement.lang=book.lang;document.title=book.querySelector('.for').textContent+' | 柔道ノート';if(t!==book)t.scrollIntoView();else window.scrollTo(0,0)}
+  else document.title='柔道ノート 取扱説明書';
+}
+addEventListener('hashchange',show); show();
+</script>
+</body>
+</html>
