@@ -384,7 +384,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .hdelta{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:3px;white-space:nowrap}
 .hdelta.up{background:var(--good-s);color:var(--good)} .hdelta.down{background:var(--bad-s);color:var(--bad)} .hdelta.flat{background:var(--panel2);color:var(--dim)}
 .hswipe{touch-action:pan-y;user-select:none;-webkit-user-select:none;min-width:0;overflow:hidden}
-.hchart{cursor:pointer}
+.hchart{cursor:pointer;min-height:172px}
 .hsl{will-change:transform}
 .hl .hlp{color:var(--dim);font-weight:500}
 .hchart svg{display:block;width:100%;height:auto}
@@ -1089,7 +1089,7 @@ function hcVals(aid,days,k){return days.filter(d=>d<=TODAY).map(d=>E(aid,d)).fil
 const hcAvg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null, hcSum=a=>a.reduce((x,y)=>x+y,0);
 function hcNiceMax(v){if(v<=0)return 600;const p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1.5?1.5:n<=2?2:n<=3?3:n<=5?5:10)*p}
 function hcDelta(now,prev,word,T,better,fmt=v=>v.toFixed(1)){if(now==null||prev==null||!word)return '';const d=now-prev;if(Math.abs(d)<.05)return `<span class="hdelta flat">${T.hc_same.replace('{w}',word)}</span>`;
-  const cls='flat';return `<span class="hdelta ${cls}">${T.hc_vs.replace('{w}',word)} ${d>0?'+':'−'}${fmt(Math.abs(d))}</span>`}
+  const cls=better==='none'?'flat':(d>0)===(better==='up')?'up':'down';return `<span class="hdelta ${cls}">${T.hc_vs.replace('{w}',word)} ${d>0?'+':'−'}${fmt(Math.abs(d))}</span>`}
 function healthCharts(aid,L,mode){
   const T=I18N[L], st=UI.hc||(UI.hc={r:'w',o:0,sel:null}), P=hcPeriod(aid,L,st.r,st.o), PP=st.r==='a'?null:hcPeriod(aid,L,st.r,st.o+1);
   const days=P.b.flatMap(b=>b.days), pdays=PP?PP.b.flatMap(b=>b.days):[], word=T.hc_pw[st.r], future=P.b.map(b=>b.days[0]>TODAY), labels=P.b.map(b=>b.lab);
@@ -1159,7 +1159,13 @@ function drawHC(host){
   host.innerHTML='<div class="hsl">'+s+'</svg></div>'; host.dataset.n=n; host.dataset.pl=pl; host.dataset.step=step; host.dataset.w=W;
 }
 function drawHealth(){document.querySelectorAll('.hchart').forEach(drawHC)}
-function hcRefresh(){const w=document.querySelector('.hc');if(!w)return;w.outerHTML=healthCharts(w.dataset.aid,w.dataset.l,w.dataset.mode);drawHealth()}
+function hcRefresh(anchor){   // 期間が変わったとき：作り直しても、触っていたカードが画面の同じ位置に残るようにする
+  const w=document.querySelector('.hc');if(!w)return;
+  const kids=[...w.children], idx=anchor?kids.findIndex(c=>c.contains(anchor)):-1, top=idx>=0?kids[idx].getBoundingClientRect().top:null, y=scrollY;
+  w.style.minHeight=w.offsetHeight+'px';   // 描き直しの一瞬、ページが短くなって上に戻されないように
+  w.outerHTML=healthCharts(w.dataset.aid,w.dataset.l,w.dataset.mode);drawHealth();
+  const nw=document.querySelector('.hc');
+  if(idx>=0&&nw.children[idx])window.scrollBy(0,nw.children[idx].getBoundingClientRect().top-top);else window.scrollTo(0,y)}
 function hcIndex(ch,clientX){const r=ch.getBoundingClientRect(),k=r.width/(+ch.dataset.w||r.width);return Math.max(0,Math.min(+ch.dataset.n-1,Math.floor((clientX-r.left-(+ch.dataset.pl)*k)/((+ch.dataset.step)*k))))}
 function hcSoft(){   // 選んだ日だけ変わるとき：数字の欄とグラフだけを描き直す（指で触っている要素は残す）
   const w=document.querySelector('.hc');if(!w)return;const t=document.createElement('div');t.innerHTML=healthCharts(w.dataset.aid,w.dataset.l,w.dataset.mode);
@@ -1170,10 +1176,10 @@ const hcMotion=()=>!matchMedia('(prefers-reduced-motion: reduce)').matches;
 function hcCan(dir){const w=document.querySelector('.hc');if(!w)return false;if(dir<0)return UI.hc.o>0;if(UI.hc.r==='a')return false;return hcPeriod(w.dataset.aid,w.dataset.l,UI.hc.r,UI.hc.o).start>DAYS[0]}
 function hcSlides(){return [...document.querySelectorAll('.hc .hsl')]}
 function hcShift(dx,anim){hcSlides().forEach(el=>{el.style.transition=anim?'transform .22s cubic-bezier(.2,.8,.2,1),opacity .22s':'none';el.style.transform=`translateX(${dx}px)`;el.style.opacity=anim==='out'?'0':''})}
-function hcGo(dir){   // dir=1：前の期間（右へスワイプ）、-1：次の期間
+function hcGo(dir,anchor){   // dir=1：前の期間（右へスワイプ）、-1：次の期間
   if(!hcCan(dir)){hcShift(0,'back');return}
   const W=document.querySelector('.hc .hsl')?.parentElement.clientWidth||320;
-  const done=()=>{UI.hc.o+=dir;UI.hc.sel=null;hcRefresh();if(!hcMotion())return;
+  const done=()=>{UI.hc.o+=dir;UI.hc.sel=null;hcRefresh(anchor);if(!hcMotion())return;
     hcSlides().forEach(el=>{el.style.transition='none';el.style.transform=`translateX(${-dir*W*.45}px)`;el.style.opacity='0';void el.offsetWidth;   // 反対側から入ってくる
       el.style.transition='transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s';el.style.transform='translateX(0)';el.style.opacity='1'})};
   if(!hcMotion())return done();
@@ -1190,7 +1196,7 @@ document.addEventListener('pointermove',ev=>{if(!hcG||ev.pointerId!==hcG.id)retu
   if(hcG.mode==='swipe'){ev.preventDefault();hcShift(hcCan(dx>0?1:-1)?dx:dx*.25)}   // 指についてくる（その先に期間がなければ少しだけ）
   else if(hcG.mode==='scrub'){const ch=document.querySelector(`.hchart[data-k="${hcG.area.dataset.k}"]`);if(ch)hcSelect(ch,ev.clientX,false)}});
 function hcEnd(ev){if(!hcG||ev.pointerId!==hcG.id)return;clearTimeout(hcG.timer);const g=hcG;hcG=null;const dx=ev.clientX-g.x0,v=Math.abs(dx)/Math.max(1,Date.now()-g.t);
-  if(g.mode==='swipe'){if(Math.abs(dx)>70||(v>.45&&Math.abs(dx)>30))hcGo(dx>0?1:-1);else hcShift(0,'back')}
+  if(g.mode==='swipe'){if(Math.abs(dx)>70||(v>.45&&Math.abs(dx)>30))hcGo(dx>0?1:-1,g.area);else hcShift(0,'back')}
   else if(!g.mode&&ev.type==='pointerup'&&g.area.classList.contains('hchart'))hcSelect(g.area,ev.clientX,true)}   // 軽くタップ → その日の値
 document.addEventListener('pointerup',hcEnd);document.addEventListener('pointercancel',ev=>{if(hcG&&hcG.mode==='swipe')hcShift(0,'back');hcEnd(ev)});
 addEventListener('resize',()=>{clearTimeout(drawHealth.t);drawHealth.t=setTimeout(drawHealth,120)});
@@ -1935,8 +1941,8 @@ document.addEventListener('click',ev=>{
   else if(a==='mreview'){UI.view='note';UI.mEdit=el.dataset.ev;render();document.querySelector('.refl-form')?.scrollIntoView({block:'center'})}
   else if(a==='child'){UI.child=el.dataset.id;UI.pAid=el.dataset.id;UI.mEdit=null;render();window.scrollTo(0,0)}
   else if(a==='gunlink'){const g=el.dataset.id, aid=el.dataset.aid;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_unlink_guardian',{guardian:g,athlete:aid}));await loadAll()},t('removed'))}
-  else if(a==='hcr'){UI.hc={r:el.dataset.v,o:0,sel:null};hcRefresh()}
-  else if(a==='hcnav'){hcGo(+el.dataset.v)}
+  else if(a==='hcr'){UI.hc={r:el.dataset.v,o:0,sel:null};hcRefresh(el)}
+  else if(a==='hcnav'){hcGo(+el.dataset.v,el)}
   else if(a==='ctab'){UI.ctab=el.dataset.v;render();window.scrollTo(0,0)}
   else if(a==='range'){UI[el.dataset.key]=+el.dataset.v;render()}
   else if(a==='bigchart'){UI.modal={type:'chart',aid:el.dataset.aid,k:el.dataset.k};render()}
