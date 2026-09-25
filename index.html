@@ -365,6 +365,8 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .acctrow.now{border-color:var(--accent);background:var(--tint)}
 .acchip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 13px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:inherit} .acchip.on{border-color:var(--accent);color:var(--accent);background:var(--tint)}
 .btn.saving{opacity:.7;cursor:wait}
+.rname .unread{display:block;margin-top:4px;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--accent);border-radius:999px;padding:1px 9px;width:max-content}
+.pill.new{background:var(--accent);color:#fff;font-size:10.5px;padding:1px 7px;letter-spacing:.04em}
 .utog{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;vertical-align:middle;flex:none}
 .utog button{border:0;background:var(--panel2);color:var(--dim);font:inherit;font-size:12px;font-weight:700;padding:3px 9px;cursor:pointer;line-height:1.3}
 .utog button[aria-pressed="true"]{background:var(--accent);color:#fff}
@@ -443,6 +445,7 @@ const I18N = {
   demo_accts:'デモ用アカウント（パスワードは全員 judo）', privacy:'選手は自分の記録だけ、コーチはチーム全員の記録を見られます。',
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
+  unread:'未読 {n}', new_tag:'NEW', unread_help:'前回この選手の画面を開いてから、新しく書かれたもの',
   wunit:'体重の単位', st_logged:'記録', st_edited:'直した',
   stk_on:'{n}日連続！', stk_on_sub:'ナイス継続。明日もこの調子で。', stk_go:'{n}日連続中', stk_go_sub:'今日書くと {m}日連続！', stk_start:'連続記録をスタートしよう', stk_start_sub:'今日の記録をつけると1日目。', stk_best:'ベスト {n}日', stk_ro:'{n}日連続で記録中', stk_ro0:'連続記録はまだありません',
   nb_off:'この端末では通知がオフです。', nb_off_a:'オンにすると、書き忘れた日の夜にお知らせが届きます。', nb_off_c:'オンにすると、選手の提出・質問と、毎朝のまとめが届きます。', nb_off_g:'オンにすると、お子さんが記録を忘れた日にお知らせが届きます。', nb_ios:'iPhoneで通知を受け取るには、Safariの「共有」→「ホーム画面に追加」から開いてください。', nb_later:'あとで',
@@ -556,6 +559,7 @@ const I18N = {
   demo_accts:'Demo accounts (password for all: judo)', privacy:'Athletes can only see their own records. The coach can see every athlete on the team.',
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
+  unread:'{n} new', new_tag:'NEW', unread_help:'Added since you last opened this athlete',
   wunit:'Weight unit', st_logged:'Logged', st_edited:'edited',
   stk_on:'{n}-day streak!', stk_on_sub:'Great consistency. Keep it going tomorrow.', stk_go:'{n}-day streak', stk_go_sub:'Log today to make it {m}!', stk_start:'Start a streak', stk_start_sub:'Log today for day 1.', stk_best:'Best: {n} days', stk_ro:'{n}-day logging streak', stk_ro0:'No streak yet',
   nb_off:'Notifications are off on this device.', nb_off_a:'Turn them on to get a reminder on nights you forget to log.', nb_off_c:'Turn them on to hear about athletes’ entries and questions, plus the morning summary.', nb_off_g:'Turn them on to get a reminder if your child forgets to log.', nb_ios:'To get notifications on iPhone, open the app from your Home Screen (Safari: Share → Add to Home Screen).', nb_later:'Later',
@@ -705,7 +709,7 @@ async function loadAll(){
 async function loadAllOnce(){
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
-  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs]=await Promise.all([
+  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs,cs]=await Promise.all([
     sb.from('profiles').select('*'),
     sb.from('entries').select('*').gte('day',since),
     sb.from('feedback').select('*'),
@@ -718,7 +722,8 @@ async function loadAllOnce(){
     sb.from('match_notes').select('*'),
     sb.from('coach_notes').select('*'),
     sb.from('guardian_links').select('*'),
-    sb.from('extras').select('*').gte('day',since).order('created_at')]);
+    sb.from('extras').select('*').gte('day',since).order('created_at'),
+    sb.from('coach_seen').select('*')]);
   const profs=must(pr);
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
@@ -735,8 +740,10 @@ async function loadAllOnce(){
   ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:e.created_by===e.athlete_id?'athlete':'coach',aids:[e.athlete_id]}));
   ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
   ST.team=must(tm)[0]||null;
-  ST.runs={};must(rn).forEach(r=>(ST.runs[r.athlete_id]||(ST.runs[r.athlete_id]=[])).push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}));
+  ST.runs={};must(rn).forEach(r=>(ST.runs[r.athlete_id]||(ST.runs[r.athlete_id]=[])).push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||'',at:r.created_at}));
   ST.extras={};must(xs).forEach(x=>(ST.extras[x.athlete_id]||(ST.extras[x.athlete_id]=[])).push(mapX(x)));
+  ST.msgs=must(ms);
+  ST.seen={};must(cs).forEach(r=>ST.seen[r.athlete_id]=r.seen_at);   // コーチ本人の既読の記録（ほかの人には返らない）
   ST.mnotes={};must(mn).forEach(n=>ST.mnotes[n.event_id]=n);
   ST.links=must(gl);
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
@@ -866,7 +873,7 @@ async function addRun(d){
   list.push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}); list.sort((a,b)=>b.day.localeCompare(a.day));
 }
 /* エクストラトレーニング：1日に何回でも。コーチへの通知はしない */
-const mapX=x=>({id:x.id,day:x.day,items:(x.items||[]).map(i=>({n:i.n||'',a:i.a||''})),min:x.minutes||null,note:x.note||'',at:x.created_at});
+const mapX=x=>({id:x.id,day:x.day,items:(x.items||[]).map(i=>({n:i.n||'',a:i.a||''})),min:x.minutes||null,note:x.note||'',at:x.created_at,upd:x.updated_at});
 const XS=(aid,d)=>(ST.extras[aid]||[]).filter(x=>x.day===d);
 async function saveExtra(d,id){
   const row={day:d.day,items:d.items,minutes:d.min,note:d.note};
@@ -938,7 +945,7 @@ function flags(aid,L){
 const sev=f=>f.reduce((s,[k,,p])=>s+(p||(k==='bad'?3:k==='warn'?1:0)),0);
 
 /* ---------- 画面の状態 ---------- */
-let UI={booting:false,auth:null,authUser:null,busy:false,draft:null,join:null,newInvite:null,confirmRemove:null,session:null,view:'',sel:null,settings:false,loginLang:(navigator.language||'ja').startsWith('ja')?'ja':'en',pAid:null,pYm:TODAY.slice(0,7),pKind:'a5',err:''};
+let UI={prevSeen:{},booting:false,auth:null,authUser:null,busy:false,draft:null,join:null,newInvite:null,confirmRemove:null,session:null,view:'',sel:null,settings:false,loginLang:(navigator.language||'ja').startsWith('ja')?'ja':'en',pAid:null,pYm:TODAY.slice(0,7),pKind:'a5',err:''};
 const viewerId=()=>UI.previewAs||UI.session;   // 閲覧モード中は、その選手として画面を組み立てる
 const me=()=>UI.session&&acct(viewerId());
 const prefs=id=>ST.prefs[id]||{lang:UI.loginLang,accent:'ai',mode:'auto',remind:'21:00',wunit:'kg'};
@@ -1136,7 +1143,7 @@ function entryList(aid,L,n,coach){
   for(let i=0;i<n;i++){const d=addDays(TODAY,-i), e=E(aid,d);
     if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div><div class="muted small">${T.no_entry}</div>${xDayBlock(aid,d,L)}</div></div>`;continue}
     const s=score(e);
-    rows+=`<div class="ent"><div class="d">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
+    rows+=`<div class="ent"><div class="d">${fd(d,L)} ${coach?newTag(aid,e.upd||e.at):''}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
       <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
       ${e.note?`<p>${esc(e.note)}</p>`:''}
       ${xDayBlock(aid,d,L)}
@@ -1207,7 +1214,7 @@ function guardianView(){
 /* ---------- コーチの画面 ---------- */
 function coachView(){
   const L=lang(), un=ST.threads.filter(unanswered).length;
-  const tabs=[['team',t('t_team')],['q',t('t_q'),un],['print',t('t_print')],['members',t('t_members')]];
+  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],['q',t('t_q'),un],['print',t('t_print')],['members',t('t_members')]];
   let body='';
   if(UI.view==='team')body=UI.sel?coachDetail(UI.sel):coachTeam();
   if(UI.view==='q')body=questions(null,L,true);
@@ -1215,9 +1222,22 @@ function coachView(){
   if(UI.view==='members')body=membersView();
   return header(tabs)+`<main>${pushNag()}${body}</main>`;
 }
+/* ---------- コーチの未読：前回その選手の画面を開いてから、選手が書いたもの（コーチだけの記録。選手には何も届かない） ---------- */
+const tms=t=>t?+new Date(t):0;
+const seenOf=aid=>ST.seen?.[aid]||new Date(Date.now()-7*864e5).toISOString();   // まだ一度も開いていなければ直近7日分
+function unreadOf(aid,since=seenOf(aid)){const s0=tms(since), aft=t=>tms(t)>s0;
+  return Object.values(ST.entries[aid]||{}).filter(e=>aft(e.upd||e.at)).length
+    +(ST.extras[aid]||[]).filter(x=>aft(x.upd||x.at)).length
+    +(ST.runs[aid]||[]).filter(r=>aft(r.at)).length
+    +Object.values(ST.mnotes||{}).filter(n=>n.athlete_id===aid&&aft(n.updated_at)).length
+    +(ST.msgs||[]).filter(m=>m.author_id===aid&&aft(m.created_at)).length}
+const isNew=(aid,ts)=>acct(UI.session)?.role==='coach'&&!UI.previewAs&&UI.prevSeen[aid]!=null&&tms(ts)>tms(UI.prevSeen[aid]);
+const newTag=(aid,ts)=>isNew(aid,ts)?`<span class="pill new">${t('new_tag')}</span>`:'';
+async function markSeen(aid){if(!aid||acct(UI.session)?.role!=='coach')return;const at=new Date().toISOString();ST.seen[aid]=at;
+  const {error}=await sb.from('coach_seen').upsert({coach_id:UI.session,athlete_id:aid,seen_at:at},{onConflict:'coach_id,athlete_id'});if(error)console.warn(error)}
 function coachTeam(){
   const L=lang(), T=I18N[L];
-  const rows=ATH.map(a=>({a,f:flags(a.id,L)})).sort((x,y)=>sev(y.f)-sev(x.f));
+  const rows=ATH.map(a=>({a,f:flags(a.id,L)})).sort((x,y)=>sev(y.f)-sev(x.f)||unreadOf(y.a.id)-unreadOf(x.a.id));
   const logged=ATH.filter(a=>E(a.id,TODAY)).length, attn=rows.filter(r=>sev(r.f)>0).length, un=ST.threads.filter(unanswered).length;
   const d14=[];for(let i=13;i>=0;i--)d14.push(addDays(TODAY,-i));
   return `<div class="stack">
@@ -1230,7 +1250,7 @@ function coachTeam(){
      <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w} ${wToggle()}</span><span></span></div>
      ${(demoAcct()?[...rows,{a:demoAcct(),f:[],demo:true}]:rows).map(({a,f,demo})=>{const e=E(a.id,TODAY),s=score(e),b=baseline(a.id,TODAY),rr=ramp(a.id,TODAY),w=latestWeight(a.id);
        return `<button class="rrow" data-act="open" data-id="${a.id}">
-        <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${demo?'🎓 '+T.st_tag:prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span></span>
+        <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${demo?'🎓 '+T.st_tag:prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span>${(u=>u?`<em class="unread" title="${esc(T.unread_help)}">${T.unread.replace('{n}',u)}</em>`:'')(unreadOf(a.id))}</span>
         <span class="c-spark">${spark(d14.map(d=>score(E(a.id,d))))}</span>
         <span class="num c-m">${s!=null?`${s}<small>${T.of25}</small>`:'—'}${s!=null&&b!=null?`<br><small>${s-b>=0?'+':''}${(s-b).toFixed(1)}</small>`:''}</span>
         <span class="num c-m">${rr?'×'+rr.toFixed(2):'—'}</span>
@@ -1243,7 +1263,7 @@ function daysTable(aid,L,days){
   const T=I18N[L], rows=rangeDays(aid,days).reverse().map(d=>{const e=E(aid,d);
     if(!e)return `<button class="drow empty" disabled><span class="mono">${fd(d,L)}</span><span class="muted">${T.no_data}</span>${XS(aid,d).length?`<span></span><span></span><span></span><span class="dnote">💪 ${XS(aid,d).map(x=>x.items.map(i=>esc(i.n)).join(T.x_sep)).join(' / ')}</span>`:''}</button>`;
     const s=score(e);
-    return `<button class="drow" data-act="dayopen" data-aid="${aid}" data-d="${d}"><span class="mono">${fd(d,L)}</span>
+    return `<button class="drow" data-act="dayopen" data-aid="${aid}" data-d="${d}"><span class="mono">${fd(d,L)} ${newTag(aid,e.upd||e.at)}</span>
       <span>${attOf(e)==='present'?'':`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`}</span>
       <span class="num" data-l="${T.d_cond}">${s??'—'}</span><span class="num" data-l="${T.d_prac}">${e.min?`${e.min}′·${e.rpe}`:'—'}</span><span class="num" data-l="${T.h_w}">${e.weight?fmtW(e.weight):'—'}</span>
       <span class="dnote">${e.head?.length?'<span class="pill bad">⚠</span> ':''}${e.pain.length?`<span class="pill warn">${esc(e.pain.map(p=>ptxt(p,T)).join('・'))}</span> `:''}${XS(aid,d).length?'💪 ':''}${esc(e.note)}</span>
@@ -1354,7 +1374,7 @@ function extraView(aid,L,editable){
     <div class="row"><button class="btn" type="submit">${ed?T.x_update:T.x_save}</button>${ed?`<button class="btn ghost sm" type="button" data-act="xedit" data-id="">${T.cancel}</button>`:''}</div>
     <div class="small muted">${T.x_log}</div></form>`:'';
   const days=[...new Set(xs.map(x=>x.day))].sort().reverse().slice(0,60);
-  const hist=days.length?`<div class="entries">${days.map(d=>`<div class="ent"><div class="d">${fd(d,L)}</div><div class="stack" style="gap:8px">${XS(aid,d).map(x=>`<div class="xitem"><div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}<div class="stamp">📝 ${hm(x.at)}</div></div>${editable?`<div class="row" style="gap:10px"><button class="linkish" data-act="xedit" data-id="${x.id}">${T.x_edit}</button><button class="linkish danger" data-act="xdel" data-id="${x.id}">${T.x_del}</button></div>`:''}</div>`).join('')}</div></div>`).join('')}</div>`
+  const hist=days.length?`<div class="entries">${days.map(d=>`<div class="ent"><div class="d">${fd(d,L)}</div><div class="stack" style="gap:8px">${XS(aid,d).map(x=>`<div class="xitem"><div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}<div class="stamp">📝 ${hm(x.at)} ${newTag(aid,x.upd||x.at)}</div></div>${editable?`<div class="row" style="gap:10px"><button class="linkish" data-act="xedit" data-id="${x.id}">${T.x_edit}</button><button class="linkish danger" data-act="xdel" data-id="${x.id}">${T.x_del}</button></div>`:''}</div>`).join('')}</div></div>`).join('')}</div>`
     :`<div class="small muted">${editable?T.x_none:T.x_none_ro}</div>`;
   return `<div class="stack">${editable?`<div class="card"><h2>💪 ${T.x_title}</h2><p class="small muted" style="margin-top:0">${T.x_lead}</p>${form}</div>`:''}<div class="card"><h2>${editable?T.x_hist:'💪 '+T.x_title}</h2>${hist}</div></div>`;
 }
@@ -1723,8 +1743,8 @@ document.addEventListener('click',ev=>{
   else if(a==='share'||a==='copymsg'){const text=inviteMsg(el.dataset.code,UI.msgLang||lang(),el.dataset.g||null);
     const copy=()=>(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>toast(t('msg_copied'))).catch(()=>{const ta=document.getElementById('msg-'+el.dataset.code);if(ta){ta.select()}});
     if(a==='share'&&navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
-  else if(a==='open'){UI.ctab='over';UI.sel=el.dataset.id;render();window.scrollTo(0,0)}
-  else if(a==='back'){UI.sel=null;render()}
+  else if(a==='open'){const id=el.dataset.id;UI.prevSeen[id]=seenOf(id);UI.ctab='over';UI.sel=id;markSeen(id);render();window.scrollTo(0,0)}
+  else if(a==='back'){markSeen(UI.sel);UI.sel=null;render()}   // 見ている間に届いた分も既読に
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
   else if(a==='naglater'){try{localStorage.setItem('judo-nag-'+UI.session,String(Date.now()))}catch(e){}render()}
