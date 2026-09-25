@@ -333,6 +333,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .moncard .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap} .moncard .gk{font-size:14px;font-weight:700;color:var(--accent)}
 .moncard .monstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin-top:10px}
 .moncard .monstats .k{font-size:11px;color:var(--dim);font-weight:600} .moncard .monstats b{font-size:18px}
+.st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
 </style>
@@ -385,6 +386,9 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'{d}kmのタイム（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
+  st_btn:'🎓 生徒モードで操作する', st_banner:'🎓 生徒モード：練習用の選手アカウントで操作しています。ここで書いた内容は、ほかの選手や保護者には見えません。', st_exit:'コーチ画面に戻る', demo_name:'練習用の選手（生徒モード）',
+  st_tag:'生徒モード', st_row:'生徒モード用の練習アカウント', st_reset:'作り直す（書いた内容を全部消す）', st_reset_done:'生徒モードのアカウントを消しました。次に入ると新しく作られます。', st_preparing:'生徒モードを準備しています…',
+  mr_now:'✍️ 試合の振り返りを書く', mr_pending:'「{n}」（{d}）の振り返りがまだです。忘れないうちに書いておこう。',
   howto:'📖 使い方の案内',
   goal_banner:'今月の目標', goal_empty:'今月の目標がまだありません。3つまで決めておこう。', goal_set:'目標を決める', goal_edit:'変える',
   hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？', yday_q:'昨日の練習をふり返ろう', d_today:'今日', d_yday:'昨日',
@@ -462,6 +466,9 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'{d} km times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
+  st_btn:'🎓 Use student mode', st_banner:'🎓 Student mode: you’re using a practice athlete account. Nothing you write here is visible to other athletes or guardians.', st_exit:'Back to coach view', demo_name:'Practice athlete (student mode)',
+  st_tag:'Student mode', st_row:'Practice account for student mode', st_reset:'Recreate (erase everything written)', st_reset_done:'Student-mode account removed. A new one is created next time.', st_preparing:'Preparing student mode…',
+  mr_now:'✍️ Write your match review', mr_pending:'You haven’t reviewed “{n}” ({d}) yet. Write it while it’s fresh.',
   howto:'📖 How to use',
   goal_banner:'This month’s goals', goal_empty:'No goals for this month yet. Set up to three.', goal_set:'Set goals', goal_edit:'Edit',
   hello:'Good work today, {n}', today_q:'How are you feeling?', yday_q:'Look back on yesterday’s practice', d_today:'Today', d_yday:'Yesterday',
@@ -532,7 +539,7 @@ const SUPABASE_URL='https://ktwunswfyxozcultprnq.supabase.co';
 const SUPABASE_KEY='sb_publishable_P_UMeGV4gB54MjRBfjUIrA_E7drptd5';   // 公開用のキー（アプリに入れてよい値）
 const VAPID_PUBLIC='BChblwq2SoS3NVeX2FjxGFMSOeHKVrf0K7fiwRVWOb0NFEEOZW772YZGAr2dJ_ZGAU4eRwGFpdcNNkF9cP6XHnE';   // 通知の公開鍵（秘密鍵は Supabase 側だけ）
 const ID_DOMAIN='players.judo-note.app';                               // ID を Supabase のログイン用メールに変える
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-note-auth'}});
+let sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-note-auth'}});
 const idToEmail=id=>`${id.trim().toLowerCase()}@${ID_DOMAIN}`;
 const ID_RE=/^[a-z0-9_-]{3,20}$/;
 
@@ -567,18 +574,18 @@ async function loadAll(){
     sb.from('coach_notes').select('*')]);
   const profs=must(pr);
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
-    limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at)}));
-  ATH=ACCOUNTS.filter(a=>a.role==='athlete').sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+    limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
+  ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
   ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind});
   const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
   ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
   must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
-  const role=id=>acct(id)?.role||'athlete', byThread={};
+  const byThread={};
   must(ms).forEach(m=>(byThread[m.thread_id]||(byThread[m.thread_id]=[])).push(m));
   ST.threads=must(th).map(t=>{const list=byThread[t.id]||[];const first=list[0];
     return first?{id:t.id,aid:t.athlete_id,coachOnly:!!t.coach_only,date:localDay(first.created_at),text:first.body,
-      replies:list.slice(1).map(m=>({from:role(m.author_id)==='coach'?'coach':'athlete',date:localDay(m.created_at),text:m.body}))}:null}).filter(Boolean);
-  ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:role(e.created_by)==='coach'?'coach':'athlete',aids:[e.athlete_id]}));
+      replies:list.slice(1).map(m=>({from:m.author_id===t.athlete_id?'athlete':'coach',date:localDay(m.created_at),text:m.body}))}:null}).filter(Boolean);
+  ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:e.created_by===e.athlete_id?'athlete':'coach',aids:[e.athlete_id]}));
   ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
   ST.team=must(tm)[0]||null;
   ST.runs={};must(rn).forEach(r=>(ST.runs[r.athlete_id]||(ST.runs[r.athlete_id]=[])).push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}));
@@ -650,7 +657,7 @@ async function disablePush(){
   if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}
 }
 function pushBlock(T,p){
-  const role=acct(UI.session).role; if(role==='guardian')return '';
+  const role=acct(UI.session).role; if(role==='guardian'||UI.student)return '';
   const st=UI.pushState, h=p.remind&&p.remind!=='off'?p.remind:null;
   const what=(role==='coach'?T.n_what_c:T.n_what_a).replace('{h}',h||'—')+(h?'':T.n_what_off);
   const ctl=st==='on'?`<div class="row"><span class="pill good">${T.n_on}</span><button class="btn ghost sm" data-act="pushtest">${T.n_test}</button><button class="linkish" data-act="pushoff">${T.n_off}</button></div>`
@@ -660,6 +667,39 @@ function pushBlock(T,p){
   return `<div class="opt-group"><span class="lbl">${T.n_title}</span>${ctl}<div class="small muted">${what}</div></div>`;
 }
 async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI.pushState='unsupported'}if(UI.settings)render()}
+
+const DEMO_PW_KEY='judo-demo-pw';
+let coachSb=null, demoSb=null;
+const getDemoSb=()=>demoSb||(demoSb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-demo-auth'}}));
+const newDemoPw=()=>{const a=new Uint8Array(18);crypto.getRandomValues(a);return 'Demo-'+Array.from(a,b=>(b%36).toString(36)).join('')};
+const demoAcct=()=>ACCOUNTS.find(a=>a.demo);
+async function enterStudentMode(){
+  const coach=me(), d=getDemoSb(), L=lang();
+  let demo=demoAcct(), pw=null; try{pw=localStorage.getItem(DEMO_PW_KEY)}catch(e){}
+  const keep=p=>{try{localStorage.setItem(DEMO_PW_KEY,p)}catch(e){}};
+  if(!demo){   // はじめて：招待コードを発行して、練習用の選手アカウントを作る
+    const code=must(await sb.rpc('create_invite',{memo:I18N[L].st_tag}));
+    const login=('demo-'+coach.login).toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,20);
+    pw=newDemoPw();
+    const {data,error}=await d.auth.signUp({email:idToEmail(login),password:pw}); if(error)throw error;
+    must(await d.rpc('redeem_invite',{invite_code:code,login,name:I18N[L].demo_name,wclass:'',wlimit:null,pref_lang:L,minor:false,guardian:'',consent:false}));
+    must(await sb.rpc('mark_demo',{athlete:data.user.id})); keep(pw);
+    await loadAll(); demo=demoAcct();
+  }
+  const {data:{session}}=await d.auth.getSession();
+  if(!session||session.user.id!==demo.id){   // 別の端末などで合言葉がないときは、コーチの権限で作り直してから入る
+    let r=pw?await d.auth.signInWithPassword({email:idToEmail(demo.login),password:pw}):{error:true};
+    if(r.error){pw=newDemoPw();must(await sb.rpc('coach_reset_password',{athlete:demo.id,new_password:pw}));keep(pw);
+      r=await d.auth.signInWithPassword({email:idToEmail(demo.login),password:pw}); if(r.error)throw r.error}
+  }
+  UI.coachId=UI.session; UI.coachLang=L; coachSb=sb; sb=d;
+  Object.assign(UI,{session:demo.id,student:true,view:'today',sel:null,previewAs:null,eday:TODAY,draft:null,settings:false});
+  await loadAll(); render(); window.scrollTo(0,0);
+}
+async function exitStudentMode(){
+  sb=coachSb; Object.assign(UI,{session:UI.coachId,student:false,view:'team',sel:null,settings:false});
+  await loadAll(); render(); window.scrollTo(0,0);
+}
 
 async function addRun(d){
   const r=must(await sb.from('runs').insert({athlete_id:UI.session,day:d.day,distance_m:d.dist,time_sec:d.sec,note:d.note}).select().single());
@@ -799,8 +839,8 @@ function header(tabs){
     <span class="sp"></span>
     <div class="who"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span></div>
     ${UI.previewAs?'':`<button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
-    <button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>`}
-  </div>${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
+    ${UI.student?'':`<button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>`}`}
+  </div>${UI.student?`<div class="pv-bar st-bar"><span>${esc(I18N[UI.coachLang||'ja'].st_banner)}</span><button class="btn sm" data-act="exitstudent">${I18N[UI.coachLang||'ja'].st_exit}</button></div>`:''}${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
 }
 
 /* ---------- 選手の画面 ---------- */
@@ -834,6 +874,8 @@ function athToday(){
   ${needY?`<div class="card row" style="justify-content:space-between"><span class="small">📝 ${esc(T.yday_nudge.replace('{d}',fd(Y,L)))}</span><button class="btn sm" data-act="eday" data-v="${Y}">${T.yday_btn}</button></div>`:''}
   ${E(m.id,day)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
   ${evCard(m.id,L)}
+  ${(()=>{const pe=(ST.events||[]).filter(e=>e.aids.includes(m.id)&&e.date<TODAY&&e.date>=addDays(TODAY,-3)&&!ST.mnotes[e.id]).sort((x,y)=>y.date.localeCompare(x.date))[0];
+    return pe?`<div class="card row" style="justify-content:space-between"><span class="small">✍️ ${esc(T.mr_pending.replace('{n}',pe.name).replace('{d}',fd(pe.date,L)))}</span><button class="btn sm" data-act="mreview" data-ev="${pe.id}">${T.mr_write}</button></div>`:''})()}
   ${lastC?`<div class="card"><h2>${T.from_coach} · ${fd(lastC.d,L)}</h2><div>${esc(lastC.c.text)}</div></div>`:''}
   <div class="segbar noprint" style="max-width:320px">${[[TODAY,T.d_today],[Y,T.d_yday]].map(([d,l])=>`<button type="button" data-act="eday" data-v="${d}" aria-pressed="${day===d}">${l} ${md(d)}${E(m.id,d)?' ✓':''}</button>`).join('')}</div>
   <form id="today-form" class="stack">
@@ -868,8 +910,9 @@ function evCard(aid,L,ro){
   const T=I18N[L], ne=nextEvent(aid); if(!ne)return ro?'':`<div class="card row" style="justify-content:space-between"><span class="small">${T.ev_prompt}</span><button class="btn ghost sm" data-act="view" data-v="note">${T.ev_go}</button></div>`;
   const dd=dayDiff(TODAY,ne.date), a=acct(aid), w=latestWeight(aid), tg=ne.target||a.limit;
   const wtxt=w==null||!tg?'':w>tg?`<span class="pill warn">${T.ev_to_go.replace('{w}',(w-tg).toFixed(1)).replace('{l}',tg)}</span>`:`<span class="pill good">${T.ev_ok.replace('{l}',tg)}</span>`;
-  return `<div class="card evcard"><div class="evn"><div class="k">${dd?esc(T.ev_until.replace('{n}',ne.name)):esc(T.ev_today.replace('{n}',ne.name))}</div><div class="big">${dd?T.ev_days.replace('{d}',`<b>${dd}</b>`):'—'}</div></div>
-    <div class="row small">${ne.weigh?`<span class="pill">${T.ev_weigh_s.replace('{d}',fd(ne.weigh,L))}</span>`:''}${wtxt}</div></div>`;
+  return `<div class="card evcard"><div class="evn"><div class="k">${dd?esc(T.ev_until.replace('{n}',ne.name)):esc(T.ev_today.replace('{n}',ne.name))}</div><div class="big">${dd?T.ev_days.replace('{d}',`<b>${dd}</b>`):'🥋'}</div></div>
+    <div class="row small">${ne.weigh?`<span class="pill">${T.ev_weigh_s.replace('{d}',fd(ne.weigh,L))}</span>`:''}${wtxt}</div>
+    ${!dd&&!ro?`<div><button class="btn sm" data-act="mreview" data-ev="${ne.id}">${ST.mnotes[ne.id]?T.mr_edit:T.mr_now}</button></div>`:''}</div>`;
 }
 function entryList(aid,L,n,coach){
   const T=I18N[L]; let rows='';
@@ -947,16 +990,16 @@ function coachTeam(){
   const logged=ATH.filter(a=>E(a.id,TODAY)).length, attn=rows.filter(r=>sev(r.f)>0).length, un=ST.threads.filter(unanswered).length;
   const d14=[];for(let i=13;i>=0;i--)d14.push(addDays(TODAY,-i));
   return `<div class="stack">
-   <div class="hello"><div class="sub">${fd(TODAY,L)}</div><h1>${T.t_team}</h1></div>
+   <div class="hello"><div class="sub">${fd(TODAY,L)}</div><h1>${T.t_team}</h1><div style="margin-top:10px"><button class="btn ghost sm" data-act="student">${T.st_btn}</button></div></div>
    <div class="stats"><div class="card stat"><div class="k">${T.s_logged}</div><div class="v">${logged}<small>/${ATH.length}</small></div></div>
      <div class="card stat"><div class="k">${T.s_attn}</div><div class="v" style="color:var(--bad)">${attn}</div></div>
      <div class="card stat"><div class="k">${T.s_unans}</div><div class="v" style="color:var(--accent)">${un}</div></div></div>
    ${ATH.length?'':`<div class="card">${T.no_athletes}</div>`}
-   <div class="card" ${ATH.length?'':'hidden'}><div class="roster">
+   <div class="card" ${ATH.length||demoAcct()?'':'hidden'}><div class="roster">
      <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w}</span><span></span></div>
-     ${rows.map(({a,f})=>{const e=E(a.id,TODAY),s=score(e),b=baseline(a.id,TODAY),rr=ramp(a.id,TODAY),w=latestWeight(a.id);
+     ${(demoAcct()?[...rows,{a:demoAcct(),f:[],demo:true}]:rows).map(({a,f,demo})=>{const e=E(a.id,TODAY),s=score(e),b=baseline(a.id,TODAY),rr=ramp(a.id,TODAY),w=latestWeight(a.id);
        return `<button class="rrow" data-act="open" data-id="${a.id}">
-        <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span></span>
+        <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${demo?'🎓 '+T.st_tag:prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span></span>
         <span class="c-spark">${spark(d14.map(d=>score(E(a.id,d))))}</span>
         <span class="num c-m">${s!=null?`${s}<small>${T.of25}</small>`:'—'}${s!=null&&b!=null?`<br><small>${s-b>=0?'+':''}${(s-b).toFixed(1)}</small>`:''}</span>
         <span class="num c-m">${rr?'×'+rr.toFixed(2):'—'}</span>
@@ -1222,6 +1265,7 @@ function membersView(){
      <h3>${T.inv_list}</h3>
      <div class="entries">${inv.length?inv.map(i=>`<div class="evrow"><div><b class="mono">${esc(i.code)}</b> <span class="small muted">${i.role==='guardian'?'👪 '+esc(T.guardians)+' · '+esc(acct(i.for_athlete)?.name||''):''} ${esc(i.memo)}</span><div class="small muted">${T.inv_until.replace('{d}',fd(localDay(i.expires_at),L))}</div></div><button class="btn ghost sm" data-act="share" data-code="${esc(i.code)}" data-g="${i.role==='guardian'?i.for_athlete:''}">📤 ${T.share}</button><button class="btn ghost sm" data-act="invdel" data-id="${esc(i.code)}">${T.inv_del}</button></div>`).join(''):`<div class="small muted">${T.inv_none}</div>`}</div>
    </div>
+   ${demoAcct()?`<div class="card row" style="justify-content:space-between"><span class="small">🎓 ${T.st_row}：<b>${esc(demoAcct().name)}</b> <span class="mono muted">${esc(demoAcct().login)}</span></span>${UI.confirmRemove===demoAcct().id?`<button class="btn sm danger-btn" data-act="demoreset">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${demoAcct().id}">${T.st_reset}</button>`}</div>`:''}
    <div class="card"><h2>${T.members}</h2><div class="entries">${ATH.length?ATH.map(a=>`<div class="member">
      <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
      <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" step="0.1" value="${a.limit??''}" placeholder="kg" style="width:90px" aria-label="${T.wlimit}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
@@ -1305,6 +1349,10 @@ document.addEventListener('click',ev=>{
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
   else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),t('seen_sent'))}
+  else if(a==='student'){toast(t('st_preparing'));run(enterStudentMode)}
+  else if(a==='exitstudent'){run(exitStudentMode)}
+  else if(a==='demoreset'){const id=demoAcct().id;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_remove_athlete',{athlete:id}));try{localStorage.removeItem(DEMO_PW_KEY)}catch(e){}await getDemoSb().auth.signOut().catch(()=>{});await loadAll()},t('st_reset_done'))}
+  else if(a==='mreview'){UI.view='note';UI.mEdit=el.dataset.ev;render();document.querySelector('.refl-form')?.scrollIntoView({block:'center'})}
   else if(a==='medit'){UI.mEdit=el.dataset.ev||null;render()}
   else if(a==='rundel'){run(()=>delRun(el.dataset.id))}
   else if(a==='openbook'){UI.view='note';UI.pYm=el.dataset.ym;render();window.scrollTo(0,0)}
