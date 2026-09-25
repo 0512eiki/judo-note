@@ -96,7 +96,9 @@ main.wide{max-width:1320px}
 .card{background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--radius);box-shadow:var(--shadow),var(--hi);padding:18px;
   -webkit-backdrop-filter:blur(var(--frost)) saturate(1.5);backdrop-filter:blur(var(--frost)) saturate(1.5)}
 .card h2{margin:0 0 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.stack{display:grid;gap:16px}
+.stack{display:grid;gap:16px;min-width:0}.stack>*,.grid2>*{min-width:0}   /* 中身が長くても画面からはみ出さない */
+.segbar{flex-wrap:wrap}.segbar button{min-width:0;flex:1 1 auto;white-space:nowrap}
+.field,.card{min-width:0}
 .grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
 .hello{padding:4px 2px 2px}
 .hello .sub{font-size:13px;color:var(--dim);font-weight:500}
@@ -356,13 +358,27 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .drow:hover{background:var(--tint)} .drow.empty{cursor:default;opacity:.55} .drow.empty:hover{background:none} .drow.empty span:nth-child(2){grid-column:2/-1}
 .drow.dhead{cursor:default;font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.05em;border-top:0} .drow.dhead:hover{background:none}
 .dnote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
-@media (max-width:760px){.drow{grid-template-columns:6.5em 1fr 3em 4.5em}.drow>span:nth-child(5),.drow>span:nth-child(7){display:none}.drow .dnote{grid-column:1/-1}.drow.dhead{display:none}}
+@media (max-width:760px){.drow{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.drow.dhead{display:none}.drow>span:empty{display:none}.drow .num[data-l]::before{content:attr(data-l) ' ';font-family:var(--sans);font-size:11px;color:var(--dim);font-weight:600}.drow>span:last-child:not(.dnote){margin-left:auto}.drow .dnote{flex-basis:100%;order:9;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:normal}.drow.empty span:nth-child(2){flex:1}}
 .cbar{display:grid;grid-template-columns:7.5em 1fr 1.5em;gap:8px;align-items:center;font-size:14px;margin:4px 0} .cbar-t{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden} .cbar-t i{display:block;height:100%;background:var(--grad)}
 .whobtn{border:0;background:none;padding:4px 6px;border-radius:12px;cursor:pointer;font:inherit} .whobtn:hover{background:var(--tint)} .whobtn:disabled{cursor:default;background:none} .whobtn .caret{font-size:11px;color:var(--dim)}
 .acctrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}
 .acctrow.now{border-color:var(--accent);background:var(--tint)}
 .acchip{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:6px 13px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:inherit} .acchip.on{border-color:var(--accent);color:var(--accent);background:var(--tint)}
 .btn.saving{opacity:.7;cursor:wait}
+.utog{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;vertical-align:middle;flex:none}
+.utog button{border:0;background:var(--panel2);color:var(--dim);font:inherit;font-size:12px;font-weight:700;padding:3px 9px;cursor:pointer;line-height:1.3}
+.utog button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.stamp{margin-top:6px;font-size:12px;color:var(--faint);font-family:var(--mono)}
+.savedbar .stamp{color:inherit;opacity:.8;margin-top:2px}
+.streak{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;background:linear-gradient(135deg,color-mix(in srgb,#ff9a3c 14%,var(--panel)),var(--panel))}
+.stk-main{display:flex;gap:12px;align-items:center;min-width:0} .stk-fire{font-size:34px;line-height:1} .stk-t{font-size:20px;font-weight:800;line-height:1.25}
+.stk-best{font-size:12px;font-weight:700;color:var(--dim);margin-top:2px}
+.stk-week{display:grid;grid-template-columns:repeat(7,26px);gap:5px}
+.stk-d{display:grid;justify-items:center;gap:2px;font-size:10px;color:var(--faint);font-weight:700}
+.stk-d i{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
+.stk-d.on i{background:var(--grad);border-color:transparent} .stk-d.today i{outline:2px solid var(--accent);outline-offset:1px}
+@media (max-width:520px){.streak{grid-template-columns:1fr}.stk-week{justify-content:space-between;grid-template-columns:repeat(7,minmax(0,32px))}}
+.nag{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;border-color:color-mix(in srgb,var(--warn) 45%,var(--glass-bd));background:color-mix(in srgb,var(--warn) 9%,var(--panel))}
 .savedbar{padding:10px 14px;border-radius:14px;background:var(--good-s);color:var(--good);font-size:14px;font-weight:600}
 .done{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;background:rgba(10,12,20,.25);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadein .15s ease-out}
 .done-card{width:min(360px,100%);text-align:center;background:var(--glass);border:1px solid var(--glass-bd);border-radius:26px;box-shadow:var(--shadow),var(--hi);padding:24px 22px 18px;-webkit-backdrop-filter:blur(30px) saturate(1.6);backdrop-filter:blur(30px) saturate(1.6);animation:pop .28s cubic-bezier(.2,1.4,.4,1)}
@@ -376,7 +392,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 @keyframes draw{to{stroke-dashoffset:0}} @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}} @keyframes fadein{from{opacity:0}}
 @media (prefers-reduced-motion:reduce){.done,.done-card,.done-check circle,.done-check path{animation:none;stroke-dashoffset:0}}
 @media (max-width:520px){.tabs .tab{padding:6px 10px;font-size:13.5px}.tabs{gap:2px;padding-inline:10px}
-  .subtabs{-webkit-mask-image:linear-gradient(to right,#000 85%,transparent);mask-image:linear-gradient(to right,#000 85%,transparent);padding-right:24px}}
+  .subtabs{flex-wrap:wrap;overflow:visible}}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
@@ -410,7 +426,7 @@ const I18N = {
   coach_only:'コーチだけに見せる（保護者には見えません）', coach_only_pill:'コーチだけ', g_inv:'保護者用コード', g_inv_made:'{n}さんの保護者用コードです。保護者に渡してください。', guardians:'保護者', g_join:'{a}さんの保護者として登録します（見るだけ）', g_remove:'外す',
   loading:'読み込み中…', join:'招待コードで登録', join_title:'チームに参加する', code:'招待コード', code_check:'確認', code_ok:'「{t}」に参加します', code_bad:'この招待コードは使えません。コーチに新しいコードをもらってください。',
   name:'名前（表示名）', name_ph:'例：佐藤 健太', login_id:'ID（ログイン用）', login_id_help:'半角の英小文字・数字・ - ・ _ で3〜20文字', pw2:'パスワード（確認）', pw_help:'8文字以上',
-  wclass:'階級', wclass_ph:'例：男子 -73kg', wlimit:'階級の上限（kg）', minor:'18歳未満です', guardian:'保護者の名前',
+  wclass:'階級', wclass_ph:'例：男子 -73kg', wlimit:'階級の上限（{u}）', minor:'18歳未満です', guardian:'保護者の名前',
   consent:'保護者に「調子・体重・ケガ・練習の記録をコーチと共有すること」を説明し、同意をもらいました。',
   consent_note:'記録を見られるのは本人とコーチだけです。卒業・退部のときは、コーチが記録を削除するか、PDFにして渡します。',
   register:'登録してはじめる', back_login:'ログインに戻る', setup:'はじめての方（コーチ）', setup_title:'チームを作る（最初のコーチ）', team_name:'チーム名', create_team:'チームを作る',
@@ -427,6 +443,9 @@ const I18N = {
   demo_accts:'デモ用アカウント（パスワードは全員 judo）', privacy:'選手は自分の記録だけ、コーチはチーム全員の記録を見られます。',
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
+  wunit:'体重の単位', st_logged:'記録', st_edited:'直した',
+  stk_on:'{n}日連続！', stk_on_sub:'ナイス継続。明日もこの調子で。', stk_go:'{n}日連続中', stk_go_sub:'今日書くと {m}日連続！', stk_start:'連続記録をスタートしよう', stk_start_sub:'今日の記録をつけると1日目。', stk_best:'ベスト {n}日', stk_ro:'{n}日連続で記録中', stk_ro0:'連続記録はまだありません',
+  nb_off:'この端末では通知がオフです。', nb_off_a:'オンにすると、書き忘れた日の夜にお知らせが届きます。', nb_off_c:'オンにすると、選手の提出・質問と、毎朝のまとめが届きます。', nb_off_g:'オンにすると、お子さんが記録を忘れた日にお知らせが届きます。', nb_ios:'iPhoneで通知を受け取るには、Safariの「共有」→「ホーム画面に追加」から開いてください。', nb_later:'あとで',
   t_x:'エクストラ', x_title:'エクストラトレーニング', x_lead:'柔道の練習以外で、自分でやったトレーニングを残そう。1日に何回でも記録できます。',
   x_date:'日付', x_ex:'種目', x_amt:'回数・時間', x_ex_ph:'例：腕立て伏せ', x_amt_ph:'例：3セット×15回', x_addrow:'＋ 種目を追加', x_rmrow:'この行を消す',
   x_pick:'よく使う種目（タップで入ります）', x_quick:['腕立て伏せ','腹筋','背筋','スクワット','懸垂','プランク','縄跳び','ダッシュ','ランニング','ストレッチ','ウェイト','打ち込み','チューブ'],
@@ -472,21 +491,21 @@ const I18N = {
   sleep_lo:'眠れない', sleep_hi:'ぐっすり', energy_lo:'だるい', energy_hi:'元気いっぱい', soreness_lo:'ひどい', soreness_hi:'なし', stress_lo:'大きい', stress_hi:'なし', mood_lo:'落ち込み', mood_hi:'最高',
   practice:'今日の稽古', content:'内容', minutes:'時間（分）', rpe:'きつさ', rpe_help:'稽古全体をふり返って、0〜10でどれくらいきつかったか',
   rpe_l:['安静','とても楽','楽','ほどよい','ややきつい','きつい','きつい','とてもきつい','とてもきつい','とてもきつい','限界'],
-  body:'体重と体の状態', weight:'体重（kg）', pain:'痛むところ・体調', pain_lv:'痛みの強さ', lv:['','軽い','中くらい','強い'],
-  note:'練習の感想・気づき', note_ph:'うまくいったこと、課題、次に意識することなど', ask:'コーチへの質問', ask_ph:'（任意）あれば書いてください',
+  body:'体重と体の状態', weight:'体重', pain:'痛むところ・体調', pain_lv:'痛みの強さ', lv:['','軽い','中くらい','強い'],
+  note:'練習の感想・気づき', note_ph:'うまくいったこと、課題、次に意識すること。そのとき感じた気持ち（うれしかった・悔しかった・楽しかった など）も書いてみよう', note_hint:'💭 気持ちも一緒に書いておくと、あとで読み返したときの力になります。', ask:'コーチへの質問', ask_ph:'（任意）あれば書いてください',
   save:'今日の記録を保存', saved:'今日の記録を保存しました', from_coach:'コーチから',
   ty:{waza:'技術練習',uchikomi:'打ち込み',nagekomi:'投げ込み',randori:'乱取り',newaza:'寝技',strength:'トレーニング',shiai:'試合形式'},
   other_ph:'どんな症状・どこか（例：風邪、腹痛、股関節）',pt:{head:'頭',neck:'首',shoulder:'肩',elbow:'肘',hand:'手首・指',back:'腰',knee:'膝',ankle:'足首',other:'その他・体調'},
   load:'練習負荷', load_u:'きつさ×分', ramp:'負荷の増え方', ramp_help:'直近7日の平均 ÷ 28日の平均。0.8〜1.3が目安', last28:'直近4週間',
   limit:'階級上限', recent:'最近の記録', rest:'休養日', no_entry:'未入力', score:'調子',
-  f_miss:'{n}日 未入力', f_miss1:'今日 未入力', f_drop:'調子低下 {d}', f_ramp:'負荷急増 ×{v}', f_pain:'痛み・体調：{p}', f_w:'減量 あと{d}kg', f_q:'未返信の質問', f_abs:'今日 欠席：{r}', f_watch:'今日 見学',
+  f_miss:'{n}日 未入力', f_miss1:'今日 未入力', f_drop:'調子低下 {d}', f_ramp:'負荷急増 ×{v}', f_pain:'痛み・体調：{p}', f_w:'減量 あと{d}', f_q:'未返信の質問', f_abs:'今日 欠席：{r}', f_watch:'今日 見学',
   att:'出欠', att_l:{present:'参加',watch:'見学',absent:'欠席',off:'休み（オフ）'}, abs_reason:'欠席の理由', ar:{sick:'体調不良',injury:'ケガ',school:'学校・仕事',personal:'用事',other:'その他'}, abs_note:'ひとこと（任意）', abs_note_ph:'例：熱が38度あるので休みます', c_abs:'欠席',
   remind:'毎日のお知らせ', remind_off:'なし', remind_note:'この時刻に、記録がまだならお知らせが届きます（iPhoneはホーム画面に追加して、通知をオンにしてください）。', streak:'記録 {n}日連続',
   head:'頭のケガ', head_help:'稽古中に頭を打ったとき、あとから症状が出たときは必ずチェック', hs:{hit:'頭を打った',headache:'頭痛',nausea:'吐き気',dizzy:'めまい',foggy:'ぼんやりする'}, f_head:'頭部：{s}',
   head_saved:'コーチに知らせました。症状があるうちは稽古を休み、医療機関で診てもらってください。',
-  seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（kg）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
+  seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（{u}）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
-  ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}kg）まで あと{w}kg', ev_ok:'階級内（{l}kg以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
+  ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'未返信の質問',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -520,7 +539,7 @@ const I18N = {
   coach_only:'Only my coach can see this (hidden from my guardian)', coach_only_pill:'Coach only', g_inv:'Guardian code', g_inv_made:'Guardian code for {n}. Give it to their parent/guardian.', guardians:'Guardians', g_join:'You’re registering as {a}’s guardian (read-only)', g_remove:'Remove',
   loading:'Loading…', join:'Join with invite code', join_title:'Join your team', code:'Invite code', code_check:'Check', code_ok:'You’re joining “{t}”', code_bad:'This invite code can’t be used. Ask your coach for a new one.',
   name:'Your name', name_ph:'e.g. Liam Carter', login_id:'ID (for signing in)', login_id_help:'3–20 characters: lowercase letters, numbers, - or _', pw2:'Password (again)', pw_help:'At least 8 characters',
-  wclass:'Weight class', wclass_ph:'e.g. Men -90kg', wlimit:'Class limit (kg)', minor:'I’m under 18', guardian:'Parent/guardian name',
+  wclass:'Weight class', wclass_ph:'e.g. Men -90kg', wlimit:'Class limit ({u})', minor:'I’m under 18', guardian:'Parent/guardian name',
   consent:'I explained to my parent/guardian that my condition, weight, injury and practice records are shared with my coach, and they agreed.',
   consent_note:'Only you and your coach can see your records. When you graduate or leave, your coach deletes them or gives them to you as a PDF.',
   register:'Create account', back_login:'Back to sign in', setup:'First time? (coach)', setup_title:'Create your team (first coach)', team_name:'Team name', create_team:'Create team',
@@ -537,6 +556,9 @@ const I18N = {
   demo_accts:'Demo accounts (password for all: judo)', privacy:'Athletes can only see their own records. The coach can see every athlete on the team.',
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
+  wunit:'Weight unit', st_logged:'Logged', st_edited:'edited',
+  stk_on:'{n}-day streak!', stk_on_sub:'Great consistency. Keep it going tomorrow.', stk_go:'{n}-day streak', stk_go_sub:'Log today to make it {m}!', stk_start:'Start a streak', stk_start_sub:'Log today for day 1.', stk_best:'Best: {n} days', stk_ro:'{n}-day logging streak', stk_ro0:'No streak yet',
+  nb_off:'Notifications are off on this device.', nb_off_a:'Turn them on to get a reminder on nights you forget to log.', nb_off_c:'Turn them on to hear about athletes’ entries and questions, plus the morning summary.', nb_off_g:'Turn them on to get a reminder if your child forgets to log.', nb_ios:'To get notifications on iPhone, open the app from your Home Screen (Safari: Share → Add to Home Screen).', nb_later:'Later',
   t_x:'Extra', x_title:'Extra training', x_lead:'Log the training you did on your own, outside judo practice. Add as many as you like per day.',
   x_date:'Date', x_ex:'Exercise', x_amt:'Reps / time', x_ex_ph:'e.g. Push-ups', x_amt_ph:'e.g. 3 × 15', x_addrow:'+ Add exercise', x_rmrow:'Remove this row',
   x_pick:'Quick picks (tap to add)', x_quick:['Push-ups','Sit-ups','Back extensions','Squats','Pull-ups','Plank','Jump rope','Sprints','Running','Stretching','Weights','Uchikomi','Bands'],
@@ -582,21 +604,21 @@ const I18N = {
   sleep_lo:'Poor', sleep_hi:'Great', energy_lo:'Drained', energy_hi:'Fresh', soreness_lo:'Very sore', soreness_hi:'None', stress_lo:'High', stress_hi:'None', mood_lo:'Low', mood_hi:'Great',
   practice:'Today’s practice', content:'What you did', minutes:'Duration (min)', rpe:'Effort', rpe_help:'Looking back on the whole session, how hard was it from 0 to 10?',
   rpe_l:['Rest','Very easy','Easy','Moderate','Somewhat hard','Hard','Hard','Very hard','Very hard','Very hard','Maximal'],
-  body:'Weight & body', weight:'Weight (kg)', pain:'Pain & illness', pain_lv:'Pain level', lv:['','Mild','Moderate','Severe'],
-  note:'Reflections', note_ph:'What worked, what to fix, what to focus on next', ask:'Question for the coach', ask_ph:'(optional)',
+  body:'Weight & body', weight:'Weight', pain:'Pain & illness', pain_lv:'Pain level', lv:['','Mild','Moderate','Severe'],
+  note:'Reflections', note_ph:'What worked, what to fix, what to focus on next — and how you felt (happy, frustrated, proud…)', note_hint:'💭 Write down how you felt too. It helps when you read it back later.', ask:'Question for the coach', ask_ph:'(optional)',
   save:'Save today’s entry', saved:'Today’s entry saved', from_coach:'From your coach',
   ty:{waza:'Technique',uchikomi:'Uchikomi',nagekomi:'Nagekomi',randori:'Randori',newaza:'Newaza',strength:'Strength',shiai:'Match sim'},
   other_ph:'What and where? (e.g. cold, stomach ache, hip)',pt:{head:'Head',neck:'Neck',shoulder:'Shoulder',elbow:'Elbow',hand:'Wrist/fingers',back:'Lower back',knee:'Knee',ankle:'Ankle',other:'Other / illness'},
   load:'Training load', load_u:'effort × min', ramp:'Load ramp', ramp_help:'7-day average ÷ 28-day average. Aim for 0.8–1.3', last28:'Last 4 weeks',
   limit:'Weight limit', recent:'Recent entries', rest:'Rest day', no_entry:'No entry', score:'Condition',
-  f_miss:'No entry for {n} days', f_miss1:'No entry today', f_drop:'Condition down {d}', f_ramp:'Load spike ×{v}', f_pain:'Pain/illness: {p}', f_w:'{d} kg to make weight', f_q:'Unanswered question', f_abs:'Absent today: {r}', f_watch:'Watching today',
+  f_miss:'No entry for {n} days', f_miss1:'No entry today', f_drop:'Condition down {d}', f_ramp:'Load spike ×{v}', f_pain:'Pain/illness: {p}', f_w:'{d} to make weight', f_q:'Unanswered question', f_abs:'Absent today: {r}', f_watch:'Watching today',
   att:'Attendance', att_l:{present:'Training',watch:'Watching',absent:'Absent',off:'Day off'}, abs_reason:'Reason', ar:{sick:'Sick',injury:'Injury',school:'School/work',personal:'Personal',other:'Other'}, abs_note:'Note (optional)', abs_note_ph:'e.g. I have a fever, staying home', c_abs:'Absent',
   remind:'Daily reminder', remind_off:'Off', remind_note:'At this time you get a reminder if you haven’t logged yet (on iPhone, add the app to your Home Screen and turn on notifications).', streak:'{n}-day streak',
   head:'Head injury', head_help:'Always check this if you hit your head in practice or notice symptoms later', hs:{hit:'Hit my head',headache:'Headache',nausea:'Nausea',dizzy:'Dizziness',foggy:'Feeling foggy'}, f_head:'Head: {s}',
   head_saved:'Your coach has been notified. Don’t train while you have symptoms, and please see a doctor.',
-  seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight (kg)', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
+  seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight ({u})', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
-  ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} kg to make {l} kg', ev_ok:'On weight (≤{l} kg)', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
+  ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'Unanswered',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -668,7 +690,7 @@ const LOAD_DAYS=150;   // 何日前までの記録を読み込むか（冊子と
 
 function mapEntry(r,fb){
   return {id:r.id,att:r.att,absReason:r.abs_reason||undefined,sleep:r.sleep,energy:r.energy,soreness:r.soreness,stress:r.stress,mood:r.mood,
-    min:r.minutes,rpe:r.rpe,types:r.types||[],weight:r.weight==null?null:+r.weight,pain:r.pain||[],head:r.head||[],note:r.note||'',
+    min:r.minutes,rpe:r.rpe,types:r.types||[],weight:r.weight==null?null:+r.weight,at:r.created_at,upd:r.updated_at,pain:r.pain||[],head:r.head||[],note:r.note||'',
     comment:fb&&fb.comment?{text:fb.comment,at:localDay(fb.commented_at||fb.seen_at),edited:!!fb.edited_at}:null,seen:fb?localDay(fb.seen_at):null};
 }
 function must(res){if(res.error)throw res.error;return res.data}
@@ -701,7 +723,7 @@ async function loadAllOnce(){
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
   ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false,tz:p.tz});
+  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false,tz:p.tz,wunit:p.wunit||'kg'});
   const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
   ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
   must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
@@ -727,7 +749,7 @@ function formToEntry(fdt){
   const lv=+fdt.get('level')||1, att=fdt.get('att')||'present', train=att==='present'||att==='watch';
   return {att,absReason:att==='absent'?(fdt.get('absReason')||'other'):undefined,
     sleep:+fdt.get('sleep')||null,energy:+fdt.get('energy')||null,soreness:+fdt.get('soreness')||null,stress:+fdt.get('stress')||null,mood:+fdt.get('mood')||null,
-    min:train?(+fdt.get('min')||0):0,rpe:train?+(fdt.get('rpe')??0):0,types:train?fdt.getAll('types'):[],weight:+fdt.get('weight')||null,
+    min:train?(+fdt.get('min')||0):0,rpe:train?+(fdt.get('rpe')??0):0,types:train?fdt.getAll('types'):[],weight:wKg(fdt.get('weight'),fdt.get('wu')||WU()),
     head:fdt.getAll('head'),pain:fdt.getAll('pain').map(p=>p==='other'?{part:p,level:lv,detail:(fdt.get('painOther')||'').trim()}:{part:p,level:lv}),
     note:fdt.get('note')||'',ask:(fdt.get('ask')||'').trim(),askPrivate:!!fdt.get('askPrivate')};
 }
@@ -871,15 +893,23 @@ async function saveGoals(ym,items,review){
   must(await sb.from('goals').upsert({athlete_id:UI.session,month:ym,items,review},{onConflict:'athlete_id,month'}));
   ST.goals[UI.session+'|'+ym]={items,review};
 }
-async function savePrefs(p){
-  ST.prefs[UI.session]=p; render();
-  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00',...(acct(UI.session)?.role==='coach'?{notify_events:p.events!==false}:{})}).eq('id',UI.session));
+async function savePrefs(p,quiet){
+  ST.prefs[UI.session]=p; if(!quiet)render();
+  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00',wunit:p.wunit==='lb'?'lb':'kg',...(acct(UI.session)?.role==='coach'?{notify_events:p.events!==false}:{})}).eq('id',UI.session));
 }
 
 /* ---------- 計算 ---------- */
 const dayDiff=(a,b)=>Math.round((new Date(b+'T00:00:00Z')-new Date(a+'T00:00:00Z'))/864e5);
 const nextEvent=aid=>(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&ev.date>=TODAY).sort((x,y)=>x.date.localeCompare(y.date))[0];
 function eventMarks(aid,ds){const m=[];(ST.events||[]).forEach(ev=>{if(!ev.aids.includes(aid))return;const i=ds.indexOf(ev.date);if(i>=0)m.push([i,ev.name])});return m}
+function bestStreak(aid){let b=0,c=0;for(const d of DAYS){if(E(aid,d)){c++;if(c>b)b=c}else c=0}return b}
+function streakCard(aid,L,ro){
+  const T=I18N[L], n=streak(aid), done=!!E(aid,TODAY), best=Math.max(bestStreak(aid),n);
+  if(ro&&!n)return '';
+  const week=Array.from({length:7},(_,i)=>addDays(TODAY,i-6)).map(d=>`<div class="stk-d ${E(aid,d)?'on':''} ${d===TODAY?'today':''}"><i>${E(aid,d)?'✓':''}</i><span>${I18N[L].wd[dow(d)]}</span></div>`).join('');
+  const [t1,t2]=ro?[T.stk_ro.replace('{n}',n),'']:done?[T.stk_on.replace('{n}',n),T.stk_on_sub]:n?[T.stk_go.replace('{n}',n),T.stk_go_sub.replace('{m}',n+1)]:[T.stk_start,T.stk_start_sub];
+  return `<div class="card streak"><div class="stk-main"><div class="stk-fire" aria-hidden="true">${n?'🔥':'🌱'}</div><div><div class="stk-t">${esc(t1)}</div>${t2?`<div class="small muted">${esc(t2)}</div>`:''}${best>1?`<div class="stk-best">🏅 ${T.stk_best.replace('{n}',best)}</div>`:''}</div></div><div class="stk-week">${week}</div></div>`;
+}
 function streak(aid){let n=0,d=E(aid,TODAY)?TODAY:addDays(TODAY,-1);while(E(aid,d)){n++;d=addDays(d,-1)}return n}
 const E=(aid,d)=>ST.entries[aid]&&ST.entries[aid][d];
 const score=e=>e?e.sleep+e.energy+e.soreness+e.stress+e.mood:null;
@@ -897,7 +927,7 @@ function flags(aid,L){
   if(e){const b=baseline(aid,TODAY),s=score(e);if(b!=null&&s<=b-3)f.push([s<=b-5?'bad':'warn',t.f_drop.replace('{d}',(s-b).toFixed(0))])}
   const rr=ramp(aid,TODAY); if(rr>1.3)f.push([rr>1.5?'bad':'warn',t.f_ramp.replace('{v}',rr.toFixed(2))]);
   const le=e||E(aid,addDays(TODAY,-1)); if(le&&le.pain.length){const p=le.pain.reduce((x,y)=>y.level>x.level?y:x);if(p.level>=2)f.push([p.level>=3?'bad':'warn',t.f_pain.replace('{p}',le.pain.map(q=>ptxt(q,t)).join('・'))])}
-  const w=latestWeight(aid); if(w&&a.limit&&w>a.limit)f.push(['warn',t.f_w.replace('{d}',(w-a.limit).toFixed(1))]);
+  const w=latestWeight(aid); if(w&&a.limit&&w>a.limit)f.push(['warn',t.f_w.replace('{d}',fmtW(w-a.limit))]);
   if(e&&e.head&&e.head.length)f.unshift(['bad',t.f_head.replace('{s}',e.head.map(k=>t.hs[k]).join('・')),10]);
   {const ne=nextEvent(aid);if(ne){const dd=dayDiff(TODAY,ne.date);if(dd<=14)f.push(['acc',dd?t.f_ev.replace('{d}',dd):t.f_ev0])}}
   if(e&&attOf(e)==='absent')f.push(['warn',t.f_abs.replace('{r}',e.absReason?t.ar[e.absReason]:t.att_l.absent)]);
@@ -911,13 +941,32 @@ const sev=f=>f.reduce((s,[k,,p])=>s+(p||(k==='bad'?3:k==='warn'?1:0)),0);
 let UI={booting:false,auth:null,authUser:null,busy:false,draft:null,join:null,newInvite:null,confirmRemove:null,session:null,view:'',sel:null,settings:false,loginLang:(navigator.language||'ja').startsWith('ja')?'ja':'en',pAid:null,pYm:TODAY.slice(0,7),pKind:'a5',err:''};
 const viewerId=()=>UI.previewAs||UI.session;   // 閲覧モード中は、その選手として画面を組み立てる
 const me=()=>UI.session&&acct(viewerId());
-const prefs=id=>ST.prefs[id]||{lang:UI.loginLang,accent:'ai',mode:'auto',remind:'21:00'};
+const prefs=id=>ST.prefs[id]||{lang:UI.loginLang,accent:'ai',mode:'auto',remind:'21:00',wunit:'kg'};
+/* 体重：保存はいつも kg。表示と入力は、見ている人が選んだ単位（kg / lb）。冊子はその選手の単位 */
+const LB=2.20462262;
+const WU=()=>prefs(viewerId()).wunit==='lb'?'lb':'kg';
+const wIn=(kg,u=WU())=>kg==null||kg===''?null:u==='lb'?kg*LB:+kg;
+const wKg=(v,u=WU())=>v==null||v===''||!+v?null:Math.round((u==='lb'?v/LB:+v)*100)/100;
+const fmtW=(kg,u=WU(),unit=true)=>kg==null?'—':wIn(kg,u).toFixed(1)+(unit?u:'');
+function wToggle(){const u=WU();return `<span class="utog noprint" role="group" aria-label="kg / lb">${['kg','lb'].map(x=>`<button type="button" data-act="wunit" data-v="${x}" aria-pressed="${u===x}">${x}</button>`).join('')}</span>`}
+const hm=ts=>{const d=new Date(ts);return `${d.getMonth()+1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+function stamp(e,T){if(!e?.at)return '';const ed=e.upd&&new Date(e.upd)-new Date(e.at)>120000;return `<div class="stamp">📝 ${T.st_logged} ${hm(e.at)}${ed?` · ${T.st_edited} ${hm(e.upd)}`:''}</div>`}
 const lang=()=>UI.session?prefs(viewerId()).lang:UI.loginLang;
 const t=k=>I18N[lang()][k];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
-function accentOf(id){const p=prefs(id);if(p.accent==='custom'&&p.custom){const c=p.custom;return{l:c,d:c,g2:c,b:[hexA(c,.5),hexA(c,.3),hexA(c,.25)]}}return ACCENTS[p.accent]||ACCENTS.ai}
+/* 好きな色：色味はそのまま、文字やボタンに使っても読める濃さ（明るい画面）・明るさ（暗い画面）に自動で調整する */
+function rgbOf(h){const n=parseInt(h.slice(1),16);return [n>>16&255,n>>8&255,n&255]}
+function lumOf(c){const f=v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])}
+const ctr=(a,b)=>{const x=lumOf(a),y=lumOf(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+function hslRgb(h,s,l){const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1));return [f(0),f(8),f(4)].map(v=>Math.round(v*255))}
+function rgbHsl([r,g,b]){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}return [h,s,l]}
+const hexOf=c=>'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');
+function readable(hex,bg,dark){const [h,s0,l0]=rgbHsl(rgbOf(hex)), s=Math.min(Math.max(s0,s0>.05?.5:0),.68), B=rgbOf(bg);
+  if(ctr(rgbOf(hex),B)>=4.5)return hex;
+  for(let i=0;i<=60;i++){const l=dark?Math.min(.97,l0+i/60):Math.max(.05,l0-i/60*l0), c=hslRgb(h,s,l);if(ctr(c,B)>=4.5)return hexOf(c)}return dark?'#ffffff':'#000000'}
+function accentOf(id){const p=prefs(id);if(p.accent==='custom'&&p.custom){const c=p.custom, l=readable(c,'#f4f5f9',false), d=readable(c,'#0b0d15',true);return{l,d,g2:l,b:[hexA(c,.5),hexA(c,.3),hexA(c,.25)]}}return ACCENTS[p.accent]||ACCENTS.ai}
 function applyTheme(){
   const id=viewerId()||'coach', p=UI.session?prefs(id):{mode:'auto',accent:'ai'}, a=UI.session?accentOf(id):ACCENTS.ai, r=document.documentElement.style;
   r.setProperty('--acc-l',a.l);r.setProperty('--acc-d',a.d);
@@ -963,8 +1012,8 @@ function oneChart(aid,L,k,days,big){
   let title='', svg='';
   if(k==='cond'){title=`${tt.cond} <small>5〜25</small>`;svg=chart(ds.map(d=>score(E(aid,d))),{...o,min:5,max:25,ticks:[10,15,20,25],labels,marks})}
   else if(k==='load'){const rr=ramp(aid,TODAY);title=`${tt.load} <small>${tt.load_u}</small> <span class="sp"></span><span class="pill ${rr>1.5?'bad':rr>1.3?'warn':'good'}">${tt.ramp} ×${rr?rr.toFixed(2):'—'}</span>`;svg=chart(ds.map(d=>load(E(aid,d))),{...o,min:0,max:1800,kind:'bar',ticks:[0,600,1200,1800],labels,marks})}
-  else if(k==='weight'){const ws=ds.map(d=>E(aid,d)?.weight??null).filter(v=>v!=null),wv=[...ws,...(a.limit?[a.limit]:[])],mn=Math.floor(Math.min(...(wv.length?wv:[60]))-1),mx=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
-    title=`${tt.weight} <small>${esc(a.cls)}</small>`;svg=chart(ds.map(d=>E(aid,d)?.weight??null),{...o,min:mn,max:mx,ticks:[mn,Math.round((mn+mx)/2),mx],labels,ref:a.limit||null,refLabel:a.limit?tt.limit+' '+a.limit+'kg':'',fill:false,marks})}
+  else if(k==='weight'){const ser=ds.map(d=>wIn(E(aid,d)?.weight??null)),lim=wIn(a.limit),ws=ser.filter(v=>v!=null),wv=[...ws,...(lim?[lim]:[])],pd=WU()==='lb'?2:1,mn=Math.floor(Math.min(...(wv.length?wv:[wIn(60)]))-pd),mx=Math.ceil(Math.max(...(wv.length?wv:[wIn(60)]))+pd*.6);
+    title=`${tt.weight} <small>${esc(a.cls)}</small> <span class="sp"></span>${wToggle()}`;svg=chart(ser,{...o,min:mn,max:mx,ticks:[mn,Math.round((mn+mx)/2),mx],labels,ref:lim||null,refLabel:lim?tt.limit+' '+fmtW(a.limit):'',fill:false,marks})}
   else {title=tt[k];svg=chart(ds.map(d=>E(aid,d)?.[k]??null),{...o,h:big?260:110,min:1,max:5,ticks:[1,3,5],labels,fill:false})}
   return `<div class="chart ${big?'':'tap'}" ${big?'':`data-act="bigchart" data-k="${k}" data-aid="${aid}" title="${esc(tt.tap_big)}" role="button" tabindex="0"`}><div class="t">${title}</div>${svg}</div>`;
 }
@@ -972,13 +1021,13 @@ function trendCharts(aid,L,days=28){
   const tt=I18N[L], ds=[];for(let i=days-1;i>=0;i--)ds.push(addDays(TODAY,-i));
   const ne=nextEvent(aid), ahead=ne?dayDiff(TODAY,ne.date):99; if(ahead>0&&ahead<=14)for(let i=1;i<=ahead;i++)ds.push(addDays(TODAY,i));
   const labels=ds.map((d,i)=>[i,md(d)]).filter((_,i)=>(i%7===0&&ds.length-1-i>=4)||i===ds.length-1), marks=eventMarks(aid,ds);
-  const a=acct(aid), ws=ds.map(d=>E(aid,d)?.weight??null).filter(v=>v!=null), wv=[...ws,...(a.limit?[a.limit]:[])];
-  const wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
+  const a=acct(aid), ser=ds.map(d=>wIn(E(aid,d)?.weight??null)), lim=wIn(a.limit), ws=ser.filter(v=>v!=null), wv=[...ws,...(lim?[lim]:[])], pd=WU()==='lb'?2:1;
+  const wmin=Math.floor(Math.min(...(wv.length?wv:[wIn(60)]))-pd), wmax=Math.ceil(Math.max(...(wv.length?wv:[wIn(60)]))+pd*.6);
   const rr=ramp(aid,TODAY);
   return `<div class="card"><h2>${tt.last28}</h2><div class="stack">
    <div class="chart"><div class="t">${tt.cond} <small>${[tt.sleep,tt.energy,tt.soreness,tt.stress,tt.mood].join(L==='ja'?'・':' · ')}${L==='ja'?'（5〜25）':' (5–25)'}</small></div>${chart(ds.map(d=>score(E(aid,d))),{min:5,max:25,ticks:[10,15,20,25],labels,marks})}</div>
    <div class="chart"><div class="t">${tt.load} <small>${tt.load_u}</small> <span class="sp"></span><span class="pill ${rr>1.5?'bad':rr>1.3?'warn':'good'}" title="${esc(tt.ramp_help)}">${tt.ramp} ×${rr?rr.toFixed(2):'—'}</span></div>${chart(ds.map(d=>load(E(aid,d))),{min:0,max:1800,kind:'bar',ticks:[0,600,1200,1800],labels,marks})}<div class="small muted">${tt.ramp_help}</div></div>
-   <div class="chart"><div class="t">${tt.weight} <small>${esc(a.cls)}</small></div>${chart(ds.map(d=>E(aid,d)?.weight??null),{min:wmin,max:wmax,ticks:[wmin,Math.round((wmin+wmax)/2),wmax],labels,ref:a.limit||null,refLabel:a.limit?tt.limit+' '+a.limit+'kg':'',fill:false,marks})}</div>
+   <div class="chart"><div class="t">${tt.weight} <small>${esc(a.cls)}</small> <span class="sp"></span>${wToggle()}</div>${chart(ser,{min:wmin,max:wmax,ticks:[wmin,Math.round((wmin+wmax)/2),wmax],labels,ref:lim||null,refLabel:lim?tt.limit+' '+fmtW(a.limit):'',fill:false,marks})}</div>
   </div></div>`;
 }
 
@@ -1011,6 +1060,12 @@ function goalsBanner(aid,L,editable){
   return `<div class="card goalbar"><div class="goalhead"><span class="gk">🎯 ${T.goal_banner} · ${monthLabel(ym,L)}</span>${editable?`<button class="linkish" data-act="view" data-v="note">${T.goal_edit}</button>`:''}</div>
     <ol>${items.map(i=>`<li>${esc(i)}</li>`).join('')}</ol></div>`;
 }
+function pushNag(){
+  const st=UI.pushState, role=me()?.role; if(UI.student||UI.previewAs||!role||!['off','ios','denied'].includes(st))return '';
+  try{const k='judo-nag-'+UI.session, v=localStorage.getItem(k);if(v&&Date.now()-+v<3*864e5)return ''}catch(e){}
+  const T=I18N[lang()], why={coach:T.nb_off_c,guardian:T.nb_off_g}[role]||T.nb_off_a;
+  return `<div class="card nag noprint"><div><b>🔔 ${T.nb_off}</b><div class="small">${st==='ios'?T.nb_ios:st==='denied'?T.n_denied:why}</div></div><div class="row" style="gap:8px">${st==='ios'?'':`<button class="btn sm" data-act="pushon">${T.n_on_btn}</button>`}<button class="btn ghost sm" data-act="naglater">${T.nb_later}</button></div></div>`;
+}
 function athleteView(){
   const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
   const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
@@ -1021,7 +1076,7 @@ function athleteView(){
   if(UI.view==='x')body=extraView(m.id,L,!UI.previewAs);
   if(UI.view==='q')body=questions(m.id,L,false);
   if(UI.view==='note')body=athNote();
-  return header(tabs)+`<main>${UI.view!=='note'?`<div class="stack" style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}${UI.view==='today'?monthCard(m.id,L):''}</div>`:''}${body}</main>`;
+  return header(tabs)+`<main>${pushNag()}${UI.view!=='note'?`<div class="stack" style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}${UI.view==='today'?monthCard(m.id,L):''}</div>`:''}${body}</main>`;
 }
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
@@ -1031,14 +1086,15 @@ function athToday(){
   const seg=(k)=>`<div class="crow"><div class="nm">${T[k]}</div><div class="seg" role="radiogroup" aria-label="${T[k]}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="${k}" value="${v}" ${e[k]===v?'checked':''} required><span>${v}</span></label>`).join('')}</div><div class="ends"><span>1 ${T[k+'_lo']}</span><span>${T[k+'_hi']} 5</span></div></div>`;
   const lvl=e.pain[0]?.level||1, att=E(m.id,day)?attOf(e):'present';
   return `<div class="stack">
-  <div class="hello"><div class="sub">${fd(day,L)}${m.cls?' · '+esc(m.cls):''} ${streak(m.id)>1?`<span class="pill acc">${T.streak.replace('{n}',streak(m.id))}</span>`:''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${isY?T.yday_q:T.today_q}</span></h1></div>
+  <div class="hello"><div class="sub">${fd(day,L)}${m.cls?' · '+esc(m.cls):''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${isY?T.yday_q:T.today_q}</span></h1></div>
+  ${streakCard(m.id,L,false)}
   ${needY?`<div class="card row" style="justify-content:space-between"><span class="small">📝 ${esc(T.yday_nudge.replace('{d}',fd(Y,L)))}</span><button class="btn sm" data-act="eday" data-v="${Y}">${T.yday_btn}</button></div>`:''}
   ${E(m.id,day)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
   ${evCard(m.id,L)}
   ${(()=>{const pe=(ST.events||[]).filter(e=>e.aids.includes(m.id)&&e.date<TODAY&&e.date>=addDays(TODAY,-3)&&!ST.mnotes[e.id]).sort((x,y)=>y.date.localeCompare(x.date))[0];
     return pe?`<div class="card row" style="justify-content:space-between"><span class="small">✍️ ${esc(T.mr_pending.replace('{n}',pe.name).replace('{d}',fd(pe.date,L)))}</span><button class="btn sm" data-act="mreview" data-ev="${pe.id}">${T.mr_write}</button></div>`:''})()}
   ${lastC?`<div class="card"><h2>${T.from_coach} · ${fd(lastC.d,L)}</h2><div>${esc(lastC.c.text)}</div></div>`:''}
-  ${E(m.id,day)?`<div class="savedbar">${esc(T.done_saved_note.replace('{d}',fd(day,L)))}</div>`:''}
+  ${E(m.id,day)?`<div class="savedbar">${esc(T.done_saved_note.replace('{d}',fd(day,L)))}${stamp(E(m.id,day),T)}</div>`:''}
   <div class="segbar noprint" style="max-width:320px">${[[TODAY,T.d_today],[Y,T.d_yday]].map(([d,l])=>`<button type="button" data-act="eday" data-v="${d}" aria-pressed="${day===d}">${l} ${md(d)}${E(m.id,d)?' ✓':''}</button>`).join('')}</div>
   <form id="today-form" class="stack">
    <div class="card"><h2>${T.cond}</h2><div class="cond">${['sleep','energy','soreness','stress','mood'].map(seg).join('')}</div></div>
@@ -1056,13 +1112,13 @@ function athToday(){
      </div>
    </div>
    <div class="card stack"><h2 style="margin:0">${T.body}</h2>
-     <div class="field" style="max-width:180px"><label for="f-w">${T.weight}</label><input class="inp mono" id="f-w" name="weight" type="number" step="0.1" min="30" max="200" value="${e.weight}"></div>
+     <div class="field" style="max-width:240px"><div class="row" style="justify-content:space-between;gap:8px"><label for="f-w" class="lbl">${T.weight}</label>${wToggle()}</div><div class="row" style="gap:8px;flex-wrap:nowrap"><input class="inp mono" id="f-w" name="weight" type="number" inputmode="decimal" step="0.1" min="${WU()==='lb'?22:10}" max="${WU()==='lb'?550:250}" value="${e.weight!=null&&e.weight!==''?wIn(e.weight).toFixed(1):''}"><span class="muted" id="f-wu-l">${WU()}</span></div><input type="hidden" name="wu" id="f-wu" value="${WU()}"></div>
      <div class="field"><span class="lbl">${T.pain}</span><div class="chips"><label class="chk good"><input type="checkbox" name="painNone" id="f-pain-none" ${e.pain.length?'':'checked'}><span>✓ ${T.pain_none}</span></label>${PARTS.map(p=>`<label class="chk"><input type="checkbox" name="pain" value="${p}" ${e.pain.some(q=>q.part===p)?'checked':''}><span>${T.pt[p]}</span></label>`).join('')}</div>
        <input class="inp" id="f-pain-other" name="painOther" maxlength="40" placeholder="${esc(T.other_ph)}" value="${esc(e.pain.find(q=>q.part==='other')?.detail||'')}" ${e.pain.some(q=>q.part==='other')?'':'hidden'}></div>
      <div class="field" id="f-pain-lv" ${e.pain.length?'':'hidden'}><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
      <div class="field"><span class="lbl">${T.head}</span><div class="small muted">${T.head_help}</div><div class="chips">${Object.keys(T.hs).map(k=>`<label class="chk danger"><input type="checkbox" name="head" value="${k}" ${e.head?.includes(k)?'checked':''}><span>${T.hs[k]}</span></label>`).join('')}</div></div>
    </div>
-   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><textarea class="inp" id="f-note" name="note" placeholder="${esc(T.note_ph)}">${esc(e.note)}</textarea></div>
+   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><div class="small muted">${T.note_hint}</div><textarea class="inp" id="f-note" name="note" placeholder="${esc(T.note_ph)}" style="min-height:110px">${esc(e.note)}</textarea></div>
      <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea></div>
      <div><button class="btn" type="submit">${T.save}</button></div></div>
   </form></div>`;
@@ -1070,7 +1126,7 @@ function athToday(){
 function evCard(aid,L,ro){
   const T=I18N[L], ne=nextEvent(aid); if(!ne)return ro?'':`<div class="card row" style="justify-content:space-between"><span class="small">${T.ev_prompt}</span><button class="btn ghost sm" data-act="view" data-v="note">${T.ev_go}</button></div>`;
   const dd=dayDiff(TODAY,ne.date), a=acct(aid), w=latestWeight(aid), tg=ne.target||a.limit;
-  const wtxt=w==null||!tg?'':w>tg?`<span class="pill warn">${T.ev_to_go.replace('{w}',(w-tg).toFixed(1)).replace('{l}',tg)}</span>`:`<span class="pill good">${T.ev_ok.replace('{l}',tg)}</span>`;
+  const wtxt=w==null||!tg?'':w>tg?`<span class="pill warn">${T.ev_to_go.replace('{w}',fmtW(w-tg)).replace('{l}',fmtW(tg))}</span>`:`<span class="pill good">${T.ev_ok.replace('{l}',fmtW(tg))}</span>`;
   return `<div class="card evcard"><div class="evn"><div class="k">${dd?esc(T.ev_until.replace('{n}',ne.name)):esc(T.ev_today.replace('{n}',ne.name))}</div><div class="big">${dd?T.ev_days.replace('{d}',`<b>${dd}</b>`):'🥋'}</div></div>
     <div class="row small">${ne.weigh?`<span class="pill">${T.ev_weigh_s.replace('{d}',fd(ne.weigh,L))}</span>`:''}${wtxt}</div>
     ${!dd&&!ro?`<div><button class="btn sm" data-act="mreview" data-ev="${ne.id}">${ST.mnotes[ne.id]?T.mr_edit:T.mr_now}</button></div>`:''}</div>`;
@@ -1081,9 +1137,10 @@ function entryList(aid,L,n,coach){
     if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div><div class="muted small">${T.no_entry}</div>${xDayBlock(aid,d,L)}</div></div>`;continue}
     const s=score(e);
     rows+=`<div class="ent"><div class="d">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
-      <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${e.weight}kg</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
+      <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
       ${e.note?`<p>${esc(e.note)}</p>`:''}
       ${xDayBlock(aid,d,L)}
+      ${stamp(e,T)}
       ${e.comment?cmtBlock(aid,d,e,T):''}
       ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
       ${coach&&!e.comment?`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="c-${aid}-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`:''}
@@ -1138,13 +1195,13 @@ function guardianView(){
   const hello=`${sw}<div class="hello"><div class="sub">${esc(T.g_sub)}${a?.cls?' · '+esc(a.cls):''}</div><h1>${esc(T.g_hello.replace('{n}',a?.name||''))}</h1></div>`;
   let body='';
   if(!a)body=`<div class="card">${T.none}</div>`;
-  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${evCard(S,L,true)}${monthCard(S,L)}${runsCard(S,L,false)}<div class="grid2">${trendCharts(S,L)}${entryList(S,L,14,false)}</div></div>`;
+  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${streakCard(S,L,true)}${evCard(S,L,true)}${monthCard(S,L)}${runsCard(S,L,false)}<div class="grid2">${trendCharts(S,L)}${entryList(S,L,14,false)}</div></div>`;
   else if(UI.view==='q')body=`<div class="stack">${hello}${questions(S,L,false,true)}</div>`;
   else {const g=ST.goals[S+'|'+curYm()];body=`<div class="stack">${hello}${eventsCard(S,L,true)}
     ${g?`<div class="card"><h2>${T.goals} · ${monthLabel(curYm(),L)}</h2><ul style="margin:0;padding-left:1.2em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>${g.review?`<p class="muted">${esc(g.review)}</p>`:''}</div>`:''}
     <div class="card"><h2>${T.booklet}</h2><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(S,UI.pYm)}</div></div>`}
-  return header(tabs)+`<main>${a&&UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(S,L,false)}</div>`:''}${body}</main>`;
+  return header(tabs)+`<main>${pushNag()}${a&&UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(S,L,false)}</div>`:''}${body}</main>`;
 }
 
 /* ---------- コーチの画面 ---------- */
@@ -1156,7 +1213,7 @@ function coachView(){
   if(UI.view==='q')body=questions(null,L,true);
   if(UI.view==='print')body=coachPrint();
   if(UI.view==='members')body=membersView();
-  return header(tabs)+`<main>${body}</main>`;
+  return header(tabs)+`<main>${pushNag()}${body}</main>`;
 }
 function coachTeam(){
   const L=lang(), T=I18N[L];
@@ -1170,14 +1227,14 @@ function coachTeam(){
      <div class="card stat"><div class="k">${T.s_unans}</div><div class="v" style="color:var(--accent)">${un}</div></div></div>
    ${ATH.length?'':`<div class="card">${T.no_athletes}</div>`}
    <div class="card" ${ATH.length||demoAcct()?'':'hidden'}><div class="roster">
-     <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w}</span><span></span></div>
+     <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w} ${wToggle()}</span><span></span></div>
      ${(demoAcct()?[...rows,{a:demoAcct(),f:[],demo:true}]:rows).map(({a,f,demo})=>{const e=E(a.id,TODAY),s=score(e),b=baseline(a.id,TODAY),rr=ramp(a.id,TODAY),w=latestWeight(a.id);
        return `<button class="rrow" data-act="open" data-id="${a.id}">
         <span class="rname"><b>${esc(a.name)}<span class="lang-tag">${demo?'🎓 '+T.st_tag:prefs(a.id).lang.toUpperCase()}</span></b><span>${esc(a.cls)}</span></span>
         <span class="c-spark">${spark(d14.map(d=>score(E(a.id,d))))}</span>
         <span class="num c-m">${s!=null?`${s}<small>${T.of25}</small>`:'—'}${s!=null&&b!=null?`<br><small>${s-b>=0?'+':''}${(s-b).toFixed(1)}</small>`:''}</span>
         <span class="num c-m">${rr?'×'+rr.toFixed(2):'—'}</span>
-        <span class="num c-m">${w?w.toFixed(1)+'kg':'—'}${a.limit?`<br><small>≤${a.limit}kg</small>`:''}</span>
+        <span class="num c-m">${w?fmtW(w):'—'}${a.limit?`<br><small>≤${fmtW(a.limit)}</small>`:''}</span>
         <span class="flags">${pills(f)||`<span class="pill good">OK</span>`}</span></button>`}).join('')}
    </div></div></div>`;
 }
@@ -1188,22 +1245,23 @@ function daysTable(aid,L,days){
     const s=score(e);
     return `<button class="drow" data-act="dayopen" data-aid="${aid}" data-d="${d}"><span class="mono">${fd(d,L)}</span>
       <span>${attOf(e)==='present'?'':`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`}</span>
-      <span class="num">${s??'—'}</span><span class="num">${e.min?`${e.min}′·${e.rpe}`:'—'}</span><span class="num">${e.weight??'—'}</span>
+      <span class="num" data-l="${T.d_cond}">${s??'—'}</span><span class="num" data-l="${T.d_prac}">${e.min?`${e.min}′·${e.rpe}`:'—'}</span><span class="num" data-l="${T.h_w}">${e.weight?fmtW(e.weight):'—'}</span>
       <span class="dnote">${e.head?.length?'<span class="pill bad">⚠</span> ':''}${e.pain.length?`<span class="pill warn">${esc(e.pain.map(p=>ptxt(p,T)).join('・'))}</span> `:''}${XS(aid,d).length?'💪 ':''}${esc(e.note)}</span>
       <span>${e.comment?'💬':e.seen?'✓':''}</span></button>`}).join('');
-  return `<div class="card"><div class="drow dhead"><span>${T.ev_date}</span><span>${T.d_att}</span><span>${T.d_cond}</span><span>${T.d_prac}</span><span>${T.h_w}</span><span>${T.d_note}</span><span>${T.d_coach}</span></div>${rows}</div>`;
+  return `<div class="card"><div class="drow dhead"><span>${T.ev_date}</span><span>${T.d_att}</span><span>${T.d_cond}</span><span>${T.d_prac}</span><span>${T.h_w} (${WU()})</span><span>${T.d_note}</span><span>${T.d_coach}</span></div>${rows}</div>`;
 }
 function entryModal(aid,d,L){
   const T=I18N[L], e=E(aid,d), a=acct(aid); if(!e)return '';
   const bars=['sleep','energy','soreness','stress','mood'].map(k=>`<div class="cbar"><span>${T[k]}</span><div class="cbar-t"><i style="width:${(e[k]||0)*20}%"></i></div><b class="mono">${e[k]??'—'}</b></div>`).join('');
   return `<h3>${esc(a.name)} · ${fd(d,L)}</h3>
-   <div class="row">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}<span class="pill">${T.score} ${score(e)??'—'}${T.of25}</span>${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe} · ${T.d_load} ${load(e)}</span>`:''}${e.weight?`<span class="pill">${e.weight}kg</span>`:''}</div>
+   <div class="row">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}<span class="pill">${T.score} ${score(e)??'—'}${T.of25}</span>${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe} · ${T.d_load} ${load(e)}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}</div>
    <div class="grid2" style="margin-top:12px"><div><div class="lbl">${T.cond}</div>${bars}</div>
     <div class="stack" style="gap:8px">${e.types.length?`<div><div class="lbl">${T.content}</div>${esc(typeTxt(e,L))}</div>`:''}
      ${e.pain.length?`<div><div class="lbl">${T.pain}</div>${e.pain.map(p=>`<span class="pill warn">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join(' ')}</div>`:''}
      ${e.head?.length?`<div><div class="lbl">${T.head}</div>${e.head.map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join(' ')}</div>`:''}</div></div>
    ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
    ${xDayBlock(aid,d,L)}
+   ${stamp(e,T)}
    <div style="margin-top:12px">${e.comment?cmtBlock(aid,d,e,T):`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="mc-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
 }
 function accountsSheet(){
@@ -1233,12 +1291,12 @@ function coachDetail(aid){
     const card=(k,v,sub,go)=>`<button class="card stat ovc" data-act="ctab" data-v="${go}"><div class="k">${k}</div><div class="v">${v}</div><div class="small muted">${sub||''}</div></button>`;
     body=`<div class="ovgrid">${card(T.ov_today,s!=null?`${s}<small>${T.of25}</small>`:'—',e?esc(attTxt(e,T)||''):T.no_data,'days')}${card(T.ov_avg7,sc7.length?(sc7.reduce((x,y)=>x+y,0)/sc7.length).toFixed(1):'—','','charts')}
       ${card(T.ov_week,`${last7.filter(x=>x.min).length}<small>${T.mon_day_u}</small>`,fmtMin(last7.reduce((x,y)=>x+(y.min||0),0),L),'days')}${card(T.ov_ramp,rr?'×'+rr.toFixed(2):'—','','charts')}
-      ${card(T.ov_weight,w?`${w.toFixed(1)}<small>kg</small>`:'—',a.limit?'≤'+a.limit+'kg':'','charts')}${card(T.ov_run,run?fmtTime(run.sec):'—',run?fd(run.day,L):'','run')}
+      ${card(T.ov_weight,w?`${fmtW(w,WU(),false)}<small>${WU()}</small>`:'—',a.limit?'≤'+fmtW(a.limit):'','charts')}${card(T.ov_run,run?fmtTime(run.sec):'—',run?fd(run.day,L):'','run')}
       ${card(T.ov_next,ne?esc(ne.name):'—',ne?T.ev_days.replace('{d}',dayDiff(TODAY,ne.date)):'','matches')}${card(T.ov_unans,un,'','qa')}</div>
       <div class="grid2">${goalsBanner(aid,L,false)||''}<div></div></div>
       <div class="grid2"><div class="card"><h2>${T.last28} <span class="small muted" style="text-transform:none;letter-spacing:0">· ${T.tap_big}</span></h2><div class="stack">${['cond','load','weight'].map(k=>oneChart(aid,L,k,28)).join('')}</div></div>${entryList(aid,L,7,true)}</div>`;
   }
-  if(tab==='days'){const days=UI.rgDays||28;body=`<div class="row" style="justify-content:flex-end">${rangeBar('rgDays',[[14,T.rg_2w],[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${daysTable(aid,L,days)}`}
+  if(tab==='days'){const days=UI.rgDays||28;body=`<div class="row" style="justify-content:space-between">${wToggle()}${rangeBar('rgDays',[[14,T.rg_2w],[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${daysTable(aid,L,days)}`}
   if(tab==='charts'){const days=UI.rgCharts||28;body=`<div class="row" style="justify-content:space-between"><span class="small muted">${T.tap_big}</span>${rangeBar('rgCharts',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>
     <div class="grid2">${['cond','load','weight'].map(k=>`<div class="card">${oneChart(aid,L,k,days)}</div>`).join('')}<div class="card"><h2>${T.cmp_title}</h2><div class="stack">${['sleep','energy','soreness','stress','mood'].map(k=>oneChart(aid,L,k,days)).join('')}</div></div></div>`}
   if(tab==='run')body=runsCard(aid,L,false);
@@ -1265,12 +1323,12 @@ function eventsCard(aid,L,ro){
       ${isCoach?`<form class="stack cnote" data-form="cnote" data-ev="${ev.id}" data-aid="${aid}"><label class="lbl" for="cn-${ev.id}">${T.cn_label}</label><textarea class="inp" id="cn-${ev.id}" name="body" maxlength="4000">${esc(cn?.body||'')}</textarea><div><button class="btn ghost sm" type="submit">${T.cn_save}</button></div></form>`:''}</div>`;
   };
   return `<div class="card"><h2>${T.events}</h2>
-   <div class="entries">${list.length?list.map(ev=>`<div class="evitem"><div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+ev.target+'kg':''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro||UI.previewAs?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>${reflect(ev)}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
+   <div class="entries">${list.length?list.map(ev=>`<div class="evitem"><div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+fmtW(ev.target):''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro||UI.previewAs?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>${reflect(ev)}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
    ${ro?'':`<form class="evform" data-form="event" data-aid="${aid}">
      <div class="field"><label for="ev-name">${T.ev_name}</label><input class="inp" id="ev-name" name="name" required></div>
      <div class="field"><label for="ev-date">${T.ev_date}</label><input class="inp" id="ev-date" name="date" type="date" required></div>
      <div class="field"><label for="ev-weigh">${T.ev_weigh}</label><input class="inp" id="ev-weigh" name="weigh" type="date"></div>
-     <div class="field"><label for="ev-target">${T.ev_target}</label><input class="inp mono" id="ev-target" name="target" type="number" step="0.1" min="30" max="200" placeholder="${acct(aid).limit??''}"></div>
+     <div class="field"><label for="ev-target">${T.ev_target.replace('{u}',WU())}</label><input class="inp mono" id="ev-target" name="target" type="number" inputmode="decimal" step="0.1" placeholder="${acct(aid).limit?fmtW(acct(aid).limit,WU(),false):''}"></div>
      <div><button class="btn sm" type="submit">${T.ev_add}</button></div><div class="small muted" style="grid-column:1/-1">${T.ev_past_hint}</div></form>`}</div>`;
 }
 
@@ -1296,7 +1354,7 @@ function extraView(aid,L,editable){
     <div class="row"><button class="btn" type="submit">${ed?T.x_update:T.x_save}</button>${ed?`<button class="btn ghost sm" type="button" data-act="xedit" data-id="">${T.cancel}</button>`:''}</div>
     <div class="small muted">${T.x_log}</div></form>`:'';
   const days=[...new Set(xs.map(x=>x.day))].sort().reverse().slice(0,60);
-  const hist=days.length?`<div class="entries">${days.map(d=>`<div class="ent"><div class="d">${fd(d,L)}</div><div class="stack" style="gap:8px">${XS(aid,d).map(x=>`<div class="xitem"><div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}</div>${editable?`<div class="row" style="gap:10px"><button class="linkish" data-act="xedit" data-id="${x.id}">${T.x_edit}</button><button class="linkish danger" data-act="xdel" data-id="${x.id}">${T.x_del}</button></div>`:''}</div>`).join('')}</div></div>`).join('')}</div>`
+  const hist=days.length?`<div class="entries">${days.map(d=>`<div class="ent"><div class="d">${fd(d,L)}</div><div class="stack" style="gap:8px">${XS(aid,d).map(x=>`<div class="xitem"><div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}<div class="stamp">📝 ${hm(x.at)}</div></div>${editable?`<div class="row" style="gap:10px"><button class="linkish" data-act="xedit" data-id="${x.id}">${T.x_edit}</button><button class="linkish danger" data-act="xdel" data-id="${x.id}">${T.x_del}</button></div>`:''}</div>`).join('')}</div></div>`).join('')}</div>`
     :`<div class="small muted">${editable?T.x_none:T.x_none_ro}</div>`;
   return `<div class="stack">${editable?`<div class="card"><h2>💪 ${T.x_title}</h2><p class="small muted" style="margin-top:0">${T.x_lead}</p>${form}</div>`:''}<div class="card"><h2>${editable?T.x_hist:'💪 '+T.x_title}</h2>${hist}</div></div>`;
 }
@@ -1358,6 +1416,7 @@ function monthStats(aid,ym){
 }
 function booklet(aid,ym){
   const a=acct(aid), L=prefs(aid).lang, T=I18N[L], acc=accentOf(aid).l, st=monthStats(aid,ym), g=ST.goals[aid+'|'+ym]||{items:[],review:''};
+  const BU=prefs(aid).wunit==='lb'?'lb':'kg';
   const pages=[]; const foot=p=>`<div class="foot"><span>JUDO NOTE · ${ym.replace('-','.')}</span><span>${esc(a.name)}</span><span>p.${p}</span></div>`;
   const all=monthDates(ym), lab=all.map((d,i)=>[i,md(d)]).filter((_,i)=>i%7===0);
   const cc={ink:'#5a5f6b',grid:'#e3e5ea',color:acc,w:520,h:120,fs:10};
@@ -1368,7 +1427,7 @@ function booklet(aid,ym){
     <div class="kpis"><div class="kpi"><div class="k">${T.days}</div><div class="v">${st.days}<small>${L==='ja'?'日':' d'}</small></div></div>
       <div class="kpi"><div class="k">${T.total}</div><div class="v" style="font-size:10pt">${fmtMin(st.min,L)}</div></div>
       <div class="kpi"><div class="k">${T.avg}</div><div class="v">${st.avg?st.avg.toFixed(1):'—'}<small>/25</small></div></div>
-      <div class="kpi"><div class="k">${T.wchg}</div><div class="v" style="font-size:9.5pt">${st.w0??'—'}→${st.w1??'—'}</div></div></div>
+      <div class="kpi"><div class="k">${T.wchg}</div><div class="v" style="font-size:9.5pt">${st.w0?fmtW(st.w0,BU,false):'—'}→${st.w1?fmtW(st.w1,BU):'—'}</div></div></div>
     ${(()=>{const n=(ST.extras[aid]||[]).filter(x=>x.day.startsWith(ym)).length;return n?`<div style="font-size:8.5pt;margin-top:3mm">💪 ${T.x_count.replace('{n}',n)}</div>`:''})()}
     ${(()=>{const rr=(ST.runs[aid]||[]).filter(r=>r.day.startsWith(ym));return rr.length?`<h3 style="margin-top:6mm">${T.run_title}</h3><div style="font-size:8pt">${rr.slice().reverse().map(r=>`${md(r.day)}　<b>${fmtTime(r.sec)}</b>`).join('　／　')}</div>`:''})()}
     <h3 style="margin-top:6mm">${T.goals.toUpperCase?T.goals:''}</h3>
@@ -1378,20 +1437,20 @@ function booklet(aid,ym){
   // 2. カレンダー＋グラフ
   const first=dow(all[0]), cells=[];for(let i=0;i<first;i++)cells.push('<div class="c o"></div>');
   all.forEach(d=>{const e=E(aid,d),s=score(e);const col=!e||!e.min&&!s?'#e3e5ea':s>=20?acc:s>=16?hexA(acc,.45):'#d9534f';
-    cells.push(`<div class="c"><b>${+d.slice(8)}</b>${e?`<span class="l" ${attOf(e)==='absent'?'style="color:#b86e00;font-weight:600"':''}>${attOf(e)==='absent'?esc(T.att_l.absent):e.min?e.min+"'·"+e.rpe+(attOf(e)==='watch'?' '+esc(T.att_l.watch):''):T.rest}</span><span class="l">${e.weight??''}</span>${e.pain.length?`<span class="l" style="color:#c0392b">${e.pain.map(p=>esc(ptxt(p,T))).join(' ')}</span>`:''}`:d<=TODAY?`<span class="l">—</span>`:''}<span class="bar" style="background:${d<=TODAY?col:'transparent'}"></span></div>`)});
-  const ws=all.map(d=>E(aid,d)?.weight).filter(Boolean), wv=[...ws,...(a.limit?[a.limit]:[])], wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.5);
+    cells.push(`<div class="c"><b>${+d.slice(8)}</b>${e?`<span class="l" ${attOf(e)==='absent'?'style="color:#b86e00;font-weight:600"':''}>${attOf(e)==='absent'?esc(T.att_l.absent):e.min?e.min+"'·"+e.rpe+(attOf(e)==='watch'?' '+esc(T.att_l.watch):''):T.rest}</span><span class="l">${e.weight?fmtW(e.weight,BU,false):''}</span>${e.pain.length?`<span class="l" style="color:#c0392b">${e.pain.map(p=>esc(ptxt(p,T))).join(' ')}</span>`:''}`:d<=TODAY?`<span class="l">—</span>`:''}<span class="bar" style="background:${d<=TODAY?col:'transparent'}"></span></div>`)});
+  const wser=all.map(d=>wIn(E(aid,d)?.weight??null,BU)), blim=wIn(a.limit,BU), ws=wser.filter(v=>v!=null), wv=[...ws,...(blim?[blim]:[])], wmin=Math.floor(Math.min(...(wv.length?wv:[wIn(60,BU)]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[wIn(60,BU)]))+.5);
   pages.push(`<h2>${T.cal}<small>${T.cal_sub}</small></h2><div class="rule"></div>
     <div class="cal">${I18N[L].wd.map(w=>`<div class="h">${w}</div>`).join('')}${cells.join('')}</div>
     <div class="legend"><span><i style="background:${acc}"></i>${T.lg_good}</span><span><i style="background:${hexA(acc,.45)}"></i>${T.lg_mid}</span><span><i style="background:#d9534f"></i>${T.lg_low}</span><span><i style="background:#e3e5ea"></i>${T.lg_rest}</span></div>
     <div class="pchart"><div class="t">${T.load_trend}<small>${T.load_u}</small></div>${chart(all.map(d=>load(E(aid,d))),{...cc,h:100,min:0,max:1800,kind:'bar',ticks:[0,900,1800],labels:lab,marks:eventMarks(aid,all),mc:acc})}</div>
-    <div class="pchart"><div class="t">${T.weight_trend}<small>${a.limit?T.limit+' '+a.limit+'kg':''}</small></div>${chart(all.map(d=>E(aid,d)?.weight??null),{...cc,h:100,min:wmin,max:wmax,ticks:[wmin,wmax],labels:lab,ref:a.limit||null,refLabel:'',fill:false})}</div>`);
+    <div class="pchart"><div class="t">${T.weight_trend}<small>${a.limit?T.limit+' '+fmtW(a.limit,BU):''}</small></div>${chart(wser,{...cc,h:100,min:wmin,max:wmax,ticks:[wmin,wmax],labels:lab,ref:blim||null,refLabel:'',fill:false})}</div>`);
   // 3. 日々の記録（1ページ9日ずつ）
   const days=all.filter(d=>d<=TODAY&&(XS(aid,d).length||E(aid,d)&&(E(aid,d).min||E(aid,d).note||attOf(E(aid,d))==='absent')));
   const xPrint=d=>XS(aid,d).map(x=>`<div class="mt">💪 ${x.items.map(i=>esc(i.n)+(i.a?' '+esc(i.a):'')).join(T.x_sep)}${x.min?` (${x.min}${T.x_min_u})`:''}</div>`).join('');
   for(let p=0;p<days.length;p+=9){
     pages.push(`<h2>${T.daily}<small>${T.daily_sub}</small></h2>${days.slice(p,p+9).map(d=>{const e=E(aid,d);
       if(!e)return `<div class="day"><div class="dt">${fd(d,L)}<small>${T.no_entry}</small></div><div>${xPrint(d)}</div></div>`;
-      return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)??'—'}${e.weight?` · ${e.weight}kg`:''}</small></div>
+      return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)??'—'}${e.weight?` · ${fmtW(e.weight,BU)}`:''}</small></div>
        <div><div class="mt">${esc(typeTxt(e,L))}${e.pain.length?' · '+e.pain.map(q=>esc(ptxt(q,T))+'('+T.lv[q.level]+')').join(' '):''}${e.head?.length?` · <b style="color:#c0392b">${e.head.map(k=>T.hs[k]).join('・')}</b>`:''}</div><div class="nt">${esc(e.note)}</div>${xPrint(d)}${e.comment?`<div class="cm">${esc(e.comment.text)}</div>`:''}</div></div>`}).join('')}`);
   }
   // 3.5 試合の振り返り（選手が書いたものだけ。コーチの非公開メモは載せない）
@@ -1416,7 +1475,7 @@ function teamReport(ym,L){
   const rows=ATH.map(a=>({a,s:monthStats(a.id,ym)}));
   return `<section class="paper a4" style="--s-acc:${acc}" lang="${L}"><h2>${T.team}<small>${T.team_sub} · ${monthLabel(ym,'en').toUpperCase()}</small></h2><div class="rule"></div>
    <table class="rep"><thead><tr><th>${T.h_ath}</th><th class="n">${T.c_days}</th><th class="n">${T.c_avg}</th><th class="n">${T.c_ramp}</th><th class="n">${T.c_w}</th><th class="n">${T.c_abs}</th><th class="n">${T.c_pain}</th><th class="n">${T.c_q}</th></tr></thead><tbody>
-   ${rows.map(({a,s})=>`<tr><td><b>${esc(a.name)}</b><br><span style="color:#5a5f6b;font-size:7pt">${esc(a.cls)}</span></td><td class="n">${s.days}</td><td class="n">${s.avg?s.avg.toFixed(1):'—'}</td><td class="n" style="${s.maxRamp>1.3?'color:#c0392b;font-weight:600':''}">${s.maxRamp?'×'+s.maxRamp.toFixed(2):'—'}</td><td class="n" style="${a.limit&&s.w1>a.limit?'color:#b86e00;font-weight:600':''}">${s.w0??'—'}→${s.w1??'—'}</td><td class="n">${s.abs}</td><td class="n">${s.pain}</td><td class="n">${s.q}</td></tr>`).join('')}
+   ${rows.map(({a,s})=>`<tr><td><b>${esc(a.name)}</b><br><span style="color:#5a5f6b;font-size:7pt">${esc(a.cls)}</span></td><td class="n">${s.days}</td><td class="n">${s.avg?s.avg.toFixed(1):'—'}</td><td class="n" style="${s.maxRamp>1.3?'color:#c0392b;font-weight:600':''}">${s.maxRamp?'×'+s.maxRamp.toFixed(2):'—'}</td><td class="n" style="${a.limit&&s.w1>a.limit?'color:#b86e00;font-weight:600':''}">${s.w0?fmtW(s.w0,WU(),false):'—'}→${s.w1?fmtW(s.w1):'—'}</td><td class="n">${s.abs}</td><td class="n">${s.pain}</td><td class="n">${s.q}</td></tr>`).join('')}
    </tbody></table>
    <h3 style="margin-top:7mm">${T.cond_trend}</h3>
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm">${rows.map(({a})=>`<div class="pchart"><div class="t">${esc(a.name)}<small>${esc(a.cls)}</small></div>${chart(all.map(d=>d<=TODAY?score(E(a.id,d)):null),{ink:'#5a5f6b',grid:'#e3e5ea',color:accentOf(a.id).l,w:420,h:110,min:5,max:25,ticks:[10,20],labels:lab,fs:10})}</div>`).join('')}</div>
@@ -1435,6 +1494,7 @@ function settingsView(){
       <label class="sw" aria-pressed="${p.accent==='custom'}"><input type="color" id="custom-color" value="${p.custom||'#3552d4'}" aria-label="${T.custom}">${T.custom}</label>
     </div></div>
     <div class="opt-group"><span class="lbl">${T.mode}</span><div class="segbar">${[['auto',T.m_auto],['light',T.m_light],['dark',T.m_dark]].map(([v,l])=>`<button data-act="pref" data-k="mode" data-v="${v}" aria-pressed="${p.mode===v}">${l}</button>`).join('')}</div></div>
+    <div class="opt-group"><span class="lbl">${T.wunit}</span><div class="segbar" style="max-width:200px">${['kg','lb'].map(v=>`<button data-act="pref" data-k="wunit" data-v="${v}" aria-pressed="${(p.wunit||'kg')===v}">${v}</button>`).join('')}</div></div>
     ${pushBlock(T,p)}
     ${!UI.student?`<div class="opt-group"><label class="lbl" for="remind">${{coach:T.remind_c,guardian:T.remind_g}[acct(UI.session).role]||T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:36},(_,i)=>String(6+Math.floor(i/2)).padStart(2,'0')+(i%2?':30':':00'))].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select><div class="small muted">${esc(T.tz_note.replace('{z}',(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ''}})()))}</div></div>`:''}
     ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}${L==='ja'?'：':': '}${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
@@ -1474,7 +1534,7 @@ function joinView(){
     <div class="field"><label for="jn-pw">${T.pw}</label><input class="inp" id="jn-pw" name="pass" type="password" autocomplete="new-password" required><div class="small muted">${T.pw_help}</div></div>
     <div class="field"><label for="jn-pw2">${T.pw2}</label><input class="inp" id="jn-pw2" name="pass2" type="password" autocomplete="new-password" required></div>`}
     <div class="stack" id="jn-athlete" ${j.role==='guardian'?'hidden':''}><div class="grid2" style="gap:10px"><div class="field"><label for="jn-cls">${T.wclass}</label><input class="inp" id="jn-cls" name="wclass" placeholder="${esc(T.wclass_ph)}" maxlength="20"></div>
-      <div class="field"><label for="jn-lim">${T.wlimit}</label><input class="inp mono" id="jn-lim" name="wlimit" type="number" step="0.1" min="20" max="250"></div></div>
+      <div class="field"><label for="jn-lim">${T.wlimit.replace('{u}',WU())}</label><input class="inp mono" id="jn-lim" name="wlimit" type="number" step="0.1" min="20" max="250"></div></div>
     <label class="chk"><input type="checkbox" name="minor" id="jn-minor" ${j.minor?'checked':''}><span>${T.minor}</span></label>
     <div class="stack" id="jn-guard" ${j.minor?'':'hidden'}>
       <div class="field"><label for="jn-g">${T.guardian}</label><input class="inp" id="jn-g" name="guardian" maxlength="40"></div>
@@ -1543,7 +1603,7 @@ function membersView(){
    ${demoAcct()?`<div class="card row" style="justify-content:space-between"><span class="small">🎓 ${T.st_row}：<b>${esc(demoAcct().name)}</b> <span class="mono muted">${esc(demoAcct().login)}</span></span>${UI.confirmRemove===demoAcct().id?`<button class="btn sm danger-btn" data-act="demoreset">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${demoAcct().id}">${T.st_reset}</button>`}</div>`:''}
    <div class="card"><h2>${T.members}</h2><div class="entries">${ATH.length?ATH.map(a=>`<div class="member">
      <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
-     <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" step="0.1" value="${a.limit??''}" placeholder="kg" style="width:90px" aria-label="${T.wlimit}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
+     <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" inputmode="decimal" step="0.1" value="${a.limit?fmtW(a.limit,WU(),false):''}" placeholder="${WU()}" style="width:90px" aria-label="${T.wlimit.replace('{u}',WU())}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
      <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
      <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span><button class="linkish" data-act="gpw" data-id="${g.id}">${T.reset_pw}</button>${UI.confirmRemove===g.id+a.id?`<button class="btn sm danger-btn" data-act="gunlink" data-id="${g.id}" data-aid="${a.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id+a.id}">${T.g_unlink}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
      ${UI.newGInvite?.aid===a.id?inviteBox(UI.newGInvite.code,T,a.id,T.g_inv_made.replace('{n}',a.name)):''}
@@ -1604,7 +1664,7 @@ async function afterSignIn(user){
   UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
   if(me().role==='guardian')UI.pAid=subject();
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
-  UI.loginLang=prefs(UI.session).lang; render(); window.scrollTo(0,0);
+  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); window.scrollTo(0,0); refreshPushState().then(()=>render());
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
@@ -1667,9 +1727,15 @@ document.addEventListener('click',ev=>{
   else if(a==='back'){UI.sel=null;render()}
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
+  else if(a==='naglater'){try{localStorage.setItem('judo-nag-'+UI.session,String(Date.now()))}catch(e){}render()}
   else if(a==='pushoff'){run(async()=>{await disablePush();UI.pushState='off'})}
   else if(a==='pushtest'){sb.functions.invoke('push',{body:{type:'test'}}).then(({data,error})=>{if(error)throw error;toast(data?.sent?t('n_test_sent'):t('n_sent0'))}).catch(e=>toast(errText(e)))}
   else if(a==='closeset'){UI.settings=false;render()}
+  else if(a==='wunit'){const u=el.dataset.v, old=WU(); if(u===old)return;
+    const f=document.getElementById('f-w'), inForm=!!document.getElementById('today-form');
+    savePrefs({...prefs(UI.session),wunit:u},inForm).catch(e=>toast(errText(e)));
+    if(inForm){if(f&&f.value)f.value=wIn(wKg(f.value,old),u).toFixed(1);f.min=u==='lb'?22:10;f.max=u==='lb'?550:250;document.getElementById('f-wu').value=u;document.getElementById('f-wu-l').textContent=u;
+      document.querySelectorAll('[data-act=wunit]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===u));stashDraft()}}
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
   else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
   else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),()=>({title:t('ch_seen_t'),msg:pick1(t('ch_seen'))}))}
@@ -1808,7 +1874,7 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
   if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
   if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),()=>({title:t('ch_ask_t'),msg:pick1(t('ch_ask'))}))}
-  if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),()=>({title:t('ch_ev_t'),msg:pick1(t('ch_ev'))}))}
+  if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',wKg(fdt.get('target'))),()=>({title:t('ch_ev_t'),msg:pick1(t('ch_ev'))}))}
   if(f.dataset.form==='run'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec)return;const prev=(ST.runs[UI.session]||[]).map(r=>r.sec), pb=prev.length&&sec<Math.min(...prev);
     run(()=>addRun({day:fdt.get('day')||TODAY,dist:null,sec,note:(fdt.get('note')||'').trim()}),()=>pb?{title:t('ch_pb_t'),msg:pick1(t('ch_pb')),sub:fmtTime(sec)}:{title:t('ch_run_t'),msg:pick1(t('ch_run')),sub:fmtTime(sec)})}
   if(f.dataset.form==='extra'){const d=xFormData(f), id=f.dataset.id||null;if(!d.items.length){toast(t('x_need'));UI.pressed=null;f.querySelector('[name=xn]')?.focus();return}
@@ -1819,7 +1885,7 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='editcmt'){const v=(fdt.get('c')||'').trim();if(!v)return;run(async()=>{await editComment(f.dataset.aid,f.dataset.d,v);UI.cmtEdit=null},t('ed_done'))}
   if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:t('ch_goal_t'),msg:pick1(t('ch_goal'))}))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
-  if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:+fdt.get('wlimit')||null}).eq('id',aid));await loadAll()},t('saved_cls'))}
+  if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:wKg(fdt.get('wlimit'))}).eq('id',aid));await loadAll()},t('saved_cls'))}
   if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&(UI.settings||UI.modal)){UI.settings=false;UI.modal=null;render()}
