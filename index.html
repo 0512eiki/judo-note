@@ -388,6 +388,7 @@ const I18N = {
  ja:{
   app:'柔道ノート',
   n_events:'選手が記録を提出・質問したら、すぐ知らせる', n_events_help:'その日の最初の保存と、質問・返信のときに届きます（頭のケガは毎回）。',
+  n_what_g:'届く通知：お子さんのその日の記録がまだのときだけ、夜{h}に1回。', remind_g:'お知らせの時刻', tz_note:'時刻は、このスマホの時間帯（{z}）で届きます。',
   n_title:'通知', n_on_btn:'🔔 この端末で通知を受け取る', n_on:'✓ この端末で通知を受け取ります', n_test:'テスト通知を送る', n_off:'通知をやめる', n_test_sent:'テスト通知を送りました。数秒で届きます。', n_enabled:'通知をオンにしました',
   n_unsupported:'このブラウザは通知に対応していません。', n_ios:'iPhoneでは、先にSafariの「共有」→「ホーム画面に追加」をして、ホーム画面の「柔」のアイコンから開くと、通知をオンにできます。',
   n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
@@ -490,6 +491,7 @@ const I18N = {
  en:{
   app:'Judo Note',
   n_events:'Notify me right away when an athlete logs or asks', n_events_help:'Sent for the first save of each day and for questions and replies (head injuries every time).',
+  n_what_g:'Once at {h}, only if your child hasn’t logged that day.', remind_g:'Reminder time', tz_note:'Times follow this phone’s time zone ({z}).',
   n_title:'Notifications', n_on_btn:'🔔 Get notifications on this device', n_on:'✓ This device gets notifications', n_test:'Send a test', n_off:'Turn off', n_test_sent:'Test sent. It should arrive in a few seconds.', n_enabled:'Notifications turned on',
   n_unsupported:'This browser doesn’t support notifications.', n_ios:'On iPhone, first tap Share → “Add to Home Screen” in Safari, then open the app from the Home Screen icon to turn on notifications.',
   n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
@@ -676,7 +678,7 @@ async function loadAllOnce(){
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
   ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false});
+  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false,tz:p.tz});
   const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
   ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
   must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
@@ -767,9 +769,9 @@ async function disablePush(){
   if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);if(regLoad().filter(r=>r.key!==curKey()).length===0)await sub.unsubscribe()}
 }
 function pushBlock(T,p){
-  const role=acct(UI.session).role; if(role==='guardian'||UI.student)return '';
+  const role=acct(UI.session).role; if(UI.student)return '';
   const st=UI.pushState, h=p.remind&&p.remind!=='off'?p.remind:null;
-  const what=(role==='coach'?T.n_what_c:T.n_what_a).replace('{h}',h||'—')+(h?'':T.n_what_off);
+  const what=(role==='coach'?T.n_what_c:role==='guardian'?T.n_what_g:T.n_what_a).replace('{h}',h||'—')+(h?'':T.n_what_off);
   const ctl=st==='on'?`<div class="row"><span class="pill good">${T.n_on}</span><button class="btn ghost sm" data-act="pushtest">${T.n_test}</button><button class="linkish" data-act="pushoff">${T.n_off}</button></div>`
     :st==='off'?`<button class="btn sm" data-act="pushon">${T.n_on_btn}</button>`
     :st==='ios'?`<div class="small">${T.n_ios}</div>`:st==='denied'?`<div class="small" style="color:var(--warn)">${T.n_denied}</div><button class="btn ghost sm" data-act="pushon">${T.n_on_btn}</button>`
@@ -1364,7 +1366,7 @@ function settingsView(){
     </div></div>
     <div class="opt-group"><span class="lbl">${T.mode}</span><div class="segbar">${[['auto',T.m_auto],['light',T.m_light],['dark',T.m_dark]].map(([v,l])=>`<button data-act="pref" data-k="mode" data-v="${v}" aria-pressed="${p.mode===v}">${l}</button>`).join('')}</div></div>
     ${pushBlock(T,p)}
-    ${['athlete','coach'].includes(acct(UI.session).role)?`<div class="opt-group"><label class="lbl" for="remind">${acct(UI.session).role==='coach'?T.remind_c:T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:18},(_,i)=>String(i+6).padStart(2,'0')+':00')].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select></div>`:''}
+    ${!UI.student?`<div class="opt-group"><label class="lbl" for="remind">${{coach:T.remind_c,guardian:T.remind_g}[acct(UI.session).role]||T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:36},(_,i)=>String(6+Math.floor(i/2)).padStart(2,'0')+(i%2?':30':':00'))].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select><div class="small muted">${esc(T.tz_note.replace('{z}',(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ''}})()))}</div></div>`:''}
     ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}${L==='ja'?'：':': '}${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
     <p class="small"><a class="linkish" href="manual.html#${acct(UI.session).role==='coach'?'coach':(acct(UI.session).role==='guardian'?'parent':'athlete')+'-'+L}">📖 ${L==='ja'?'取扱説明書':'Manual'}</a></p>
     <p class="small muted">${T.settings_note}</p>
@@ -1533,6 +1535,7 @@ async function afterSignIn(user){
   if(me().role==='guardian')UI.pAid=subject();
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
   UI.loginLang=prefs(UI.session).lang; render(); window.scrollTo(0,0);
+  try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
   const key=curKey(); await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
