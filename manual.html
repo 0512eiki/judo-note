@@ -80,7 +80,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="pick">
     <a href="#athlete-ja"><b>選手用</b><span>毎日の記録のつけ方、ランニング、試合の振り返り、質問のしかた</span></a>
     <a href="#parent-ja"><b>保護者用</b><span>登録のしかた、兄弟姉妹の切り替え、お子さんの記録の見方、プライバシー</span></a>
-    <a href="#coach"><b>コーチ用</b><span>招待、毎日の見方、目印の意味、コメント、印刷ノート、選手の管理</span></a>
+    <a href="#coach"><b>コーチ用</b><span>招待、毎日の見方、目印の意味、コメント、印刷ノート、メンバー（選手・保護者）</span></a>
     <a href="#athlete-en"><b>For athletes (English)</b><span>How to log each day, running, match reviews and questions</span></a>
     <a href="#parent-en"><b>For parents (English)</b><span>Sign-up, switching between children, viewing records, privacy</span></a>
   </div>
@@ -459,7 +459,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <nav class="toc noprint"><b>もくじ</b><ol>
     <li><a href="#c1">全体のしくみ</a></li><li><a href="#c2">はじめに（ホーム画面・通知）</a></li><li><a href="#c3">選手を招待する</a></li><li><a href="#c4">保護者を招待する</a></li>
     <li><a href="#c5">毎日の見方（選手一覧と目印）</a></li><li><a href="#c6">選手の詳しい画面</a></li><li><a href="#c7">コメント・見たよ・返信</a></li><li><a href="#c8">試合と非公開メモ</a></li>
-    <li><a href="#c9">月末の印刷ノート</a></li><li><a href="#c10">生徒モード・選手の画面で見る</a></li><li><a href="#c11">選手の管理</a></li><li><a href="#c12">数値の意味</a></li>
+    <li><a href="#c9">月末の印刷ノート</a></li><li><a href="#c10">生徒モード・選手の画面で見る</a></li><li><a href="#c11">メンバー（選手・保護者）</a></li><li><a href="#c12">数値の意味</a></li>
     <li><a href="#c13">プライバシーの約束</a></li><li><a href="#c14">困ったとき</a></li></ol></nav>
 
   <h2 id="c1"><span class="n">01</span>全体のしくみ</h2>
@@ -485,18 +485,18 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <h2 id="c3"><span class="n">03</span>選手を招待する</h2>
   <div class="with"><div>
     <ol class="steps">
-      <li><div><span class="ui">選手の管理</span> タブを開きます。</div></li>
+      <li><div><span class="ui">メンバー</span> タブ → <span class="ui">招待</span> を開きます。</div></li>
       <li><div>「誰に渡すか」に選手の名前を書いて <span class="ui">発行する</span>（メモなので選手には見えません）。</div></li>
       <li><div>できた招待メッセージの言語（日本語 / EN）を選んで <span class="ui">📤 送る</span>。スマホの共有メニューから、メッセージアプリなどでそのまま送れます。</div></li>
       <li><div>選手がリンクを開いて自分でIDとパスワードを決めて登録すると、「選手」の欄に名前が出ます。</div></li>
     </ol>
     <p>招待リンクは<b>1人1回・14日間</b>有効です。使われなかったコードは「まだ使われていない招待コード」から <span class="ui">取り消す</span> で消せます。</p>
-  </div><figure><img src="manual-img/c-invite.jpg" alt="招待コードの発行" loading="lazy"><figcaption>選手の管理 → 招待コードを発行</figcaption></figure></div>
+  </div><figure><img src="manual-img/c-invite.jpg" alt="招待コードの発行" loading="lazy"><figcaption>メンバー → 招待 → 招待コードを発行</figcaption></figure></div>
 
   <h2 id="c4"><span class="n">04</span>保護者を招待する</h2>
   <div class="with"><div>
     <ol class="steps">
-      <li><div>選手の登録が終わったら、「選手の管理」のその選手の欄で <span class="ui">＋ 保護者用コード</span>。</div></li>
+      <li><div>選手の登録が終わったら、<span class="ui">メンバー</span> → <span class="ui">選手</span> でその選手の <span class="ui">管理する</span> → <span class="ui">＋ 保護者用コード</span>。</div></li>
       <li><div>保護者用のメッセージを <span class="ui">📤 送る</span> で保護者に送ります。</div></li>
     </ol>
     <ul>
@@ -568,15 +568,22 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <p>選手の詳しい画面の <span class="ui">👀 選手の画面で見る</span> で、実在の選手の画面をそのまま見られます（何も変えられません）。</p>
   </div><figure><img src="manual-img/c-student.jpg" alt="生徒モード" loading="lazy"><figcaption>生徒モード</figcaption></figure></div>
 
-  <h2 id="c11"><span class="n">11</span>選手の管理</h2>
+  <h2 id="c11"><span class="n">11</span>メンバー（選手・保護者）</h2>
   <div class="with"><div>
+    <p>上に「選手」「保護者」「保護者がまだ」の人数、その下に <span class="ui">選手</span>｜<span class="ui">保護者</span>｜<span class="ui">招待</span> のタブがあります。</p>
+    <ul>
+      <li><b>選手</b>：名前・ID・階級・登録した日、つながっている保護者（まだなら「保護者 未登録」）、通知がオンかどうか、最後に記録した日。</li>
+      <li><b>保護者</b>：名前・ID・登録した日・お知らせの時刻、お子さんの名前、通知がオンかどうか。</li>
+      <li><b>🔕 通知オフ</b>の人には、スマホで通知をオンにするよう伝えてください（オンかどうかだけ分かり、端末の情報は見えません）。</li>
+      <li>下の操作は、それぞれの <span class="ui">管理する</span> を押すと出ます。</li>
+    </ul>
     <ul>
       <li><b>階級</b>：「男子 -73kg」と上限（kg）を入れて <span class="ui">階級を保存</span>。減量の目印やグラフの線に使われます。</li>
       <li><b>パスワードを忘れた選手・保護者</b>：新しいパスワード（8文字以上）を入れて <span class="ui">パスワード再設定</span>。<b>本人に直接</b>伝えてください。</li>
       <li><b>保護者を外す</b>：保護者の名前の横の <span class="ui">外す</span>。ほかの子どももいる保護者なら、アカウント自体は残ります。</li>
       <li><b>卒業・退部</b>：<span class="ui">この選手を削除</span>。記録はすべて消え、その子だけの保護者アカウントも消えます。<b>残したいときは、先に印刷ノートでPDFを保存</b>してください。</li>
     </ul>
-  </div><figure><img src="manual-img/c-members.jpg" alt="選手の管理" loading="lazy"><figcaption>選手の管理</figcaption></figure></div>
+  </div><figure><img src="manual-img/c-members.jpg" alt="メンバー" loading="lazy"><figcaption>メンバー</figcaption></figure></div>
 
   <h2 id="c12"><span class="n">12</span>数値の意味</h2>
   <div class="tbl"><table>
@@ -592,13 +599,13 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <ul>
     <li>選手の記録（体重を含む）を見られるのは、本人・その保護者・コーチだけ。ほかの選手や家庭、兄弟姉妹どうしでも見えません。データベースのルールで守っているので、画面の操作で見えることはありません。</li>
     <li>コーチの画面・非公開メモ・レポート・招待コードは、選手と保護者には見えません。</li>
-    <li>18歳未満の選手は、登録時に保護者の名前と同意を記録しています（選手の管理に表示）。</li>
+    <li>18歳未満の選手は、登録時に保護者の名前と同意を記録しています（メンバーの選手の欄に表示）。</li>
     <li>卒業・退部のときは、記録を削除するか、PDFにして渡します。</li>
   </ul>
 
   <h2 id="c14"><span class="n">14</span>困ったとき</h2>
   <div class="tbl"><table><tr><th>こんなとき</th><th>こうする</th></tr>
-    <tr><td>選手がログインできない</td><td>IDは「選手の管理」で確認できます。パスワードは再設定して本人に伝えます。</td></tr>
+    <tr><td>選手がログインできない</td><td>IDは「メンバー」で確認できます。パスワードは再設定して本人に伝えます。</td></tr>
     <tr><td>通知が届かない</td><td>ホーム画面の「柔」から開いているか、歯車の通知がオンか確認し、「テスト通知を送る」で試します。</td></tr>
     <tr><td>画面が古いまま・大きく表示される</td><td>アプリを一度閉じて、開き直します。</td></tr>
     <tr><td>自分（コーチ）のパスワードを忘れた</td><td>アプリの中では戻せません。Claudeに「コーチのパスワードを再設定して」と頼んでください。</td></tr>

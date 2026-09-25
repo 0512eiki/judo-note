@@ -408,6 +408,12 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .hbrow{display:grid;grid-template-columns:5.5em 2.6em minmax(0,1fr);gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
 .hbrow:first-child{border-top:0} .hbrow .n{font-size:14px;font-weight:600} .hbrow .a{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .hbrow svg{width:100%;height:30px;display:block}
+.mrow{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.mmain{display:grid;gap:3px;min-width:0}.mmain b{font-size:16px}
+.mrow>.btn{flex:none;white-space:nowrap}
+.mtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mbody{display:grid;gap:10px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line2)}
+.mstat{text-align:left;font:inherit;color:inherit;cursor:pointer}
 .utog{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;vertical-align:middle;flex:none}
 .utog button{border:0;background:var(--panel2);color:var(--dim);font:inherit;font-size:12px;font-weight:700;padding:3px 9px;cursor:pointer;line-height:1.3}
 .utog button[aria-pressed="true"]{background:var(--accent);color:#fff}
@@ -478,7 +484,10 @@ const I18N = {
   e_net:'通信できませんでした。電波のよいところでもう一度試してください。', e_conf:'登録の設定がまだ完了していません。コーチに伝えてください。',
   e_team:'チームはもう作られています。コーチから招待コードをもらってください。', e_generic:'うまくいきませんでした（{m}）',
   offline_saved:'電波が弱くて保存できませんでした。入力はこのスマホに残っているので、あとでもう一度「保存」を押してください。', draft_restored:'保存できていなかった入力を戻しました。',
-  t_members:'選手の管理', inv_title:'招待コードを発行', inv_memo:'誰に渡すか（メモ）', inv_memo_ph:'誰に渡すか（例：佐藤 健太）', inv_make:'発行する', inv_list:'まだ使われていない招待コード',
+  m_tab:{a:'選手',g:'保護者',i:'招待'}, m_cnt_a:'選手', m_cnt_g:'保護者', m_cnt_no:'保護者がまだ', m_joined:'登録 {d}', m_last:'最後の記録 {d}', m_never:'まだ記録なし',
+  m_g_none:'保護者 未登録', m_kids:'お子さん', m_push_on:'🔔 通知オン', m_push_off:'🔕 通知オフ', m_remind:'お知らせ {h}', m_manage:'管理する', m_close:'閉じる', m_no_g:'まだ保護者は登録していません。「選手」タブの各選手の「管理する」から、保護者用の招待コードを作れます。',
+  m_push_help:'通知オフの人には、スマホで通知をオンにするよう伝えてください。',
+  t_members:'メンバー', inv_title:'招待コードを発行', inv_memo:'誰に渡すか（メモ）', inv_memo_ph:'誰に渡すか（例：佐藤 健太）', inv_make:'発行する', inv_list:'まだ使われていない招待コード',
   inv_until:'{d}まで有効', inv_link:'このリンクを選手に送ってください（コードは入力済みになります）', copy:'コピー', copied:'コピーしました', inv_del:'取り消す', inv_none:'ありません',
   members:'選手', m_login:'ID', m_minor:'18歳未満・保護者 {g}', save_cls:'階級を保存', saved_cls:'階級を保存しました', reset_pw:'パスワード再設定', new_pw:'新しいパスワード（8文字以上）',
   reset_done_pw:'パスワードを変更しました。本人に直接伝えてください。', remove:'この選手を削除', remove_q:'本当に削除しますか？ 記録もすべて消えます。', remove_yes:'削除する', removed:'削除しました',
@@ -598,6 +607,9 @@ const I18N = {
   e_net:'Couldn’t connect. Try again where your signal is better.', e_conf:'Sign-up isn’t fully set up yet. Please tell your coach.',
   e_team:'A team already exists. Ask your coach for an invite code.', e_generic:'Something went wrong ({m})',
   offline_saved:'Your signal was too weak to save. Your entry is kept on this phone — tap Save again later.', draft_restored:'Restored an entry that hadn’t been saved.',
+  m_tab:{a:'Athletes',g:'Parents',i:'Invites'}, m_cnt_a:'Athletes', m_cnt_g:'Parents', m_cnt_no:'No parent yet', m_joined:'Joined {d}', m_last:'Last entry {d}', m_never:'No entries yet',
+  m_g_none:'No parent yet', m_kids:'Child', m_push_on:'🔔 Notifications on', m_push_off:'🔕 Notifications off', m_remind:'Reminder {h}', m_manage:'Manage', m_close:'Close', m_no_g:'No parents have signed up yet. Open “Manage” for an athlete in the Athletes tab to create a parent invite code.',
+  m_push_help:'Ask anyone with notifications off to turn them on on their phone.',
   t_members:'Members', inv_title:'Create an invite code', inv_memo:'Who is it for (memo)', inv_memo_ph:'Who is it for (e.g. Liam Carter)', inv_make:'Create', inv_list:'Unused invite codes',
   inv_until:'Valid until {d}', inv_link:'Send this link to the athlete (the code is filled in)', copy:'Copy', copied:'Copied', inv_del:'Cancel code', inv_none:'None',
   members:'Athletes', m_login:'ID', m_minor:'Under 18 · guardian {g}', save_cls:'Save class', saved_cls:'Weight class saved', reset_pw:'Reset password', new_pw:'New password (8+ characters)',
@@ -800,7 +812,8 @@ async function loadAllOnce(){
   ST.mnotes={};must(mn).forEach(n=>ST.mnotes[n.event_id]=n);
   ST.links=must(gl);
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
-  if(acct(UI.session)?.role==='coach')ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
+  if(acct(UI.session)?.role==='coach'){ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
+    ST.push={};const ps=await sb.rpc('team_push_status');(ps.data||[]).forEach(r=>ST.push[r.user_id]=r.devices)}   // 通知オンかどうかだけ
   UI.loadedAt=Date.now();
 }
 
@@ -1810,28 +1823,50 @@ function inviteBox(code,T,guardianOf,title){
     <div class="row"><button class="btn sm" data-act="share" data-code="${esc(code)}" data-g="${guardianOf||''}">📤 ${T.share}</button><button class="btn ghost sm" data-act="copymsg" data-code="${esc(code)}" data-g="${guardianOf||''}">${T.copy}</button></div></div>`;
 }
 function membersView(){
-  const L=lang(), T=I18N[L], base=location.origin+location.pathname;
-  const inv=(ST.invites||[]).filter(i=>new Date(i.expires_at)>new Date());
-  return `<div class="stack">
-   <div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${T.t_members}</h1></div>
-   <details class="card guide" ${ATH.length?'':'open'}><summary><b>${T.inv_steps_t}</b></summary>
+  const L=lang(), T=I18N[L], base=location.origin+location.pathname, tab=UI.mtab||(ATH.length?'a':'i');
+  const inv=(ST.invites||[]).filter(i=>new Date(i.expires_at)>new Date()), GS=ACCOUNTS.filter(a=>a.role==='guardian').sort((x,y)=>x.name.localeCompare(y.name,'ja'));
+  const noG=ATH.filter(a=>!guardiansOf(a.id).length).length;
+  const push=id=>ST.push&&id in ST.push?`<span class="pill ${ST.push[id]?'good':''}">${ST.push[id]?T.m_push_on:T.m_push_off}</span>`:'';
+  const lastDay=aid=>{const ks=Object.keys(ST.entries[aid]||{});return ks.length?ks.reduce((x,y)=>x>y?x:y):null};
+  const stat=(k,v,go,cls)=>`<button class="card stat mstat" data-act="mtab" data-v="${go}"><div class="k">${k}</div><div class="v" ${cls?`style="color:var(--${cls})"`:''}>${v}</div></button>`;
+  const athRow=a=>{const gs=guardiansOf(a.id), open=UI.mOpen===a.id, ld=lastDay(a.id);
+    return `<div class="member"><div class="mrow"><div class="mmain"><div><b>${esc(a.name)}</b><span class="lang-tag">${prefs(a.id).lang.toUpperCase()}</span></div>
+      <div class="small muted">ID <span class="mono">${esc(a.login)}</span>${a.cls?' · '+esc(a.cls):''} · ${T.m_joined.replace('{d}',fd(a.joined,L))}</div>
+      <div class="mtags">${gs.length?gs.map(g=>`<span class="pill acc">👪 ${esc(g.name)}</span>`).join(''):`<span class="pill warn">${T.m_g_none}</span>`}${push(a.id)}<span class="pill">${ld?T.m_last.replace('{d}',fd(ld,L)):T.m_never}</span></div></div>
+      <button class="btn ghost sm" data-act="mopen" data-id="${a.id}" aria-expanded="${open}">${open?T.m_close:T.m_manage}</button></div>
+      ${open?`<div class="mbody"><form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" inputmode="decimal" step="0.1" value="${a.limit?fmtW(a.limit,WU(),false):''}" placeholder="${WU()}" style="width:90px" aria-label="${T.wlimit.replace('{u}',WU())}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
+     <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
+     <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span><button class="linkish" data-act="gpw" data-id="${g.id}">${T.reset_pw}</button>${UI.confirmRemove===g.id+a.id?`<button class="btn sm danger-btn" data-act="gunlink" data-id="${g.id}" data-aid="${a.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id+a.id}">${T.g_unlink}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
+     ${UI.newGInvite?.aid===a.id?inviteBox(UI.newGInvite.code,T,a.id,T.g_inv_made.replace('{n}',a.name)):''}
+     ${guardiansOf(a.id).some(g=>g.id===UI.gpw)?`<form class="row" data-form="resetpw" data-aid="${UI.gpw}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}（${esc(acct(UI.gpw)?.name||'')}）" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>`:''}
+     <div class="row">${UI.confirmRemove===a.id?`<span class="small" style="color:var(--bad)">${T.remove_q}</span><button class="btn sm danger-btn" data-act="remove" data-id="${a.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${a.id}">${T.remove}</button>`}</div></div>`:''}</div>`};
+  const gRow=g=>{const kids=childrenOf(g.id), open=UI.mOpen===g.id, p=prefs(g.id);
+    return `<div class="member"><div class="mrow"><div class="mmain"><div><b>${esc(g.name)}</b><span class="lang-tag">${p.lang.toUpperCase()}</span></div>
+      <div class="small muted">ID <span class="mono">${esc(g.login)}</span> · ${T.m_joined.replace('{d}',fd(g.joined,L))}${p.remind&&p.remind!=='off'?' · '+T.m_remind.replace('{h}',p.remind):''}</div>
+      <div class="mtags">${kids.map(k=>`<span class="pill acc">${T.m_kids}：${esc(k.name)}</span>`).join('')}${push(g.id)}</div></div>
+      <button class="btn ghost sm" data-act="mopen" data-id="${g.id}" aria-expanded="${open}">${open?T.m_close:T.m_manage}</button></div>
+      ${open?`<div class="mbody">
+        <form class="row" data-form="resetpw" data-aid="${g.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
+        ${kids.map(k=>`<div class="row"><span class="small">${T.m_kids}：<b>${esc(k.name)}</b></span>${UI.confirmRemove===g.id+k.id?`<button class="btn sm danger-btn" data-act="gunlink" data-id="${g.id}" data-aid="${k.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id+k.id}">${T.g_unlink}</button>`}</div>`).join('')}
+      </div>`:''}</div>`};
+  let body='';
+  if(tab==='a')body=`<div class="card"><div class="entries">${ATH.length?ATH.map(athRow).join(''):`<div class="small muted">${T.no_athletes}</div>`}</div></div>
+   ${demoAcct()?`<div class="card row" style="justify-content:space-between"><span class="small">🎓 ${T.st_row}：<b>${esc(demoAcct().name)}</b> <span class="mono muted">${esc(demoAcct().login)}</span></span>${UI.confirmRemove===demoAcct().id?`<button class="btn sm danger-btn" data-act="demoreset">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${demoAcct().id}">${T.st_reset}</button>`}</div>`:''}`;
+  if(tab==='g')body=`<div class="card"><div class="entries">${GS.length?GS.map(gRow).join(''):`<div class="small muted">${T.m_no_g}</div>`}</div></div>`;
+  if(tab==='i')body=`<details class="card guide" ${ATH.length?'':'open'}><summary><b>${T.inv_steps_t}</b></summary>
      <ol><li>${T.inv_s1}</li><li>${T.inv_s2}</li><li>${T.inv_s3}</li><li>${T.inv_s4}</li></ol><p class="small muted" style="margin:0">${T.inv_note}</p></details>
    <div class="card"><h2>${T.inv_title}</h2>
      <form data-form="invite" class="row"><input class="inp" id="inv-memo" name="memo" placeholder="${esc(T.inv_memo_ph)}" maxlength="40" style="flex:1;min-width:160px" aria-label="${esc(T.inv_memo)}"><button class="btn sm" type="submit">${T.inv_make}</button></form>
      ${UI.newInvite?inviteBox(UI.newInvite,T,null,''):''}
      <h3>${T.inv_list}</h3>
      <div class="entries">${inv.length?inv.map(i=>`<div class="evrow"><div><b class="mono">${esc(i.code)}</b> <span class="small muted">${i.role==='guardian'?'👪 '+esc(T.guardians)+' · '+esc(acct(i.for_athlete)?.name||''):''} ${esc(i.memo)}</span><div class="small muted">${T.inv_until.replace('{d}',fd(localDay(i.expires_at),L))}</div></div><button class="btn ghost sm" data-act="share" data-code="${esc(i.code)}" data-g="${i.role==='guardian'?i.for_athlete:''}">📤 ${T.share}</button><button class="btn ghost sm" data-act="invdel" data-id="${esc(i.code)}">${T.inv_del}</button></div>`).join(''):`<div class="small muted">${T.inv_none}</div>`}</div>
-   </div>
-   ${demoAcct()?`<div class="card row" style="justify-content:space-between"><span class="small">🎓 ${T.st_row}：<b>${esc(demoAcct().name)}</b> <span class="mono muted">${esc(demoAcct().login)}</span></span>${UI.confirmRemove===demoAcct().id?`<button class="btn sm danger-btn" data-act="demoreset">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${demoAcct().id}">${T.st_reset}</button>`}</div>`:''}
-   <div class="card"><h2>${T.members}</h2><div class="entries">${ATH.length?ATH.map(a=>`<div class="member">
-     <div class="mhead"><b>${esc(a.name)}</b> <span class="small muted">${T.m_login} <span class="mono">${esc(a.login)}</span>${a.minor?' · '+esc(T.m_minor.replace('{g}',a.guardian)):''}</span></div>
-     <form class="row" data-form="cls" data-aid="${a.id}"><input class="inp" name="wclass" value="${esc(a.cls)}" placeholder="${esc(T.wclass_ph)}" maxlength="20" style="flex:1;min-width:120px" aria-label="${T.wclass}"><input class="inp mono" name="wlimit" type="number" inputmode="decimal" step="0.1" value="${a.limit?fmtW(a.limit,WU(),false):''}" placeholder="${WU()}" style="width:90px" aria-label="${T.wlimit.replace('{u}',WU())}"><button class="btn ghost sm" type="submit">${T.save_cls}</button></form>
-     <form class="row" data-form="resetpw" data-aid="${a.id}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>
-     <div class="row"><span class="small muted">${T.guardians}：</span>${guardiansOf(a.id).map(g=>`<span class="pill">${esc(g.name)} <span class="mono">${esc(g.login)}</span></span><button class="linkish" data-act="gpw" data-id="${g.id}">${T.reset_pw}</button>${UI.confirmRemove===g.id+a.id?`<button class="btn sm danger-btn" data-act="gunlink" data-id="${g.id}" data-aid="${a.id}">${T.remove_yes}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${g.id+a.id}">${T.g_unlink}</button>`}`).join('')||'<span class="small muted">—</span>'}<button class="btn ghost sm" data-act="ginvite" data-aid="${a.id}">＋ ${T.g_inv}</button></div>
-     ${UI.newGInvite?.aid===a.id?inviteBox(UI.newGInvite.code,T,a.id,T.g_inv_made.replace('{n}',a.name)):''}
-     ${guardiansOf(a.id).some(g=>g.id===UI.gpw)?`<form class="row" data-form="resetpw" data-aid="${UI.gpw}"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}（${esc(acct(UI.gpw)?.name||'')}）" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></form>`:''}
-     <div class="row">${UI.confirmRemove===a.id?`<span class="small" style="color:var(--bad)">${T.remove_q}</span><button class="btn sm danger-btn" data-act="remove" data-id="${a.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="${a.id}">${T.remove}</button>`}</div>
-   </div>`).join(''):`<div class="small muted">${T.no_athletes}</div>`}</div></div>
+   </div>`;
+  return `<div class="stack">
+   <div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${T.t_members}</h1></div>
+   <div class="stats">${stat(T.m_cnt_a,ATH.length,'a')}${stat(T.m_cnt_g,GS.length,'g')}${stat(T.m_cnt_no,noG,'a',noG?'warn':'')}</div>
+   ${ST.push&&[...ATH,...GS].some(x=>!ST.push[x.id])?`<div class="small muted">${T.m_push_help}</div>`:''}
+   <div class="segbar" role="tablist" style="max-width:420px">${['a','g','i'].map(k=>`<button type="button" data-act="mtab" data-v="${k}" aria-pressed="${tab===k}">${T.m_tab[k]}${k==='i'&&inv.length?` (${inv.length})`:''}</button>`).join('')}</div>
+   ${body}
   </div>`;
 }
 
@@ -1972,6 +2007,8 @@ document.addEventListener('click',ev=>{
   else if(a==='hcnav'){hcGo(+el.dataset.v,el)}
   else if(a==='cwdone'){const f=el.closest('form'),v=f.querySelector('.cw-ta').value.trim();if(!v){toast(t('cw_empty'));f.querySelector('.cw-ta').focus();return}cwMode(f,true)}
   else if(a==='cwedit'){cwMode(el.closest('form'),false)}
+  else if(a==='mtab'){UI.mtab=el.dataset.v;UI.mOpen=null;render()}
+  else if(a==='mopen'){UI.mOpen=UI.mOpen===el.dataset.id?null:el.dataset.id;UI.gpw=null;render()}
   else if(a==='ctab'){UI.ctab=el.dataset.v;render();window.scrollTo(0,0)}
   else if(a==='range'){UI[el.dataset.key]=+el.dataset.v;render()}
   else if(a==='bigchart'){UI.modal={type:'chart',aid:el.dataset.aid,k:el.dataset.k};render()}
