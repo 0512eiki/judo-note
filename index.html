@@ -330,6 +330,14 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .runtop{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:end}
 .rbig{font-size:40px;font-weight:600;line-height:1.05;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rbig2{font-size:26px;font-weight:600;line-height:1.1}
+.xrows{display:grid;gap:8px}
+.xrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;align-items:center}
+.xrm{border:0;background:transparent;color:var(--faint);font-size:15px;cursor:pointer;height:34px;border-radius:10px}.xrm:hover{color:var(--bad,#d9534f);background:var(--panel2)}
+.xchip{display:inline-block;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);font:inherit;font-size:13px;font-weight:600;color:inherit;cursor:pointer}.xchip:active{background:var(--tint);border-color:var(--accent);color:var(--accent)}
+.xmeta{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:10px}
+@media (max-width:520px){.xmeta{grid-template-columns:1fr}}
+.xday{margin-top:8px;padding:8px 10px;border-radius:12px;background:var(--panel2);font-size:14px;display:grid;gap:4px}.xday .xk{font-size:12px;font-weight:700;color:var(--accent)}
+.xitem{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:14px}
 .runlist{display:grid;gap:0} .runrow{display:grid;grid-template-columns:7em 5.5em 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px} .runrow:first-child{border-top:0}
 .timein{display:grid;grid-template-columns:minmax(4.5em,7em) auto minmax(4.5em,7em) auto;gap:6px;align-items:center;justify-content:start}
 .runform .timef{grid-column:1/-1}
@@ -419,6 +427,13 @@ const I18N = {
   demo_accts:'デモ用アカウント（パスワードは全員 judo）', privacy:'選手は自分の記録だけ、コーチはチーム全員の記録を見られます。',
   logout:'ログアウト', settings:'表示設定', lang:'言語', color:'テーマカラー', mode:'明るさ', m_auto:'自動', m_light:'ライト', m_dark:'ダーク', custom:'自由に', close:'閉じる',
   settings_note:'この設定はあなたのアカウントにだけ保存されます。ほかの人の画面は変わりません。',
+  t_x:'エクストラ', x_title:'エクストラトレーニング', x_lead:'柔道の練習以外で、自分でやったトレーニングを残そう。1日に何回でも記録できます。',
+  x_date:'日付', x_ex:'種目', x_amt:'回数・時間', x_ex_ph:'例：腕立て伏せ', x_amt_ph:'例：3セット×15回', x_addrow:'＋ 種目を追加', x_rmrow:'この行を消す',
+  x_pick:'よく使う種目（タップで入ります）', x_quick:['腕立て伏せ','腹筋','背筋','スクワット','懸垂','プランク','縄跳び','ダッシュ','ランニング','ストレッチ','ウェイト','打ち込み','チューブ'],
+  x_min:'かかった時間（分・なくてもOK）', x_note:'メモ（なくてもOK）', x_save:'記録する', x_update:'直して保存', x_hist:'これまでのエクストラ',
+  x_none:'まだありません。練習以外にやったトレーニングを入れてみよう。', x_none_ro:'まだエクストラの記録はありません。', x_edit:'直す', x_del:'消す', x_del_q:'このエクストラの記録を消しますか？', x_deleted:'消しました',
+  x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
+  ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
   mr_title:'試合の振り返り', mr_result:'結果', mr_result_ph:'例：2回戦敗退、ベスト8、優勝', mr_good:'よかったこと', mr_issues:'反省点', mr_next:'これからの課題', mr_write:'✍️ 振り返りを書く', mr_edit:'直す', mr_save:'振り返りを保存', mr_saved:'振り返りを保存しました', mr_none:'振り返りはまだ書かれていません',
   cn_label:'🔒 コーチのメモ（自分だけ。選手と保護者には見えません）', cn_save:'メモを保存', cn_saved:'メモを保存しました', ev_past_hint:'終わった試合も登録して、振り返りを書けます。', cancel:'やめる',
@@ -522,6 +537,13 @@ const I18N = {
   demo_accts:'Demo accounts (password for all: judo)', privacy:'Athletes can only see their own records. The coach can see every athlete on the team.',
   logout:'Sign out', settings:'Display settings', lang:'Language', color:'Theme color', mode:'Appearance', m_auto:'Auto', m_light:'Light', m_dark:'Dark', custom:'Custom', close:'Close',
   settings_note:'These settings are saved to your account only. Nobody else’s screen changes.',
+  t_x:'Extra', x_title:'Extra training', x_lead:'Log the training you did on your own, outside judo practice. Add as many as you like per day.',
+  x_date:'Date', x_ex:'Exercise', x_amt:'Reps / time', x_ex_ph:'e.g. Push-ups', x_amt_ph:'e.g. 3 × 15', x_addrow:'+ Add exercise', x_rmrow:'Remove this row',
+  x_pick:'Quick picks (tap to add)', x_quick:['Push-ups','Sit-ups','Back extensions','Squats','Pull-ups','Plank','Jump rope','Sprints','Running','Stretching','Weights','Uchikomi','Bands'],
+  x_min:'Time (minutes, optional)', x_note:'Note (optional)', x_save:'Save', x_update:'Save changes', x_hist:'Your extra training',
+  x_none:'Nothing yet. Add the training you did outside practice.', x_none_ro:'No extra training yet.', x_edit:'Edit', x_del:'Delete', x_del_q:'Delete this extra training record?', x_deleted:'Deleted',
+  x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
+  ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
   mr_title:'Match review', mr_result:'Result', mr_result_ph:'e.g. lost in round 2, best 8, won', mr_good:'What went well', mr_issues:'What went wrong', mr_next:'What to work on next', mr_write:'✍️ Write a review', mr_edit:'Edit', mr_save:'Save review', mr_saved:'Review saved', mr_none:'No review yet',
   cn_label:'🔒 Coach’s note (only you — hidden from the athlete and guardians)', cn_save:'Save note', cn_saved:'Note saved', ev_past_hint:'You can also add a past match to write a review.', cancel:'Cancel',
@@ -640,7 +662,7 @@ const acct=id=>ACCOUNTS.find(a=>a.id===id);
 const guardiansOf=aid=>(ST.links||[]).filter(l=>l.athlete_id===aid).map(l=>acct(l.guardian_id)).filter(Boolean);
 const childrenOf=gid=>(ST.links||[]).filter(l=>l.guardian_id===gid).map(l=>acct(l.athlete_id)).filter(Boolean);
 const subject=()=>{if(me()?.role!=='guardian')return UI.session;const kids=childrenOf(me().id);return (kids.find(k=>k.id===UI.child)||kids[0])?.id};   // 保護者は、選んだ子どもの記録を見る
-let ST={entries:{},threads:[],goals:{},events:[],prefs:{},invites:[],team:null,runs:{},mnotes:{},cnotes:{}};
+let ST={entries:{},threads:[],goals:{},events:[],prefs:{},invites:[],team:null,runs:{},extras:{},mnotes:{},cnotes:{}};
 let DAYS=[];
 const LOAD_DAYS=150;   // 何日前までの記録を読み込むか（冊子とグラフに十分な長さ）
 
@@ -661,7 +683,7 @@ async function loadAll(){
 async function loadAllOnce(){
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
-  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl]=await Promise.all([
+  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs]=await Promise.all([
     sb.from('profiles').select('*'),
     sb.from('entries').select('*').gte('day',since),
     sb.from('feedback').select('*'),
@@ -673,7 +695,8 @@ async function loadAllOnce(){
     sb.from('runs').select('*').order('day',{ascending:false}).order('created_at',{ascending:false}),
     sb.from('match_notes').select('*'),
     sb.from('coach_notes').select('*'),
-    sb.from('guardian_links').select('*')]);
+    sb.from('guardian_links').select('*'),
+    sb.from('extras').select('*').gte('day',since).order('created_at')]);
   const profs=must(pr);
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
@@ -691,6 +714,7 @@ async function loadAllOnce(){
   ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
   ST.team=must(tm)[0]||null;
   ST.runs={};must(rn).forEach(r=>(ST.runs[r.athlete_id]||(ST.runs[r.athlete_id]=[])).push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}));
+  ST.extras={};must(xs).forEach(x=>(ST.extras[x.athlete_id]||(ST.extras[x.athlete_id]=[])).push(mapX(x)));
   ST.mnotes={};must(mn).forEach(n=>ST.mnotes[n.event_id]=n);
   ST.links=must(gl);
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
@@ -819,6 +843,16 @@ async function addRun(d){
   const list=ST.runs[UI.session]||(ST.runs[UI.session]=[]);
   list.push({id:r.id,day:r.day,dist:r.distance_m,sec:r.time_sec,note:r.note||''}); list.sort((a,b)=>b.day.localeCompare(a.day));
 }
+/* エクストラトレーニング：1日に何回でも。コーチへの通知はしない */
+const mapX=x=>({id:x.id,day:x.day,items:(x.items||[]).map(i=>({n:i.n||'',a:i.a||''})),min:x.minutes||null,note:x.note||'',at:x.created_at});
+const XS=(aid,d)=>(ST.extras[aid]||[]).filter(x=>x.day===d);
+async function saveExtra(d,id){
+  const row={day:d.day,items:d.items,minutes:d.min,note:d.note};
+  const r=must(id?await sb.from('extras').update({...row,updated_at:new Date().toISOString()}).eq('id',id).select().single()
+    :await sb.from('extras').insert({...row,athlete_id:UI.session}).select().single());
+  const list=(ST.extras[UI.session]||[]).filter(x=>x.id!==r.id); list.push(mapX(r)); list.sort((a,b)=>a.at.localeCompare(b.at)); ST.extras[UI.session]=list;
+}
+async function delExtra(id){must(await sb.from('extras').delete().eq('id',id));ST.extras[UI.session]=(ST.extras[UI.session]||[]).filter(x=>x.id!==id)}
 async function delRun(id){must(await sb.from('runs').delete().eq('id',id));ST.runs[UI.session]=(ST.runs[UI.session]||[]).filter(r=>r.id!==id)}
 async function saveMNote(ev,f){
   const row={event_id:ev,athlete_id:UI.session,...f,updated_at:new Date().toISOString()};
@@ -980,10 +1014,11 @@ function goalsBanner(aid,L,editable){
 function athleteView(){
   const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
   const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
-  const tabs=[['today',t('t_today')],['log',t('t_log')],['q',t('t_q'),newReplies||0],['note',t('t_note')]];
+  const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['note',t('t_note')]];
   let body='';
   if(UI.view==='today')body=athToday();
   if(UI.view==='log')body=`<div class="stack">${runsCard(m.id,L,!UI.previewAs)}<div class="grid2">${trendCharts(m.id,L)}${entryList(m.id,L,14,false)}</div></div>`;
+  if(UI.view==='x')body=extraView(m.id,L,!UI.previewAs);
   if(UI.view==='q')body=questions(m.id,L,false);
   if(UI.view==='note')body=athNote();
   return header(tabs)+`<main>${UI.view!=='note'?`<div class="stack" style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}${UI.view==='today'?monthCard(m.id,L):''}</div>`:''}${body}</main>`;
@@ -1043,11 +1078,12 @@ function evCard(aid,L,ro){
 function entryList(aid,L,n,coach){
   const T=I18N[L]; let rows='';
   for(let i=0;i<n;i++){const d=addDays(TODAY,-i), e=E(aid,d);
-    if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div class="muted small">${T.no_entry}</div></div>`;continue}
+    if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div><div class="muted small">${T.no_entry}</div>${xDayBlock(aid,d,L)}</div></div>`;continue}
     const s=score(e);
     rows+=`<div class="ent"><div class="d">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
       <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${e.weight}kg</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
       ${e.note?`<p>${esc(e.note)}</p>`:''}
+      ${xDayBlock(aid,d,L)}
       ${e.comment?cmtBlock(aid,d,e,T):''}
       ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
       ${coach&&!e.comment?`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="c-${aid}-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`:''}
@@ -1148,12 +1184,12 @@ function coachTeam(){
 function rangeBar(key,opts){const cur=UI[key]||opts[1][0];return `<div class="segbar" style="max-width:${opts.length*110}px">${opts.map(([v,l])=>`<button type="button" data-act="range" data-key="${key}" data-v="${v}" aria-pressed="${cur==v}">${l}</button>`).join('')}</div>`}
 function daysTable(aid,L,days){
   const T=I18N[L], rows=rangeDays(aid,days).reverse().map(d=>{const e=E(aid,d);
-    if(!e)return `<button class="drow empty" disabled><span class="mono">${fd(d,L)}</span><span class="muted">${T.no_data}</span></button>`;
+    if(!e)return `<button class="drow empty" disabled><span class="mono">${fd(d,L)}</span><span class="muted">${T.no_data}</span>${XS(aid,d).length?`<span></span><span></span><span></span><span class="dnote">💪 ${XS(aid,d).map(x=>x.items.map(i=>esc(i.n)).join(T.x_sep)).join(' / ')}</span>`:''}</button>`;
     const s=score(e);
     return `<button class="drow" data-act="dayopen" data-aid="${aid}" data-d="${d}"><span class="mono">${fd(d,L)}</span>
       <span>${attOf(e)==='present'?'':`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`}</span>
       <span class="num">${s??'—'}</span><span class="num">${e.min?`${e.min}′·${e.rpe}`:'—'}</span><span class="num">${e.weight??'—'}</span>
-      <span class="dnote">${e.head?.length?'<span class="pill bad">⚠</span> ':''}${e.pain.length?`<span class="pill warn">${esc(e.pain.map(p=>ptxt(p,T)).join('・'))}</span> `:''}${esc(e.note)}</span>
+      <span class="dnote">${e.head?.length?'<span class="pill bad">⚠</span> ':''}${e.pain.length?`<span class="pill warn">${esc(e.pain.map(p=>ptxt(p,T)).join('・'))}</span> `:''}${XS(aid,d).length?'💪 ':''}${esc(e.note)}</span>
       <span>${e.comment?'💬':e.seen?'✓':''}</span></button>`}).join('');
   return `<div class="card"><div class="drow dhead"><span>${T.ev_date}</span><span>${T.d_att}</span><span>${T.d_cond}</span><span>${T.d_prac}</span><span>${T.h_w}</span><span>${T.d_note}</span><span>${T.d_coach}</span></div>${rows}</div>`;
 }
@@ -1167,6 +1203,7 @@ function entryModal(aid,d,L){
      ${e.pain.length?`<div><div class="lbl">${T.pain}</div>${e.pain.map(p=>`<span class="pill warn">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join(' ')}</div>`:''}
      ${e.head?.length?`<div><div class="lbl">${T.head}</div>${e.head.map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join(' ')}</div>`:''}</div></div>
    ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
+   ${xDayBlock(aid,d,L)}
    <div style="margin-top:12px">${e.comment?cmtBlock(aid,d,e,T):`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="mc-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
 }
 function accountsSheet(){
@@ -1186,7 +1223,7 @@ function modalView(){
 }
 function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid), tab=UI.ctab||'over';
-  const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['matches',T.events],['qa',T.ct_qa]];
+  const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['x',T.t_x],['matches',T.events],['qa',T.ct_qa]];
   const head=`<div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
    <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
    <nav class="subtabs">${tabs.map(([k,l])=>`<button class="tab" data-act="ctab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${l}</button>`).join('')}</nav>`;
@@ -1205,6 +1242,7 @@ function coachDetail(aid){
   if(tab==='charts'){const days=UI.rgCharts||28;body=`<div class="row" style="justify-content:space-between"><span class="small muted">${T.tap_big}</span>${rangeBar('rgCharts',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>
     <div class="grid2">${['cond','load','weight'].map(k=>`<div class="card">${oneChart(aid,L,k,days)}</div>`).join('')}<div class="card"><h2>${T.cmp_title}</h2><div class="stack">${['sleep','energy','soreness','stress','mood'].map(k=>oneChart(aid,L,k,days)).join('')}</div></div></div>`}
   if(tab==='run')body=runsCard(aid,L,false);
+  if(tab==='x')body=extraView(aid,L,false);
   if(tab==='matches')body=eventsCard(aid,L);
   if(tab==='qa'){const gs=Object.keys(ST.goals).filter(k=>k.startsWith(aid+'|')).sort().reverse();
     body=`<div class="grid2">${questions(aid,L,true)}<div class="card"><h2>${T.goals_all}</h2>${gs.length?gs.map(k=>{const g=ST.goals[k];return `<div class="evitem" style="padding:8px 0"><b>${monthLabel(k.split('|')[1],L)}</b><ol style="margin:4px 0;padding-left:1.3em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ol>${g.review?`<div class="small muted">${esc(g.review)}</div>`:''}</div>`}).join(''):`<div class="small muted">${T.none}</div>`}</div></div>`}
@@ -1235,6 +1273,35 @@ function eventsCard(aid,L,ro){
      <div class="field"><label for="ev-target">${T.ev_target}</label><input class="inp mono" id="ev-target" name="target" type="number" step="0.1" min="30" max="200" placeholder="${acct(aid).limit??''}"></div>
      <div><button class="btn sm" type="submit">${T.ev_add}</button></div><div class="small muted" style="grid-column:1/-1">${T.ev_past_hint}</div></form>`}</div>`;
 }
+
+/* ---------- エクストラトレーニング（練習以外。日付を選んで、1日に何回でも） ---------- */
+function xLine(x,L){const T=I18N[L];return x.items.map(i=>esc(i.n)+(i.a?` <span class="muted">${esc(i.a)}</span>`:'')).join(T.x_sep)+(x.min?` <span class="pill">${x.min}${T.x_min_u}</span>`:'')}
+function xDayBlock(aid,d,L){const xs=XS(aid,d);if(!xs.length)return '';const T=I18N[L];
+  return `<div class="xday"><span class="xk">💪 ${T.t_x}</span>${xs.map(x=>`<div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}</div>`).join('')}</div>`}
+function xRow(i,T){return `<div class="xrow"><input class="inp" name="xn" list="x-names" maxlength="40" placeholder="${esc(T.x_ex_ph)}" aria-label="${T.x_ex}" value="${esc(i?.n||'')}"><input class="inp" name="xa" maxlength="40" placeholder="${esc(T.x_amt_ph)}" aria-label="${T.x_amt}" value="${esc(i?.a||'')}"><button type="button" class="xrm" data-act="xrmrow" aria-label="${T.x_rmrow}" title="${T.x_rmrow}">✕</button></div>`}
+function extraView(aid,L,editable){
+  const T=I18N[L], xs=ST.extras[aid]||[], ed=editable&&UI.xEdit?xs.find(x=>x.id===UI.xEdit):null;
+  const cur=ed||UI.xDraft||{day:UI.xDay||TODAY,items:[],min:null,note:''};
+  const items=cur.items.length?cur.items:[{n:'',a:''}];
+  const names=[...new Set([...xs.slice().reverse().flatMap(x=>x.items.map(i=>i.n)),...T.x_quick])];
+  const form=editable?`<form class="stack xform" id="x-form" data-form="extra" data-id="${ed?ed.id:''}">
+    ${ed?`<div class="pill acc" style="justify-self:start">✏️ ${esc(T.x_editing.replace('{d}',fd(ed.day,L)))}</div>`:''}
+    <div class="field" style="max-width:220px"><label for="x-day">${T.x_date}</label><input class="inp" id="x-day" name="day" type="date" max="${TODAY}" value="${cur.day}" required></div>
+    <div class="field"><span class="lbl">${T.x_ex} ／ ${T.x_amt}</span><div class="xrows" id="x-rows">${items.map(i=>xRow(i,T)).join('')}</div>
+      <div><button type="button" class="btn ghost sm" data-act="xaddrow">${T.x_addrow}</button></div></div>
+    <div class="field"><span class="lbl">${T.x_pick}</span><div class="chips">${T.x_quick.map(n=>`<button type="button" class="xchip" data-act="xpick" data-v="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>
+    <datalist id="x-names">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+    <div class="xmeta"><div class="field"><label for="x-min">${T.x_min}</label><input class="inp mono" id="x-min" name="min" type="number" inputmode="numeric" min="1" max="600" value="${cur.min||''}"></div>
+      <div class="field"><label for="x-note">${T.x_note}</label><input class="inp" id="x-note" name="note" maxlength="500" value="${esc(cur.note||'')}"></div></div>
+    <div class="row"><button class="btn" type="submit">${ed?T.x_update:T.x_save}</button>${ed?`<button class="btn ghost sm" type="button" data-act="xedit" data-id="">${T.cancel}</button>`:''}</div>
+    <div class="small muted">${T.x_log}</div></form>`:'';
+  const days=[...new Set(xs.map(x=>x.day))].sort().reverse().slice(0,60);
+  const hist=days.length?`<div class="entries">${days.map(d=>`<div class="ent"><div class="d">${fd(d,L)}</div><div class="stack" style="gap:8px">${XS(aid,d).map(x=>`<div class="xitem"><div>${xLine(x,L)}${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}</div>${editable?`<div class="row" style="gap:10px"><button class="linkish" data-act="xedit" data-id="${x.id}">${T.x_edit}</button><button class="linkish danger" data-act="xdel" data-id="${x.id}">${T.x_del}</button></div>`:''}</div>`).join('')}</div></div>`).join('')}</div>`
+    :`<div class="small muted">${editable?T.x_none:T.x_none_ro}</div>`;
+  return `<div class="stack">${editable?`<div class="card"><h2>💪 ${T.x_title}</h2><p class="small muted" style="margin-top:0">${T.x_lead}</p>${form}</div>`:''}<div class="card"><h2>${editable?T.x_hist:'💪 '+T.x_title}</h2>${hist}</div></div>`;
+}
+function xFormData(f){const fdt=new FormData(f), ns=fdt.getAll('xn'), as=fdt.getAll('xa');
+  return {day:fdt.get('day')||TODAY,items:ns.map((n,i)=>({n:String(n).trim(),a:String(as[i]||'').trim()})).filter(i=>i.n),min:+fdt.get('min')||null,note:(fdt.get('note')||'').trim()}}
 
 /* ---------- ランニング（測ったときだけ入れる。最新・自己ベスト・これまで全部） ---------- */
 const fmtTime=sec=>{sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${pad(m)}:${pad(s)}`:`${m}:${pad(s)}`};
@@ -1302,6 +1369,7 @@ function booklet(aid,ym){
       <div class="kpi"><div class="k">${T.total}</div><div class="v" style="font-size:10pt">${fmtMin(st.min,L)}</div></div>
       <div class="kpi"><div class="k">${T.avg}</div><div class="v">${st.avg?st.avg.toFixed(1):'—'}<small>/25</small></div></div>
       <div class="kpi"><div class="k">${T.wchg}</div><div class="v" style="font-size:9.5pt">${st.w0??'—'}→${st.w1??'—'}</div></div></div>
+    ${(()=>{const n=(ST.extras[aid]||[]).filter(x=>x.day.startsWith(ym)).length;return n?`<div style="font-size:8.5pt;margin-top:3mm">💪 ${T.x_count.replace('{n}',n)}</div>`:''})()}
     ${(()=>{const rr=(ST.runs[aid]||[]).filter(r=>r.day.startsWith(ym));return rr.length?`<h3 style="margin-top:6mm">${T.run_title}</h3><div style="font-size:8pt">${rr.slice().reverse().map(r=>`${md(r.day)}　<b>${fmtTime(r.sec)}</b>`).join('　／　')}</div>`:''})()}
     <h3 style="margin-top:6mm">${T.goals.toUpperCase?T.goals:''}</h3>
     <ul class="goal-list">${[0,1,2].map(i=>`<li><i></i><span>${esc(g.items[i]||'')}&nbsp;</span></li>`).join('')}</ul>
@@ -1310,7 +1378,7 @@ function booklet(aid,ym){
   // 2. カレンダー＋グラフ
   const first=dow(all[0]), cells=[];for(let i=0;i<first;i++)cells.push('<div class="c o"></div>');
   all.forEach(d=>{const e=E(aid,d),s=score(e);const col=!e||!e.min&&!s?'#e3e5ea':s>=20?acc:s>=16?hexA(acc,.45):'#d9534f';
-    cells.push(`<div class="c"><b>${+d.slice(8)}</b>${e?`<span class="l" ${attOf(e)==='absent'?'style="color:#b86e00;font-weight:600"':''}>${attOf(e)==='absent'?esc(T.att_l.absent):e.min?e.min+"'·"+e.rpe+(attOf(e)==='watch'?' '+esc(T.att_l.watch):''):T.rest}</span><span class="l">${e.weight}</span>${e.pain.length?`<span class="l" style="color:#c0392b">${e.pain.map(p=>esc(ptxt(p,T))).join(' ')}</span>`:''}`:d<=TODAY?`<span class="l">—</span>`:''}<span class="bar" style="background:${d<=TODAY?col:'transparent'}"></span></div>`)});
+    cells.push(`<div class="c"><b>${+d.slice(8)}</b>${e?`<span class="l" ${attOf(e)==='absent'?'style="color:#b86e00;font-weight:600"':''}>${attOf(e)==='absent'?esc(T.att_l.absent):e.min?e.min+"'·"+e.rpe+(attOf(e)==='watch'?' '+esc(T.att_l.watch):''):T.rest}</span><span class="l">${e.weight??''}</span>${e.pain.length?`<span class="l" style="color:#c0392b">${e.pain.map(p=>esc(ptxt(p,T))).join(' ')}</span>`:''}`:d<=TODAY?`<span class="l">—</span>`:''}<span class="bar" style="background:${d<=TODAY?col:'transparent'}"></span></div>`)});
   const ws=all.map(d=>E(aid,d)?.weight).filter(Boolean), wv=[...ws,...(a.limit?[a.limit]:[])], wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.5);
   pages.push(`<h2>${T.cal}<small>${T.cal_sub}</small></h2><div class="rule"></div>
     <div class="cal">${I18N[L].wd.map(w=>`<div class="h">${w}</div>`).join('')}${cells.join('')}</div>
@@ -1318,11 +1386,13 @@ function booklet(aid,ym){
     <div class="pchart"><div class="t">${T.load_trend}<small>${T.load_u}</small></div>${chart(all.map(d=>load(E(aid,d))),{...cc,h:100,min:0,max:1800,kind:'bar',ticks:[0,900,1800],labels:lab,marks:eventMarks(aid,all),mc:acc})}</div>
     <div class="pchart"><div class="t">${T.weight_trend}<small>${a.limit?T.limit+' '+a.limit+'kg':''}</small></div>${chart(all.map(d=>E(aid,d)?.weight??null),{...cc,h:100,min:wmin,max:wmax,ticks:[wmin,wmax],labels:lab,ref:a.limit||null,refLabel:'',fill:false})}</div>`);
   // 3. 日々の記録（1ページ9日ずつ）
-  const days=all.filter(d=>d<=TODAY&&E(aid,d)&&(E(aid,d).min||E(aid,d).note||attOf(E(aid,d))==='absent'));
+  const days=all.filter(d=>d<=TODAY&&(XS(aid,d).length||E(aid,d)&&(E(aid,d).min||E(aid,d).note||attOf(E(aid,d))==='absent')));
+  const xPrint=d=>XS(aid,d).map(x=>`<div class="mt">💪 ${x.items.map(i=>esc(i.n)+(i.a?' '+esc(i.a):'')).join(T.x_sep)}${x.min?` (${x.min}${T.x_min_u})`:''}</div>`).join('');
   for(let p=0;p<days.length;p+=9){
     pages.push(`<h2>${T.daily}<small>${T.daily_sub}</small></h2>${days.slice(p,p+9).map(d=>{const e=E(aid,d);
-      return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)} · ${e.weight}kg</small></div>
-       <div><div class="mt">${esc(typeTxt(e,L))}${e.pain.length?' · '+e.pain.map(q=>esc(ptxt(q,T))+'('+T.lv[q.level]+')').join(' '):''}${e.head?.length?` · <b style="color:#c0392b">${e.head.map(k=>T.hs[k]).join('・')}</b>`:''}</div><div class="nt">${esc(e.note)}</div>${e.comment?`<div class="cm">${esc(e.comment.text)}</div>`:''}</div></div>`}).join('')}`);
+      if(!e)return `<div class="day"><div class="dt">${fd(d,L)}<small>${T.no_entry}</small></div><div>${xPrint(d)}</div></div>`;
+      return `<div class="day"><div class="dt">${fd(d,L)}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small><small>${T.score} ${score(e)??'—'}${e.weight?` · ${e.weight}kg`:''}</small></div>
+       <div><div class="mt">${esc(typeTxt(e,L))}${e.pain.length?' · '+e.pain.map(q=>esc(ptxt(q,T))+'('+T.lv[q.level]+')').join(' '):''}${e.head?.length?` · <b style="color:#c0392b">${e.head.map(k=>T.hs[k]).join('・')}</b>`:''}</div><div class="nt">${esc(e.note)}</div>${xPrint(d)}${e.comment?`<div class="cm">${esc(e.comment.text)}</div>`:''}</div></div>`}).join('')}`);
   }
   // 3.5 試合の振り返り（選手が書いたものだけ。コーチの非公開メモは載せない）
   const mevs=(ST.events||[]).filter(e=>e.aids.includes(aid)&&e.date.startsWith(ym)&&e.date<=TODAY).sort((x,y)=>x.date.localeCompare(y.date));
@@ -1569,7 +1639,7 @@ document.addEventListener('click',ev=>{
   const el=ev.target.closest('[data-act]'); if(!el){if(ev.target.id==='done')document.getElementById('done').hidden=true;return}
   if(el.dataset.act==='donehide'){document.getElementById('done').hidden=true;return}
   if(el.dataset.act==='donego'){document.getElementById('done').hidden=true;UI.view=el.dataset.v;render();window.scrollTo(0,0);return}
-  UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
+  UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel','xdel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
   if(UI.previewAs&&!['view','exitpreview','print','pym'].includes(a))return;   // 閲覧モードでは何も変えられない
@@ -1618,6 +1688,13 @@ document.addEventListener('click',ev=>{
   else if(a==='cmtedit'){UI.cmtEdit=el.dataset.k||null;render()}
   else if(a==='medit'){UI.mEdit=el.dataset.ev||null;render()}
   else if(a==='rundel'){run(()=>delRun(el.dataset.id))}
+  else if(a==='xaddrow'){const box=document.getElementById('x-rows');box.insertAdjacentHTML('beforeend',xRow(null,I18N[lang()]));box.lastElementChild.querySelector('input').focus()}
+  else if(a==='xrmrow'){const box=document.getElementById('x-rows'), r=el.closest('.xrow');if(box.children.length>1)r.remove();else r.querySelectorAll('input').forEach(i=>i.value='');stashX()}
+  else if(a==='xpick'){const box=document.getElementById('x-rows');let r=[...box.children].find(x=>!x.querySelector('[name=xn]').value.trim());
+    if(!r){box.insertAdjacentHTML('beforeend',xRow(null,I18N[lang()]));r=box.lastElementChild}
+    r.querySelector('[name=xn]').value=el.dataset.v;r.querySelector('[name=xa]').focus();stashX()}
+  else if(a==='xedit'){UI.xEdit=el.dataset.id||null;render();document.getElementById('x-form')?.scrollIntoView({block:'start',behavior:'smooth'})}
+  else if(a==='xdel'){if(!confirm(t('x_del_q'))){UI.pressed=null;return}const id=el.dataset.id;run(async()=>{await delExtra(id);if(UI.xEdit===id)UI.xEdit=null},t('x_deleted'))}
   else if(a==='openbook'){UI.view='note';UI.pYm=el.dataset.ym;render();window.scrollTo(0,0)}
   else if(a==='gpw'){UI.gpw=el.dataset.id;render()}
   else if(a==='eday'){UI.eday=el.dataset.v;UI.draft=E(UI.session,UI.eday)?null:loadDraft();render();window.scrollTo(0,0)}
@@ -1650,8 +1727,10 @@ document.addEventListener('change',ev=>{
     const o=document.getElementById('f-pain-other'), oc=parts.find(c=>c.value==='other').checked; o.hidden=!oc; if(el.value==='other'&&el.checked)o.focus()}
   else if(el.name==='rpe'){const c=document.getElementById('rpe-cap');if(c)c.textContent=el.value+' — '+t('rpe_l')[+el.value]}
   if(el.closest('#today-form'))stashDraft();
+  if(el.closest('#x-form'))stashX();
 });
-document.addEventListener('input',ev=>{if(ev.target.closest('#today-form'))stashDraft()});
+document.addEventListener('input',ev=>{if(ev.target.closest('#today-form'))stashDraft();if(ev.target.closest('#x-form'))stashX()});
+function stashX(){const f=document.getElementById('x-form');if(!f||f.dataset.id)return;const d=xFormData(f);UI.xDay=d.day;UI.xDraft={...d,items:[...new FormData(f).getAll('xn')].map((n,i)=>({n,a:new FormData(f).getAll('xa')[i]||''}))}}
 function stashDraft(){const f=document.getElementById('today-form');if(!f)return;clearTimeout(stashDraft.t);stashDraft.t=setTimeout(()=>saveDraft(formToEntry(new FormData(f))),400)}
 
 document.addEventListener('submit',ev=>{
@@ -1732,6 +1811,8 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',+fdt.get('target')||null),()=>({title:t('ch_ev_t'),msg:pick1(t('ch_ev'))}))}
   if(f.dataset.form==='run'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec)return;const prev=(ST.runs[UI.session]||[]).map(r=>r.sec), pb=prev.length&&sec<Math.min(...prev);
     run(()=>addRun({day:fdt.get('day')||TODAY,dist:null,sec,note:(fdt.get('note')||'').trim()}),()=>pb?{title:t('ch_pb_t'),msg:pick1(t('ch_pb')),sub:fmtTime(sec)}:{title:t('ch_run_t'),msg:pick1(t('ch_run')),sub:fmtTime(sec)})}
+  if(f.dataset.form==='extra'){const d=xFormData(f), id=f.dataset.id||null;if(!d.items.length){toast(t('x_need'));UI.pressed=null;f.querySelector('[name=xn]')?.focus();return}
+    run(async()=>{await saveExtra(d,id);UI.xEdit=null;UI.xDraft=null;UI.xDay=d.day;window.scrollTo(0,0)},()=>id?t('ed_done'):{title:t('ch_x_t'),msg:pick1(t('ch_x')),sub:d.items.map(i=>i.n).join(t('x_sep')),actions:[[t('done_log'),'donego','log']]})}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
