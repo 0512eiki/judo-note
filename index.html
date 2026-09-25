@@ -385,6 +385,7 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'{d}kmのタイム（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
+  howto:'📖 使い方の案内',
   goal_banner:'今月の目標', goal_empty:'今月の目標がまだありません。3つまで決めておこう。', goal_set:'目標を決める', goal_edit:'変える',
   hello:'おつかれさま、{n}さん', today_q:'今日の調子はどう？', yday_q:'昨日の練習をふり返ろう', d_today:'今日', d_yday:'昨日',
   yday_nudge:'昨日（{d}）の記録がまだです。次の練習までに書いておこう。', yday_btn:'昨日の分を書く', f_miss_y:'昨日の分がまだ', saved_y:'昨日の記録を保存しました',
@@ -461,6 +462,7 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'{d} km times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
+  howto:'📖 How to use',
   goal_banner:'This month’s goals', goal_empty:'No goals for this month yet. Set up to three.', goal_set:'Set goals', goal_edit:'Edit',
   hello:'Good work today, {n}', today_q:'How are you feeling?', yday_q:'Look back on yesterday’s practice', d_today:'Today', d_yday:'Yesterday',
   yday_nudge:'You haven’t logged yesterday ({d}) yet. Write it before your next practice.', yday_btn:'Log yesterday', f_miss_y:'Yesterday not logged yet', saved_y:'Yesterday’s entry saved',
@@ -1145,7 +1147,7 @@ function loginView(){
     <div class="field"><label for="lg-pw">${T.pw}</label><input class="inp" id="lg-pw" name="pass" type="password" autocomplete="current-password"></div>
     <div class="err" id="lg-err">${esc(UI.err)}</div>
     <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.signin}</button>
-    <p class="small muted" style="margin:0">🔒 ${T.privacy}</p>
+    <p class="small muted" style="margin:0">🔒 ${T.privacy} <a class="linkish" href="guide.html#${UI.loginLang==='en'?'athlete-en':'athlete-ja'}">${T.howto}</a></p>
     <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost sm" data-act="auth" data-v="join">${T.join}</button><button type="button" class="linkish" data-act="auth" data-v="setup">${T.setup}</button></div>
   </form></div>`;
 }
