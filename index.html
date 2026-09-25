@@ -387,10 +387,11 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 const I18N = {
  ja:{
   app:'柔道ノート',
+  n_events:'選手が記録を提出・質問したら、すぐ知らせる', n_events_help:'その日の最初の保存と、質問・返信のときに届きます（頭のケガは毎回）。',
   n_title:'通知', n_on_btn:'🔔 この端末で通知を受け取る', n_on:'✓ この端末で通知を受け取ります', n_test:'テスト通知を送る', n_off:'通知をやめる', n_test_sent:'テスト通知を送りました。数秒で届きます。', n_enabled:'通知をオンにしました',
   n_unsupported:'このブラウザは通知に対応していません。', n_ios:'iPhoneでは、先にSafariの「共有」→「ホーム画面に追加」をして、ホーム画面の「柔」のアイコンから開くと、通知をオンにできます。',
   n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
-  n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}に、チームのまとめ（記録した人数・未入力・欠席・痛みやケガ・未返信の質問）が1回だけ届きます。',
+  n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}にチームのまとめ（記録した人数・未入力・欠席・痛みやケガ・未返信の質問）。',
   n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
   pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
   inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、メッセージアプリなどから選手に送る（日本語・英語を選べます）',
@@ -488,10 +489,11 @@ const I18N = {
  },
  en:{
   app:'Judo Note',
+  n_events:'Notify me right away when an athlete logs or asks', n_events_help:'Sent for the first save of each day and for questions and replies (head injuries every time).',
   n_title:'Notifications', n_on_btn:'🔔 Get notifications on this device', n_on:'✓ This device gets notifications', n_test:'Send a test', n_off:'Turn off', n_test_sent:'Test sent. It should arrive in a few seconds.', n_enabled:'Notifications turned on',
   n_unsupported:'This browser doesn’t support notifications.', n_ios:'On iPhone, first tap Share → “Add to Home Screen” in Safari, then open the app from the Home Screen icon to turn on notifications.',
   n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
-  n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Once a day at {h}: a team summary (logged, not logged, absent, pain/injury, unanswered questions).',
+  n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Daily at {h}: a team summary (logged, not logged, absent, pain/injury, unanswered questions).',
   n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
   pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
   inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via Messages or another app (Japanese or English)',
@@ -674,7 +676,7 @@ async function loadAllOnce(){
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
   ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind});
+  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false});
   const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
   ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
   must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
@@ -713,16 +715,17 @@ async function saveEntry(d,day=TODAY){
     minutes:d.min,rpe:d.rpe,types:d.types,weight:d.weight,pain:d.pain,head:d.head,note:d.note};
   const saved=must(await sb.from('entries').upsert(row,{onConflict:'athlete_id,day'}).select().single());
   const old=E(UI.session,day);
+  notify('entry',{id:saved.id,first:!old});   // その日の最初の保存だけコーチへ（頭のケガは毎回）
   ST.entries[UI.session][day]={...mapEntry(saved,null),comment:old?.comment||null,seen:old?.seen||null};
   if(d.ask)await askQuestion(d.ask,false);
 }
 async function askQuestion(text,coachOnly){
   const t=must(await sb.from('threads').insert({athlete_id:UI.session,coach_only:!!coachOnly}).select().single());
-  const m=must(await sb.from('messages').insert({thread_id:t.id,body:text}).select().single());
+  const m=must(await sb.from('messages').insert({thread_id:t.id,body:text}).select().single()); notify('message',{id:m.id});
   ST.threads.push({id:t.id,aid:UI.session,coachOnly:!!coachOnly,date:TODAY,text,mid:m.id,author:UI.session,edited:false,replies:[]});
 }
 async function sendReply(tid,text){
-  const m=must(await sb.from('messages').insert({thread_id:tid,body:text}).select().single());
+  const m=must(await sb.from('messages').insert({thread_id:tid,body:text}).select().single()); if(me().role==='athlete')notify('message',{id:m.id});
   ST.threads.find(x=>x.id===tid).replies.push({id:m.id,author:UI.session,edited:false,from:me().role==='coach'?'coach':'athlete',date:TODAY,text});
 }
 async function editMessage(id,body){   // 自分が書いた質問・返信を直す
@@ -740,6 +743,7 @@ async function sendFeedback(aid,day,comment){
   e.seen=TODAY; if(comment)e.comment={text:comment,at:TODAY};
 }
 /* ---------- スマホ通知 ---------- */
+function notify(type,extra){sb.functions.invoke('push',{body:{type,...extra}}).catch(()=>{})}   // 選手の操作をコーチへ。送れなくても保存は成功扱い
 const pushSupported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
@@ -770,7 +774,8 @@ function pushBlock(T,p){
     :st==='off'?`<button class="btn sm" data-act="pushon">${T.n_on_btn}</button>`
     :st==='ios'?`<div class="small">${T.n_ios}</div>`:st==='denied'?`<div class="small" style="color:var(--warn)">${T.n_denied}</div><button class="btn ghost sm" data-act="pushon">${T.n_on_btn}</button>`
     :st==='unsupported'?`<div class="small muted">${T.n_unsupported}</div>`:`<div class="small muted">${T.n_checking}</div>`;
-  return `<div class="opt-group"><span class="lbl">${T.n_title}</span>${ctl}<div class="small muted">${what}</div></div>`;
+  const ev=role==='coach'?`<label class="consent small" style="margin-top:4px"><input type="checkbox" id="n-events" ${p.events!==false?'checked':''}> <span><b>${T.n_events}</b><br><span class="muted">${T.n_events_help}</span></span></label>`:'';
+  return `<div class="opt-group"><span class="lbl">${T.n_title}</span>${ctl}<div class="small muted">${what}</div>${ev}</div>`;
 }
 async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI.pushState='unsupported'}if(UI.settings)render()}
 
@@ -832,7 +837,7 @@ async function saveGoals(ym,items,review){
 }
 async function savePrefs(p){
   ST.prefs[UI.session]=p; render();
-  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00'}).eq('id',UI.session));
+  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00',...(acct(UI.session)?.role==='coach'?{notify_events:p.events!==false}:{})}).eq('id',UI.session));
 }
 
 /* ---------- 計算 ---------- */
@@ -1630,6 +1635,7 @@ document.addEventListener('change',ev=>{
   else if(el.dataset.act==='paid'){UI.pAid=el.value;render()}
   else if(el.dataset.act==='pkind'){UI.pKind=el.value;render()}
   else if(el.dataset.act==='remind'){savePrefs({...prefs(UI.session),remind:el.value}).catch(e=>toast(errText(e)))}
+  else if(el.id==='n-events'){savePrefs({...prefs(UI.session),events:el.checked}).then(()=>toast(t('ed_done'))).catch(e=>toast(errText(e)))}
   else if(el.id==='custom-color'){savePrefs({...prefs(UI.session),accent:'custom',custom:el.value}).catch(e=>toast(errText(e)))}
   else if(el.id==='jn-minor'){document.getElementById('jn-guard').hidden=!el.checked;UI.join={...(UI.join||{}),minor:el.checked}}
   else if(el.name==='painNone'||el.name==='pain'){   // 「痛みや不調はなし」と部位は、どちらか一方だけ
