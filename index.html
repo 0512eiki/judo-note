@@ -135,6 +135,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .chk span{display:inline-block;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);font-size:13px;font-weight:600}
 .chk input:checked+span{background:var(--tint);border-color:var(--accent);color:var(--accent)}
 .chk input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.chk.good input:checked+span{background:var(--good-s);border-color:var(--good);color:var(--good)}
 .chk.danger input:checked+span{background:var(--bad-s);border-color:var(--bad);color:var(--bad)}
 .card.alert{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
 .card.alert h2{color:var(--bad)}
@@ -386,6 +387,7 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'タイムの推移（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
+  pain_none:'痛みや不調はなし', 
   kids_sw:'お子さんを切り替え', lk_title:'すでに保護者として登録している方（2人目以降のお子さん）', lk_help:'前に作ったIDとパスワードでログインすると、このお子さんが追加され、画面の上で切り替えて見られます。', lk_btn:'ログインして追加', lk_done:'お子さんを追加しました', e_not_guardian:'このIDは保護者のアカウントではありません。', g_unlink:'外す',
   st_btn:'🎓 生徒モードで操作する', st_banner:'🎓 生徒モード：練習用の選手アカウントで操作しています。ここで書いた内容は、ほかの選手や保護者には見えません。', st_exit:'コーチ画面に戻る', demo_name:'練習用の選手（生徒モード）',
   st_tag:'生徒モード', st_row:'生徒モード用の練習アカウント', st_reset:'作り直す（書いた内容を全部消す）', st_reset_done:'生徒モードのアカウントを消しました。次に入ると新しく作られます。', st_preparing:'生徒モードを準備しています…',
@@ -467,6 +469,7 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'Your times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
+  pain_none:'No pain or illness', 
   kids_sw:'Switch child', lk_title:'Already registered as a guardian? (second child and more)', lk_help:'Sign in with your existing ID and password to add this child. You can switch between children at the top of the screen.', lk_btn:'Sign in and add', lk_done:'Child added', e_not_guardian:'This ID is not a guardian account.', g_unlink:'Remove',
   st_btn:'🎓 Use student mode', st_banner:'🎓 Student mode: you’re using a practice athlete account. Nothing you write here is visible to other athletes or guardians.', st_exit:'Back to coach view', demo_name:'Practice athlete (student mode)',
   st_tag:'Student mode', st_row:'Practice account for student mode', st_reset:'Recreate (erase everything written)', st_reset_done:'Student-mode account removed. A new one is created next time.', st_preparing:'Preparing student mode…',
@@ -900,9 +903,9 @@ function athToday(){
    </div>
    <div class="card stack"><h2 style="margin:0">${T.body}</h2>
      <div class="field" style="max-width:180px"><label for="f-w">${T.weight}</label><input class="inp mono" id="f-w" name="weight" type="number" step="0.1" min="30" max="200" value="${e.weight}"></div>
-     <div class="field"><span class="lbl">${T.pain}</span><div class="chips">${PARTS.map(p=>`<label class="chk"><input type="checkbox" name="pain" value="${p}" ${e.pain.some(q=>q.part===p)?'checked':''}><span>${T.pt[p]}</span></label>`).join('')}</div>
+     <div class="field"><span class="lbl">${T.pain}</span><div class="chips"><label class="chk good"><input type="checkbox" name="painNone" id="f-pain-none" ${e.pain.length?'':'checked'}><span>✓ ${T.pain_none}</span></label>${PARTS.map(p=>`<label class="chk"><input type="checkbox" name="pain" value="${p}" ${e.pain.some(q=>q.part===p)?'checked':''}><span>${T.pt[p]}</span></label>`).join('')}</div>
        <input class="inp" id="f-pain-other" name="painOther" maxlength="40" placeholder="${esc(T.other_ph)}" value="${esc(e.pain.find(q=>q.part==='other')?.detail||'')}" ${e.pain.some(q=>q.part==='other')?'':'hidden'}></div>
-     <div class="field"><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
+     <div class="field" id="f-pain-lv" ${e.pain.length?'':'hidden'}><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
      <div class="field"><span class="lbl">${T.head}</span><div class="small muted">${T.head_help}</div><div class="chips">${Object.keys(T.hs).map(k=>`<label class="chk danger"><input type="checkbox" name="head" value="${k}" ${e.head?.includes(k)?'checked':''}><span>${T.hs[k]}</span></label>`).join('')}</div></div>
    </div>
    <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><textarea class="inp" id="f-note" name="note" placeholder="${esc(T.note_ph)}">${esc(e.note)}</textarea></div>
@@ -1392,7 +1395,13 @@ document.addEventListener('change',ev=>{
   else if(el.dataset.act==='remind'){savePrefs({...prefs(UI.session),remind:el.value}).catch(e=>toast(errText(e)))}
   else if(el.id==='custom-color'){savePrefs({...prefs(UI.session),accent:'custom',custom:el.value}).catch(e=>toast(errText(e)))}
   else if(el.id==='jn-minor'){document.getElementById('jn-guard').hidden=!el.checked;UI.join={...(UI.join||{}),minor:el.checked}}
-  else if(el.name==='pain'&&el.value==='other'){const o=document.getElementById('f-pain-other');o.hidden=!el.checked;if(el.checked)o.focus()}
+  else if(el.name==='painNone'||el.name==='pain'){   // 「痛みや不調はなし」と部位は、どちらか一方だけ
+    const f=el.form, parts=[...f.querySelectorAll('input[name=pain]')], none=f.querySelector('#f-pain-none');
+    if(el.name==='painNone'&&el.checked)parts.forEach(c=>c.checked=false);
+    if(el.name==='pain'&&el.checked)none.checked=false;
+    const any=parts.some(c=>c.checked); if(!any)none.checked=true;
+    document.getElementById('f-pain-lv').hidden=!any;
+    const o=document.getElementById('f-pain-other'), oc=parts.find(c=>c.value==='other').checked; o.hidden=!oc; if(el.value==='other'&&el.checked)o.focus()}
   else if(el.name==='rpe'){const c=document.getElementById('rpe-cap');if(c)c.textContent=el.value+' — '+t('rpe_l')[+el.value]}
   if(el.closest('#today-form'))stashDraft();
 });
