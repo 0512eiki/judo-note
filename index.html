@@ -91,7 +91,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .tab .dot{display:inline-block;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;line-height:18px;text-align:center;margin-left:6px;padding:0 5px}
 
 /* ── レイアウトとガラスカード ── */
-main{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+main{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;overflow-x:clip}
+main.wide{max-width:1320px}
 .card{background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--radius);box-shadow:var(--shadow),var(--hi);padding:18px;
   -webkit-backdrop-filter:blur(var(--frost)) saturate(1.5);backdrop-filter:blur(var(--frost)) saturate(1.5)}
 .card h2{margin:0 0 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -111,7 +112,8 @@ main{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
 .btn.sm{padding:6px 12px;font-size:13px;border-radius:10px}
 .field{display:grid;gap:6px}
 .field>label,.lbl{font-size:13px;font-weight:600;color:var(--dim)}
-.inp{width:100%;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:15px}
+.inp{width:100%;min-width:0;border:1px solid var(--line2);background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:16px}   /* 16px未満だと iPhone が入力時に画面を拡大する */
+input[type=date].inp{-webkit-appearance:none;appearance:none;min-height:44px;display:block}
 textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
@@ -144,7 +146,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .evcard .k{font-size:13px;font-weight:700;color:var(--dim)}
 .evcard .big{font-size:18px;font-weight:600} .evcard .big b{font-size:40px;line-height:1;font-family:var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:2px}
 .evrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)} .evrow:first-child{border-top:0} .evrow>div{flex:1} .evrow.past{opacity:.55}
-.evform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.evform{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 @media (max-width:520px){ .crow{grid-template-columns:1fr} .ends{grid-column:1} .rpe{grid-template-columns:repeat(6,1fr)} }
 
 /* 状態チップ */
@@ -188,7 +190,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .cmt{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--tint);font-size:14px}
 .cmt b{font-size:12px;color:var(--accent);display:block}
 .cform{display:flex;gap:8px;margin-top:8px}
-.cform .inp{padding:7px 10px;font-size:14px}
+.cform .inp{padding:7px 10px;font-size:16px}
 @media (max-width:520px){.ent{grid-template-columns:1fr;gap:4px}}
 
 /* 質問スレッド */
@@ -329,11 +331,24 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .rbig{font-size:40px;font-weight:600;line-height:1.05;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rbig2{font-size:26px;font-weight:600;line-height:1.1}
 .runlist{display:grid;gap:0} .runrow{display:grid;grid-template-columns:7em 5.5em 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px} .runrow:first-child{border-top:0}
-.runform{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
-@media (max-width:520px){.runrow{grid-template-columns:6.5em 5em 1fr auto}.runrow .muted{grid-column:1/-1}.rbig{font-size:34px}}
+.timein{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:6px;align-items:center}
+.runform{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
+@media (max-width:520px){.runrow{grid-template-columns:6.5em 4.5em minmax(0,1fr) auto}.runrow .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rbig{font-size:34px}}
 .moncard .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap} .moncard .gk{font-size:14px;font-weight:700;color:var(--accent)}
 .moncard .monstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin-top:10px}
 .moncard .monstats .k{font-size:11px;color:var(--dim);font-weight:600} .moncard .monstats b{font-size:18px}
+.segbar button{white-space:nowrap}
+.subtabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.sheet-ui.wide{width:min(1180px,100%);max-height:calc(100vh - 32px)}
+.chart.tap{cursor:zoom-in;border-radius:12px;transition:background .15s} .chart.tap:hover{background:var(--tint)}
+.ovgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
+.ovc{text-align:left;cursor:pointer;font:inherit;color:inherit} .ovc:hover{outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent)} .ovc .v{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .ovc .v small{font-size:13px;color:var(--dim)}
+.drow{display:grid;grid-template-columns:7.5em 6em 3.5em 5em 4.5em minmax(0,1fr) 2em;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 6px;border:0;border-top:1px solid var(--line);background:none;font:inherit;color:inherit;cursor:pointer}
+.drow:hover{background:var(--tint)} .drow.empty{cursor:default;opacity:.55} .drow.empty:hover{background:none} .drow.empty span:nth-child(2){grid-column:2/-1}
+.drow.dhead{cursor:default;font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.05em;border-top:0} .drow.dhead:hover{background:none}
+.dnote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+@media (max-width:760px){.drow{grid-template-columns:6.5em 1fr 3em 4.5em}.drow>span:nth-child(5),.drow>span:nth-child(7){display:none}.drow .dnote{grid-column:1/-1}.drow.dhead{display:none}}
+.cbar{display:grid;grid-template-columns:7.5em 1fr 1.5em;gap:8px;align-items:center;font-size:14px;margin:4px 0} .cbar-t{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden} .cbar-t i{display:block;height:100%;background:var(--grad)}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
@@ -387,7 +402,9 @@ const I18N = {
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'タイムの推移（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
-  pain_none:'痛みや不調はなし', 
+  pain_none:'痛みや不調はなし', ct_over:'概要', ct_days:'毎日の記録', ct_charts:'グラフ', ct_qa:'質問・目標', rg_2w:'2週間', rg_4w:'4週間', rg_3m:'3ヶ月', rg_all:'すべて', tap_big:'タップで大きく表示',
+  ov_today:'今日の調子', ov_avg7:'7日間の平均', ov_week:'この7日の稽古', ov_ramp:'負荷の増え方', ov_weight:'最新の体重', ov_run:'ランニング最新', ov_next:'次の試合', ov_unans:'未返信の質問', ov_open:'詳しく',
+  cmp_title:'調子の内訳', d_att:'出欠', d_cond:'調子', d_prac:'稽古', d_note:'感想', d_coach:'コーチ', d_load:'負荷', close2:'閉じる', goals_all:'これまでの目標', no_data:'記録なし', 
   kids_sw:'お子さんを切り替え', lk_title:'すでに保護者として登録している方（2人目以降のお子さん）', lk_help:'前に作ったIDとパスワードでログインすると、このお子さんが追加され、画面の上で切り替えて見られます。', lk_btn:'ログインして追加', lk_done:'お子さんを追加しました', e_not_guardian:'このIDは保護者のアカウントではありません。', g_unlink:'外す',
   st_btn:'🎓 生徒モードで操作する', st_banner:'🎓 生徒モード：練習用の選手アカウントで操作しています。ここで書いた内容は、ほかの選手や保護者には見えません。', st_exit:'コーチ画面に戻る', demo_name:'練習用の選手（生徒モード）',
   st_tag:'生徒モード', st_row:'生徒モード用の練習アカウント', st_reset:'作り直す（書いた内容を全部消す）', st_reset_done:'生徒モードのアカウントを消しました。次に入ると新しく作られます。', st_preparing:'生徒モードを準備しています…',
@@ -469,7 +486,9 @@ const I18N = {
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'Your times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
-  pain_none:'No pain or illness', 
+  pain_none:'No pain or illness', ct_over:'Overview', ct_days:'Daily log', ct_charts:'Charts', ct_qa:'Questions & goals', rg_2w:'2 weeks', rg_4w:'4 weeks', rg_3m:'3 months', rg_all:'All', tap_big:'Tap to enlarge',
+  ov_today:'Today', ov_avg7:'7-day average', ov_week:'Last 7 days', ov_ramp:'Load ramp', ov_weight:'Latest weight', ov_run:'Latest run', ov_next:'Next match', ov_unans:'Unanswered', ov_open:'Details',
+  cmp_title:'Condition breakdown', d_att:'Att.', d_cond:'Cond.', d_prac:'Practice', d_note:'Notes', d_coach:'Coach', d_load:'Load', close2:'Close', goals_all:'Past goals', no_data:'No entry', 
   kids_sw:'Switch child', lk_title:'Already registered as a guardian? (second child and more)', lk_help:'Sign in with your existing ID and password to add this child. You can switch between children at the top of the screen.', lk_btn:'Sign in and add', lk_done:'Child added', e_not_guardian:'This ID is not a guardian account.', g_unlink:'Remove',
   st_btn:'🎓 Use student mode', st_banner:'🎓 Student mode: you’re using a practice athlete account. Nothing you write here is visible to other athletes or guardians.', st_exit:'Back to coach view', demo_name:'Practice athlete (student mode)',
   st_tag:'Student mode', st_row:'Practice account for student mode', st_reset:'Recreate (erase everything written)', st_reset_done:'Student-mode account removed. A new one is created next time.', st_preparing:'Preparing student mode…',
@@ -565,6 +584,7 @@ function mapEntry(r,fb){
 function must(res){if(res.error)throw res.error;return res.data}
 
 async function loadAll(){
+  DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
   const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl]=await Promise.all([
     sb.from('profiles').select('*'),
@@ -600,7 +620,6 @@ async function loadAll(){
   ST.links=must(gl);
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
   if(acct(UI.session)?.role==='coach')ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
-  DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));
   UI.loadedAt=Date.now();
 }
 
@@ -816,10 +835,23 @@ function spark(vals,w=132,h=30){
   const li=vals.map((v,i)=>v==null?-1:i).filter(i=>i>=0).pop();
   return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${y(20)}" y2="${y(20)}" stroke="var(--line)" stroke-dasharray="2 3"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round"/>${li>=0?`<circle cx="${x(li)}" cy="${y(vals[li])}" r="2.8" fill="var(--accent)"/>`:''}</svg>`;
 }
+function rangeDays(aid,days){const ds=[];for(let i=days-1;i>=0;i--)ds.push(addDays(TODAY,-i));return ds}
+function oneChart(aid,L,k,days,big){
+  const tt=I18N[L], a=acct(aid), ds=rangeDays(aid,days), step=days<=31?7:days<=100?14:28;
+  const labels=ds.map((d,i)=>[i,md(d)]).filter((_,i)=>(i%step===0&&ds.length-1-i>=step/2)||i===ds.length-1), marks=eventMarks(aid,ds);
+  const o=big?{w:1100,h:340,fs:12}:{w:640,h:150};
+  let title='', svg='';
+  if(k==='cond'){title=`${tt.cond} <small>5〜25</small>`;svg=chart(ds.map(d=>score(E(aid,d))),{...o,min:5,max:25,ticks:[10,15,20,25],labels,marks})}
+  else if(k==='load'){const rr=ramp(aid,TODAY);title=`${tt.load} <small>${tt.load_u}</small> <span class="sp"></span><span class="pill ${rr>1.5?'bad':rr>1.3?'warn':'good'}">${tt.ramp} ×${rr?rr.toFixed(2):'—'}</span>`;svg=chart(ds.map(d=>load(E(aid,d))),{...o,min:0,max:1800,kind:'bar',ticks:[0,600,1200,1800],labels,marks})}
+  else if(k==='weight'){const ws=ds.map(d=>E(aid,d)?.weight??null).filter(v=>v!=null),wv=[...ws,...(a.limit?[a.limit]:[])],mn=Math.floor(Math.min(...(wv.length?wv:[60]))-1),mx=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
+    title=`${tt.weight} <small>${esc(a.cls)}</small>`;svg=chart(ds.map(d=>E(aid,d)?.weight??null),{...o,min:mn,max:mx,ticks:[mn,Math.round((mn+mx)/2),mx],labels,ref:a.limit||null,refLabel:a.limit?tt.limit+' '+a.limit+'kg':'',fill:false,marks})}
+  else {title=tt[k];svg=chart(ds.map(d=>E(aid,d)?.[k]??null),{...o,h:big?260:110,min:1,max:5,ticks:[1,3,5],labels,fill:false})}
+  return `<div class="chart ${big?'':'tap'}" ${big?'':`data-act="bigchart" data-k="${k}" data-aid="${aid}" title="${esc(tt.tap_big)}" role="button" tabindex="0"`}><div class="t">${title}</div>${svg}</div>`;
+}
 function trendCharts(aid,L,days=28){
   const tt=I18N[L], ds=[];for(let i=days-1;i>=0;i--)ds.push(addDays(TODAY,-i));
   const ne=nextEvent(aid), ahead=ne?dayDiff(TODAY,ne.date):99; if(ahead>0&&ahead<=14)for(let i=1;i<=ahead;i++)ds.push(addDays(TODAY,i));
-  const labels=ds.map((d,i)=>[i,md(d)]).filter((_,i)=>i%7===0||i===ds.length-1), marks=eventMarks(aid,ds);
+  const labels=ds.map((d,i)=>[i,md(d)]).filter((_,i)=>(i%7===0&&ds.length-1-i>=4)||i===ds.length-1), marks=eventMarks(aid,ds);
   const a=acct(aid), ws=ds.map(d=>E(aid,d)?.weight??null).filter(v=>v!=null), wv=[...ws,...(a.limit?[a.limit]:[])];
   const wmin=Math.floor(Math.min(...(wv.length?wv:[60]))-1), wmax=Math.ceil(Math.max(...(wv.length?wv:[60]))+.6);
   const rr=ramp(aid,TODAY);
@@ -1016,11 +1048,62 @@ function coachTeam(){
         <span class="flags">${pills(f)||`<span class="pill good">OK</span>`}</span></button>`}).join('')}
    </div></div></div>`;
 }
+function rangeBar(key,opts){const cur=UI[key]||opts[1][0];return `<div class="segbar" style="max-width:${opts.length*110}px">${opts.map(([v,l])=>`<button type="button" data-act="range" data-key="${key}" data-v="${v}" aria-pressed="${cur==v}">${l}</button>`).join('')}</div>`}
+function daysTable(aid,L,days){
+  const T=I18N[L], rows=rangeDays(aid,days).reverse().map(d=>{const e=E(aid,d);
+    if(!e)return `<button class="drow empty" disabled><span class="mono">${fd(d,L)}</span><span class="muted">${T.no_data}</span></button>`;
+    const s=score(e);
+    return `<button class="drow" data-act="dayopen" data-aid="${aid}" data-d="${d}"><span class="mono">${fd(d,L)}</span>
+      <span>${attOf(e)==='present'?'':`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`}</span>
+      <span class="num">${s??'—'}</span><span class="num">${e.min?`${e.min}′·${e.rpe}`:'—'}</span><span class="num">${e.weight??'—'}</span>
+      <span class="dnote">${e.head?.length?'<span class="pill bad">⚠</span> ':''}${e.pain.length?`<span class="pill warn">${esc(e.pain.map(p=>ptxt(p,T)).join('・'))}</span> `:''}${esc(e.note)}</span>
+      <span>${e.comment?'💬':e.seen?'✓':''}</span></button>`}).join('');
+  return `<div class="card"><div class="drow dhead"><span>${T.ev_date}</span><span>${T.d_att}</span><span>${T.d_cond}</span><span>${T.d_prac}</span><span>${T.h_w}</span><span>${T.d_note}</span><span>${T.d_coach}</span></div>${rows}</div>`;
+}
+function entryModal(aid,d,L){
+  const T=I18N[L], e=E(aid,d), a=acct(aid); if(!e)return '';
+  const bars=['sleep','energy','soreness','stress','mood'].map(k=>`<div class="cbar"><span>${T[k]}</span><div class="cbar-t"><i style="width:${(e[k]||0)*20}%"></i></div><b class="mono">${e[k]??'—'}</b></div>`).join('');
+  return `<h3>${esc(a.name)} · ${fd(d,L)}</h3>
+   <div class="row">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}<span class="pill">${T.score} ${score(e)??'—'}${T.of25}</span>${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe} · ${T.d_load} ${load(e)}</span>`:''}${e.weight?`<span class="pill">${e.weight}kg</span>`:''}</div>
+   <div class="grid2" style="margin-top:12px"><div><div class="lbl">${T.cond}</div>${bars}</div>
+    <div class="stack" style="gap:8px">${e.types.length?`<div><div class="lbl">${T.content}</div>${esc(typeTxt(e,L))}</div>`:''}
+     ${e.pain.length?`<div><div class="lbl">${T.pain}</div>${e.pain.map(p=>`<span class="pill warn">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join(' ')}</div>`:''}
+     ${e.head?.length?`<div><div class="lbl">${T.head}</div>${e.head.map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join(' ')}</div>`:''}</div></div>
+   ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
+   <div style="margin-top:12px">${e.comment?`<div class="cmt"><b>${T.from_coach}</b>${esc(e.comment.text)}</div>`:`<form class="cform" data-form="comment" data-aid="${aid}" data-d="${d}"><input class="inp" id="mc-${d}" name="c" placeholder="${esc(T.cmt_ph)}"><button class="btn sm" type="submit">${T.send}</button>${e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}</form>`}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
+}
+function modalView(){
+  const m=UI.modal, L=lang(), T=I18N[L]; if(!m)return '';
+  let body='';
+  if(m.type==='chart'){const days=UI.rgBig||90;body=`<div class="row" style="justify-content:space-between;margin-bottom:8px"><b>${esc(acct(m.aid)?.name||'')}</b>${rangeBar('rgBig',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${oneChart(m.aid,L,m.k,days,true)}`}
+  if(m.type==='day')body=entryModal(m.aid,m.d,L);
+  return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui wide" role="dialog" aria-modal="true" data-stop><div style="text-align:right"><button class="btn ghost sm" data-act="closemodal">✕ ${T.close2}</button></div>${body}</div></div>`;
+}
 function coachDetail(aid){
-  const L=lang(), T=I18N[L], a=acct(aid);
-  return `<div class="stack"><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
+  const L=lang(), T=I18N[L], a=acct(aid), tab=UI.ctab||'over';
+  const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['matches',T.events],['qa',T.ct_qa]];
+  const head=`<div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
    <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
-   <div class="grid2"><div class="stack">${trendCharts(aid,L)}${runsCard(aid,L,false)}${eventsCard(aid,L)}</div><div class="stack">${entryList(aid,L,10,true)}${questions(aid,L,true)}</div></div></div>`;
+   <nav class="subtabs">${tabs.map(([k,l])=>`<button class="tab" data-act="ctab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${l}</button>`).join('')}</nav>`;
+  let body='';
+  if(tab==='over'){
+    const e=E(aid,TODAY), s=score(e), last7=rangeDays(aid,7).map(d=>E(aid,d)).filter(Boolean), sc7=last7.map(score).filter(v=>v!=null), rr=ramp(aid,TODAY), w=latestWeight(aid), run=(ST.runs[aid]||[])[0], ne=nextEvent(aid), un=ST.threads.filter(th=>th.aid===aid&&unanswered(th)).length;
+    const card=(k,v,sub,go)=>`<button class="card stat ovc" data-act="ctab" data-v="${go}"><div class="k">${k}</div><div class="v">${v}</div><div class="small muted">${sub||''}</div></button>`;
+    body=`<div class="ovgrid">${card(T.ov_today,s!=null?`${s}<small>${T.of25}</small>`:'—',e?esc(attTxt(e,T)||''):T.no_data,'days')}${card(T.ov_avg7,sc7.length?(sc7.reduce((x,y)=>x+y,0)/sc7.length).toFixed(1):'—','','charts')}
+      ${card(T.ov_week,`${last7.filter(x=>x.min).length}<small>${T.mon_day_u}</small>`,fmtMin(last7.reduce((x,y)=>x+(y.min||0),0),L),'days')}${card(T.ov_ramp,rr?'×'+rr.toFixed(2):'—','','charts')}
+      ${card(T.ov_weight,w?`${w.toFixed(1)}<small>kg</small>`:'—',a.limit?'≤'+a.limit+'kg':'','charts')}${card(T.ov_run,run?fmtTime(run.sec):'—',run?fd(run.day,L):'','run')}
+      ${card(T.ov_next,ne?esc(ne.name):'—',ne?T.ev_days.replace('{d}',dayDiff(TODAY,ne.date)):'','matches')}${card(T.ov_unans,un,'','qa')}</div>
+      <div class="grid2">${goalsBanner(aid,L,false)||''}<div></div></div>
+      <div class="grid2"><div class="card"><h2>${T.last28} <span class="small muted" style="text-transform:none;letter-spacing:0">· ${T.tap_big}</span></h2><div class="stack">${['cond','load','weight'].map(k=>oneChart(aid,L,k,28)).join('')}</div></div>${entryList(aid,L,7,true)}</div>`;
+  }
+  if(tab==='days'){const days=UI.rgDays||28;body=`<div class="row" style="justify-content:flex-end">${rangeBar('rgDays',[[14,T.rg_2w],[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${daysTable(aid,L,days)}`}
+  if(tab==='charts'){const days=UI.rgCharts||28;body=`<div class="row" style="justify-content:space-between"><span class="small muted">${T.tap_big}</span>${rangeBar('rgCharts',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>
+    <div class="grid2">${['cond','load','weight'].map(k=>`<div class="card">${oneChart(aid,L,k,days)}</div>`).join('')}<div class="card"><h2>${T.cmp_title}</h2><div class="stack">${['sleep','energy','soreness','stress','mood'].map(k=>oneChart(aid,L,k,days)).join('')}</div></div></div>`}
+  if(tab==='run')body=runsCard(aid,L,false);
+  if(tab==='matches')body=eventsCard(aid,L);
+  if(tab==='qa'){const gs=Object.keys(ST.goals).filter(k=>k.startsWith(aid+'|')).sort().reverse();
+    body=`<div class="grid2">${questions(aid,L,true)}<div class="card"><h2>${T.goals_all}</h2>${gs.length?gs.map(k=>{const g=ST.goals[k];return `<div class="evitem" style="padding:8px 0"><b>${monthLabel(k.split('|')[1],L)}</b><ol style="margin:4px 0;padding-left:1.3em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ol>${g.review?`<div class="small muted">${esc(g.review)}</div>`:''}</div>`}).join(''):`<div class="small muted">${T.none}</div>`}</div></div>`}
+  return `<div class="stack">${head}${body}</div>`;
 }
 function eventsCard(aid,L,ro){
   const T=I18N[L], mine=UI.session===aid&&!UI.previewAs, isCoach=acct(UI.session)?.role==='coach'&&!UI.previewAs;
@@ -1066,7 +1149,7 @@ function runsCard(aid,L,editable){
   const hist=rs.length?`<div class="lbl" style="margin-top:6px">${T.run_hist}</div><div class="runlist">${rs.map(r=>`<div class="runrow"><span class="mono">${fd(r.day,L)}</span><b class="mono">${fmtTime(r.sec)}${r.sec===bestSec?' 🏅':''}</b><span class="small muted">${esc(r.note)}</span>${editable?`<button class="linkish danger" data-act="rundel" data-id="${r.id}">${T.run_del}</button>`:''}</div>`).join('')}</div>`:`<div class="small muted">${T.run_none}</div>`;
   const form=editable?`<form class="runform" data-form="run">
     <div class="field"><label for="rn-day">${T.run_date}</label><input class="inp" id="rn-day" name="day" type="date" max="${TODAY}" value="${TODAY}" required></div>
-    <div class="field"><span class="lbl">${T.run_time}</span><div class="row" style="flex-wrap:nowrap;gap:6px"><input class="inp mono" name="min" type="number" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required style="width:5em"><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" min="0" max="59" placeholder="34" aria-label="${T.run_sec}" style="width:4.5em"><span>${T.run_sec}</span></div></div>
+    <div class="field"><span class="lbl">${T.run_time}</span><div class="timein"><input class="inp mono" name="min" type="number" inputmode="numeric" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" inputmode="numeric" min="0" max="59" placeholder="34" aria-label="${T.run_sec}"><span>${T.run_sec}</span></div></div>
     <div class="field"><label for="rn-note">${T.run_note}</label><input class="inp" id="rn-note" name="note" maxlength="200"></div>
     <div><button class="btn sm" type="submit">${T.run_add}</button></div></form>`:'';
   return `<div class="card"><h2>🏃 ${T.run_title}</h2><div class="stack">${top}${chartHtml}${hist}${form}</div></div>`;
@@ -1300,7 +1383,8 @@ function render(){
   if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;return}
   if(!UI.session||!me()){app.innerHTML=loginView();return}
   const m=me();
-  app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'');
+  app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView();
+  if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
@@ -1355,7 +1439,7 @@ document.addEventListener('click',ev=>{
   else if(a==='share'||a==='copymsg'){const text=inviteMsg(el.dataset.code,UI.msgLang||lang(),el.dataset.g||null);
     const copy=()=>(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>toast(t('msg_copied'))).catch(()=>{const ta=document.getElementById('msg-'+el.dataset.code);if(ta){ta.select()}});
     if(a==='share'&&navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
-  else if(a==='open'){UI.sel=el.dataset.id;render();window.scrollTo(0,0)}
+  else if(a==='open'){UI.ctab='over';UI.sel=el.dataset.id;render();window.scrollTo(0,0)}
   else if(a==='back'){UI.sel=null;render()}
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
@@ -1371,6 +1455,11 @@ document.addEventListener('click',ev=>{
   else if(a==='mreview'){UI.view='note';UI.mEdit=el.dataset.ev;render();document.querySelector('.refl-form')?.scrollIntoView({block:'center'})}
   else if(a==='child'){UI.child=el.dataset.id;UI.pAid=el.dataset.id;UI.mEdit=null;render();window.scrollTo(0,0)}
   else if(a==='gunlink'){const g=el.dataset.id, aid=el.dataset.aid;UI.confirmRemove=null;run(async()=>{must(await sb.rpc('coach_unlink_guardian',{guardian:g,athlete:aid}));await loadAll()},t('removed'))}
+  else if(a==='ctab'){UI.ctab=el.dataset.v;render();window.scrollTo(0,0)}
+  else if(a==='range'){UI[el.dataset.key]=+el.dataset.v;render()}
+  else if(a==='bigchart'){UI.modal={type:'chart',aid:el.dataset.aid,k:el.dataset.k};render()}
+  else if(a==='dayopen'){UI.modal={type:'day',aid:el.dataset.aid,d:el.dataset.d};render()}
+  else if(a==='closemodal'){if(el.classList.contains('scrim')&&ev.target.closest('[data-stop]'))return;UI.modal=null;render()}
   else if(a==='medit'){UI.mEdit=el.dataset.ev||null;render()}
   else if(a==='rundel'){run(()=>delRun(el.dataset.id))}
   else if(a==='openbook'){UI.view='note';UI.pYm=el.dataset.ym;render();window.scrollTo(0,0)}
@@ -1484,7 +1573,8 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:+fdt.get('wlimit')||null}).eq('id',aid));await loadAll()},t('saved_cls'))}
   if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
 });
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.settings){UI.settings=false;render()}});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&(UI.settings||UI.modal)){UI.settings=false;UI.modal=null;render()}
+  if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches?.('[data-act=bigchart]')){ev.preventDefault();ev.target.click()}});
 
 /* ---------- 起動 ---------- */
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
