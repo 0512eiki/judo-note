@@ -114,7 +114,8 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="with"><div>
     <p>画面の上に4つのタブがあります。</p>
     <ul><li><b>今日</b>：その日の記録をつける</li><li><b>記録</b>：グラフ・ランニング・これまでの記録</li><li><b>エクストラ</b>：練習以外に自分でやったトレーニング</li><li><b>質問</b>：コーチに質問する、返事を見る</li><li><b>ノート</b>：今月の目標、試合の予定と振り返り、月の冊子</li></ul>
-    <p>いちばん上にはいつも<b>今月の目標</b>が出ます。試合が近いと「あと◯日」、コーチからのコメントもここに出ます。</p>
+    <p>いちばん上にはいつも<b>今月の目標</b>が出ます。その下に <b>🔥 連続記録</b>（何日続けて書けているか・この1週間の ✓・これまでのベスト）が出ます。試合が近いと「あと◯日」、コーチからのコメントもここに出ます。</p>
+    <p>「この端末では通知がオフです」と出たら、<span class="ui">🔔 この端末で通知を受け取る</span> を押してください。</p>
   </div><figure><img src="manual-img/a-today.jpg" alt="今日の画面" loading="lazy"><figcaption>今日のタブ</figcaption></figure></div>
 
   <h2 id="aj4"><span class="n">04</span>毎日の記録のつけ方</h2>
@@ -130,10 +131,10 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <tr><td>出欠</td><td>参加・見学・欠席・休み（オフ）から選びます。欠席のときは理由も選びます。</td></tr>
     <tr><td>稽古の内容</td><td>技術練習・打ち込み・投げ込み・乱取り・寝技・トレーニング・試合形式から、やったものを全部。</td></tr>
     <tr><td>時間・きつさ</td><td>稽古の時間（分）と、稽古全体のきつさを <b>0〜10</b> で（0＝安静、10＝限界）。</td></tr>
-    <tr><td>体重</td><td>その日に量った体重（kg）。</td></tr>
+    <tr><td>体重</td><td>その日に量った体重。横の <span class="ui">kg</span>｜<span class="ui">lb</span> で単位を切り替えられます（入れた数字もそのまま換算されます）。グラフや記録も、選んだ単位で表示されます。</td></tr>
     <tr><td>痛むところ・体調</td><td>何もなければ <span class="ui">✓ 痛みや不調はなし</span> のままでOK。痛いところがあれば部位と強さを選びます。風邪・腹痛などは「その他・体調」に書きます。</td></tr>
     <tr><td>頭のケガ</td><td><b>頭を打ったとき、頭痛・吐き気・めまい・ぼんやりがあるときは必ずチェック</b>。コーチの画面のいちばん上に赤い印で出ます。症状があるうちは稽古を休み、病院で診てもらってください。</td></tr>
-    <tr><td>感想・気づき</td><td>うまくいったこと、課題、次に意識すること。短くても大丈夫です。</td></tr>
+    <tr><td>感想・気づき</td><td>うまくいったこと、課題、次に意識すること。<b>そのとき感じた気持ち</b>（うれしかった・悔しかった・楽しかった など）も書いておくと、あとで読み返したときの力になります。短くても大丈夫です。</td></tr>
     <tr><td>コーチへの質問</td><td>あれば書きます（なくてもOK）。</td></tr>
   </table></div>
   <div class="with"><div>
@@ -155,7 +156,8 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <p>いつものコースのタイムを測ったら、<b>測った日とタイム（分・秒）</b>を入れて <span class="ui">記録を追加</span>。距離は入れなくて大丈夫です。</p>
     <ul><li>最新のタイムと、前回より何秒速い・遅いかが出ます。</li><li>🏅 が自己ベストです。これまでの記録は全部さかのぼれます。</li><li>グラフは上にいくほど速いタイムです。</li></ul>
     <h3>グラフ</h3>
-    <p>直近4週間の調子（5〜25）、練習負荷（きつさ×分）、体重の変化が見られます。試合の日には縦線が入ります。</p>
+    <p>直近4週間の調子（5〜25）、練習負荷（きつさ×分）、体重の変化が見られます。試合の日には縦線が入ります。体重のグラフの <span class="ui">kg</span>｜<span class="ui">lb</span> でも単位を切り替えられます。</p>
+    <p>「最近の記録」の各日には、<b>📝 記録した日時</b>（直したときはその日時も）が出ます。</p>
   </div><figure><img src="manual-img/a-run.jpg" alt="ランニングとグラフ" loading="lazy"><figcaption>記録タブ</figcaption></figure></div>
   <h3>💪 エクストラ（練習以外のトレーニング）</h3>
   <p>家や学校などで、柔道の練習以外に自分でトレーニングをしたら <span class="ui">エクストラ</span> タブに残しましょう。</p>
@@ -187,7 +189,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
 
   <h2 id="aj10"><span class="n">10</span>通知と設定</h2>
   <p>右上の歯車から変えられます。自分の画面だけに反映されます。</p>
-  <ul><li><b>言語</b>：日本語 / English</li><li><b>テーマカラー</b>：藍・桜・抹茶・夕焼け・墨、または好きな色</li><li><b>明るさ</b>：自動・ライト・ダーク</li><li><b>毎日のお知らせ</b>：はじめは夜9:00。6:00〜23:30の30分ごとに選べます（なしにもできます）。時刻はスマホの時間帯で届きます。保護者の方には、前日の記録がまだのときだけ、翌日のお昼12:00にお知らせが届きます。</li></ul>
+  <ul><li><b>言語</b>：日本語 / English</li><li><b>テーマカラー</b>：藍・桜・抹茶・夕焼け・墨、または好きな色</li><li><b>明るさ</b>：自動・ライト・ダーク</li><li><b>体重の単位</b>：kg / lb</li><li><b>毎日のお知らせ</b>：はじめは夜9:00。6:00〜23:30の30分ごとに選べます（なしにもできます）。時刻はスマホの時間帯で届きます。保護者の方には、前日の記録がまだのときだけ、翌日のお昼12:00にお知らせが届きます。</li></ul>
 
   <h2 id="aj11"><span class="n">11</span>自分のスマホがないとき（親のスマホで使う）</h2>
   <ol class="steps">
@@ -236,7 +238,8 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="with"><div>
     <p>Four tabs at the top:</p>
     <ul><li><b>Today</b>: log the day</li><li><b>History</b>: charts, running and past entries</li><li><b>Extra</b>: training you did on your own, outside practice</li><li><b>Questions</b>: ask your coach and read replies</li><li><b>Notebook</b>: monthly goals, matches and reviews, the monthly booklet</li></ul>
-    <p>Your <b>goals for the month</b> always sit at the top. Upcoming matches (“10 days to …”) and your coach’s latest comment appear there too.</p>
+    <p>Your <b>goals for the month</b> always sit at the top. Below them is your <b>🔥 streak</b>: how many days in a row you’ve logged, a ✓ for each day this week, and your best so far. Upcoming matches (“10 days to …”) and your coach’s latest comment appear there too.</p>
+    <p>If you see “Notifications are off on this device”, tap <span class="ui">🔔 Get notifications on this device</span>.</p>
   </div><figure><img src="manual-img/a-today-en.jpg" alt="Today tab" loading="lazy"><figcaption>Today tab</figcaption></figure></div>
 
   <h2 id="ae4"><span class="n">04</span>Logging each day</h2>
@@ -252,10 +255,10 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <tr><td>Attendance</td><td>Training, watching, absent or day off. If absent, pick the reason.</td></tr>
     <tr><td>What you did</td><td>Tick everything: technique, uchikomi, nagekomi, randori, newaza, strength, match sim.</td></tr>
     <tr><td>Duration and effort</td><td>Minutes, and how hard the whole session was from <b>0 to 10</b> (0 = rest, 10 = maximal).</td></tr>
-    <tr><td>Weight</td><td>Today’s weight in kg.</td></tr>
+    <tr><td>Weight</td><td>Today’s weight. Tap <span class="ui">kg</span>｜<span class="ui">lb</span> next to it to switch units (the number you typed is converted). Charts and history use the unit you chose.</td></tr>
     <tr><td>Pain & illness</td><td>Leave <span class="ui">✓ No pain or illness</span> if you’re fine. Otherwise pick the body part and level. Colds, stomach aches etc. go in “Other / illness”.</td></tr>
     <tr><td>Head injury</td><td><b>Always tick this if you hit your head or have a headache, nausea, dizziness or feel foggy.</b> It’s flagged in red at the top of your coach’s screen. Don’t train while you have symptoms and see a doctor.</td></tr>
-    <tr><td>Reflections</td><td>What worked, what to fix, what to focus on next. Short is fine.</td></tr>
+    <tr><td>Reflections</td><td>What worked, what to fix, what to focus on next — and <b>how you felt</b> (happy, frustrated, proud…). It helps when you read it back later. Short is fine.</td></tr>
     <tr><td>Question for the coach</td><td>Optional.</td></tr>
   </table></div>
   <div class="with"><div>
@@ -275,7 +278,8 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <p>After a timed run on the usual course, enter the <b>date and time (min, sec)</b> and tap <span class="ui">Add record</span>. No distance needed.</p>
     <ul><li>You see your latest time and how much faster or slower it was than last time.</li><li>🏅 marks your personal best. Every past record is listed.</li><li>In the chart, higher means faster.</li></ul>
     <h3>Charts</h3>
-    <p>Condition (5–25), training load (effort × minutes) and weight for the last four weeks. Match days show as vertical lines.</p>
+    <p>Condition (5–25), training load (effort × minutes) and weight for the last four weeks. Match days show as vertical lines. You can switch kg / lb on the weight chart too.</p>
+    <p>Each day in “Recent entries” shows <b>📝 when you logged it</b> (and when you last edited it).</p>
   </div><figure><img src="manual-img/a-run-en.jpg" alt="" loading="lazy"><figcaption>History tab</figcaption></figure></div>
   <h3>💪 Extra training (outside practice)</h3>
   <p>If you train on your own outside judo practice — at home, at school, anywhere — log it in the <span class="ui">Extra</span> tab.</p>
@@ -302,7 +306,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <p>On the last evening of the month you get “📘 Your … summary is ready”. The Notebook tab shows that month’s booklet (cover, calendar, daily log, match reviews, conversations with your coach and space to write by hand). Print it with <span class="ui">Print / save as PDF</span>.</p>
 
   <h2 id="ae10"><span class="n">10</span>Notifications and settings</h2>
-  <p>Use the gear icon. Changes only affect your own screen: language (日本語 / English), theme color, appearance (auto / light / dark) and the daily reminder time (9 pm at first; any half hour from 6 am to 11:30 pm, or off — it follows your phone’s time zone). Your parent/guardian gets a reminder at noon the next day, only if you still haven’t logged the day before.</p>
+  <p>Use the gear icon. Changes only affect your own screen: language (日本語 / English), theme color, appearance (auto / light / dark) and weight unit (kg / lb), the daily reminder time (9 pm at first; any half hour from 6 am to 11:30 pm, or off — it follows your phone’s time zone). Your parent/guardian gets a reminder at noon the next day, only if you still haven’t logged the day before.</p>
 
   <h2 id="ae11"><span class="n">11</span>No phone? Use a parent’s phone</h2>
   <ol class="steps"><li><div>Open Judo Note on your parent’s phone and tap the name at the top.</div></li><li><div>Tap <span class="ui">＋ Someone else signs in</span> and sign in with <b>your own ID and password</b>.</div></li><li><div>When you’re done, tap the name again and choose your parent.</div></li></ol>
@@ -354,6 +358,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="with"><div>
     <ul><li><b>記録</b>：今月の目標、試合までの日数、ランニング、調子・負荷・体重のグラフ、毎日の記録とコーチのコメント（その日に練習以外のトレーニングをしていれば 💪 エクストラも）</li><li><b>質問</b>：お子さんとコーチのやりとり</li><li><b>ノート</b>：試合の予定と振り返り、目標、月の冊子（<span class="ui">印刷・PDFで保存</span>）</li></ul>
     <p>「痛み」「頭のケガ」などが記録されると、その日の記録に表示されます。頭のケガは、コーチの画面のいちばん上にも赤い印で出ます。</p>
+    <p>🔥 は、お子さんが何日続けて記録できているかです。各日には 📝 記録した日時が出ます。体重は <span class="ui">kg</span>｜<span class="ui">lb</span> で単位を切り替えられます（歯車の設定からも変えられます）。</p>
   </div><figure><img src="manual-img/p-log.jpg" alt="保護者の画面" loading="lazy"><figcaption>保護者の画面（上でお子さんを切り替え）</figcaption></figure></div>
 
   <h2 id="pj6"><span class="n">06</span>お子さんがスマホを持っていないとき</h2>
@@ -418,6 +423,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="with"><div>
     <ul><li><b>Records</b>: monthly goals, days to the next match, running, charts, daily entries and the coach’s comments (plus 💪 extra training on days your child did any)</li><li><b>Questions</b>: your child’s conversations with the coach</li><li><b>Notebook</b>: matches and reviews, goals, the monthly booklet (<span class="ui">Print / save as PDF</span>)</li></ul>
     <p>Pain and head injuries appear on that day’s entry. A head injury is also flagged in red at the top of the coach’s screen.</p>
+    <p>🔥 shows how many days in a row your child has logged, and each day shows 📝 when it was logged. Tap <span class="ui">kg</span>｜<span class="ui">lb</span> to switch weight units (also in the gear settings).</p>
   </div><figure><img src="manual-img/p-log-en.jpg" alt="" loading="lazy"><figcaption>Guardian view (switch children at the top)</figcaption></figure></div>
 
   <h2 id="pe6"><span class="n">06</span>If your child has no phone</h2>
@@ -471,6 +477,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
     <li><div><b>通知の時刻</b>は、はじめは選手が夜9:00、保護者が翌日のお昼12:00（前日の記録がまだのときだけ）、コーチのまとめが朝9:00（前日の分：記録した人数・まだの人・欠席・痛みやケガ・未返信の質問）です。どれも各自のスマホの時間帯で届き、それぞれが歯車から30分単位で変えられます。</div></li>
     <li><div><b>選手が記録を提出・質問したとき</b>も、すぐ通知が届きます（「◯◯さんが9/25の記録を提出しました」「◯◯さんから質問」）。記録はその日の最初の保存のときだけ届き、頭のケガは毎回届きます。止めたいときは、歯車の「選手が記録を提出・質問したら、すぐ知らせる」のチェックを外します。</div></li>
   </ol>
+  <div class="note">⚠️ 通知は<b>スマホごと</b>にオンにします。オンになっていない端末では、画面の上に「この端末では通知がオフです」と出ます。そこから <span class="ui">🔔 この端末で通知を受け取る</span> を押し、歯車の <span class="ui">テスト通知</span> で届くか確かめてください。</div>
   <div class="note">パソコンやiPadでは、ブラウザで同じURLを開いてログインします。選手の詳しい画面や印刷は、大きな画面のほうが見やすいです。</div>
 
   <h2 id="c3"><span class="n">03</span>選手を招待する</h2>
@@ -499,7 +506,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
 
   <h2 id="c5"><span class="n">05</span>毎日の見方（選手一覧と目印）</h2>
   <figure><img src="manual-img/c-team.jpg" alt="選手一覧" loading="lazy"><figcaption>選手一覧（気になる選手ほど上に並びます）</figcaption></figure>
-  <p>上に「本日の入力」「要チェック」「未返信の質問」の数、その下に選手ごとの14日間の調子の線・今日の調子・負荷比・体重と、目印が並びます。<b>赤い目印の選手ほど上</b>に出ます。</p>
+  <p>上に「本日の入力」「要チェック」「未返信の質問」の数、その下に選手ごとの14日間の調子の線・今日の調子・負荷比・体重と、目印が並びます。体重の <span class="ui">kg</span>｜<span class="ui">lb</span> で、コーチの画面の単位を切り替えられます（選手の冊子は、その選手が選んだ単位で作られます）。<b>赤い目印の選手ほど上</b>に出ます。</p>
   <div class="tbl"><table>
     <tr><th>目印</th><th>意味</th><th>おすすめの対応</th></tr>
     <tr><td><span class="pill bad">頭部：頭を打った・頭痛</span></td><td>頭のケガの記録（いちばん上に出ます。すぐ通知が届き、翌朝のまとめにも入ります）</td><td>本人に確認。症状があるうちは練習させず、受診をすすめる</td></tr>
@@ -520,7 +527,7 @@ kbd,.ui{font-family:var(--sans);font-weight:700;font-size:.92em;background:var(-
   <div class="tbl"><table>
     <tr><th>タブ</th><th>中身</th></tr>
     <tr><td>概要</td><td>今日の調子・7日平均・この7日の稽古・負荷の増え方・体重・ランニング・次の試合・未返信。直近4週間のグラフと最近の記録。</td></tr>
-    <tr><td>毎日の記録</td><td>1日1行の表（2週間〜すべて）。<b>行を押すとその日の詳細</b>（調子5項目・稽古・痛み・感想）が開き、そこからコメント・見たよ。</td></tr>
+    <tr><td>毎日の記録</td><td>1日1行の表（2週間〜すべて）。スマホでは項目名つきで折り返して表示。<b>行を押すとその日の詳細</b>（調子5項目・稽古・痛み・感想・📝 記録した日時）が開き、そこからコメント・見たよ。</td></tr>
     <tr><td>グラフ</td><td>調子・負荷・体重・調子の内訳。<b>グラフを押すと大きく</b>なり、4週間・3ヶ月・すべてを切り替えられます。</td></tr>
     <tr><td>ランニング／エクストラ／試合／質問・目標</td><td>それぞれの記録。エクストラは練習以外に選手が自分でやったトレーニング（1日に何回でも・通知なし）で、最近の記録と日の詳細にも 💪 で出ます。目標は過去の月もさかのぼれます。</td></tr>
   </table></div>
