@@ -498,7 +498,7 @@ const I18N = {
   offline_saved:'電波が弱くて保存できませんでした。入力はこのスマホに残っているので、あとでもう一度「保存」を押してください。', draft_restored:'保存できていなかった入力を戻しました。',
   v_free_q:'保存容量がいっぱいです。この動画を入れるために、いちばん古い動画 {n}本（{from}〜{to}に送られたもの・合計{mb}）を削除します。', v_free_other:'ほかの選手の動画 {n}本', v_free_yes:'削除して保存', v_free_no:'やめる', v_cancel:'アップロードをやめました', v_changed:'ほかの人が動画を送ったため、もう一度お試しください。',
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
-  t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
+  t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
   v_done_t:'動画をアップロードしました！', v_done:['選手とコーチがいつでも見られます。','ありがとうございます。練習の振り返りに役立てます。'], v_need:'動画を選んでください', v_too_big:'この動画はこのスマホでは小さくできませんでした。短く切ってから、もう一度お試しください。',
   v_too_long:'20分までの動画にしてください。', v_full:'チームの動画の保存容量がいっぱいです。コーチに古い動画を削除してもらってください。', v_usage:'チームの動画の保存容量：{u} / {t}', v_quality:'長い動画ほど、画質を少し下げて保存します（無料で使うため）。',
@@ -1425,7 +1425,7 @@ function athNote(){
   const L=lang(), T=I18N[L], m=me(), ym=curYm(), g=ST.goals[m.id+'|'+ym]||{items:['','',''],review:''};
   return `<div class="stack">
     ${viewersNote(m.id,L)}
-    ${videosCard(m.id,L,false)}
+    ${videosCard(m.id,L,true)}
     ${eventsCard(m.id,L)}
     <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
       ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
