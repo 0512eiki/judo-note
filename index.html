@@ -432,11 +432,12 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .vprog{display:grid;gap:6px;padding:10px 12px;border-radius:12px;background:var(--tint)}.vp-t{font-weight:700;font-size:calc(14*var(--u))}
 .vp-bar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden}.vp-bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .3s}
 .crail-card{display:grid;gap:8px}.crail-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.crail{display:flex;gap:16px;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}.cslide{touch-action:pan-x pan-y}.crail::-webkit-scrollbar{display:none}
-.cslide{flex:0 0 100%;scroll-snap-align:start;display:grid;gap:8px;align-content:start;min-width:0}
+.crail{overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.ctrack{display:flex;gap:16px;align-items:flex-start;will-change:transform;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}.cslide{touch-action:pan-x pan-y}.crail::-webkit-scrollbar{display:none}
+.cslide{flex:0 0 100%;display:grid;gap:8px;align-content:start;min-width:0}
 .cs-day{font-size:calc(13*var(--u));font-weight:700;color:var(--dim)}
 .cs-mine{font-size:calc(13*var(--u));color:var(--dim);white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cs-mine span{display:block;font-size:calc(11*var(--u));font-weight:700;letter-spacing:.04em}
-.cs-cmt.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.cs-more{justify-self:start;padding:2px 0}
+.cs-txt.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.cs-more{justify-self:start;padding:2px 0}
 .cs-cmt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border-radius:12px;padding:10px 12px;font-size:calc(15*var(--u));line-height:1.6}
 .memo{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:80;background:var(--base);box-shadow:0 0 0 100vmax var(--base);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 .memo-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
@@ -1349,19 +1350,31 @@ function coachRail(aid,L){
   if(!days.length)return '';
   const i=Math.min(UI.cIdx??days.length-1,days.length-1);
   return `<div class="card crail-card"><div class="crail-head"><h2 style="margin:0">💬 ${T.cc_title}</h2><span class="small muted crail-n">${i+1} / ${days.length}</span></div>
-    <div class="crail" data-n="${days.length}" data-i="${i}">${days.map(d=>{const e=E(aid,d);return `<div class="cslide"><div class="cs-day">${fd(d,L)}</div>
-      ${e.note?`<div class="cs-mine"><span>${T.cc_mine}</span>${esc(e.note)}</div>`:''}<div class="cs-cmt clamp">${esc(e.comment.text)}</div><button type="button" class="linkish cs-more" data-act="cmore" hidden>${T.cc_more}</button></div>`}).join('')}</div>
+    <div class="crail" data-n="${days.length}" data-i="${i}"><div class="ctrack">${days.map(d=>{const e=E(aid,d);return `<div class="cslide"><div class="cs-day">${fd(d,L)}</div>
+      ${e.note?`<div class="cs-mine"><span>${T.cc_mine}</span>${esc(e.note)}</div>`:''}<div class="cs-cmt"><div class="cs-txt clamp">${esc(e.comment.text)}</div></div><button type="button" class="linkish cs-more" data-act="cmore" hidden>${T.cc_more}</button></div>`}).join('')}</div></div>
     ${days.length>1?`<div class="hnav"><button type="button" data-act="cnav" data-v="-1" aria-label="${T.cc_prev}" ${i?'':'disabled'}>‹</button><span>${T.cc_swipe}</span><button type="button" data-act="cnav" data-v="1" aria-label="${T.cc_next}" ${i<days.length-1?'':'disabled'}>›</button></div>`:''}</div>`;
 }
-function railSync(r){const n=+r.dataset.n,i=Math.max(0,Math.min(n-1,Math.round(r.scrollLeft/Math.max(1,r.clientWidth+16))));UI.cIdx=i;r.dataset.cur=i;railFit(r,true);
+/* スワイプは記録タブのグラフと同じ仕組み：指についてきて、離すと必ず1日ずつ（勢いで2つ先に飛ばない） */
+const CGAP=16;
+function railGeo(r){return r.clientWidth+CGAP}
+function railPos(r,p,anim){const tr=r.firstElementChild;tr.style.transition=anim?'transform .28s cubic-bezier(.2,.8,.2,1)':'none';tr.style.transform=`translateX(${-p*railGeo(r)}px)`;
+  const i=Math.max(0,Math.min(tr.children.length-1,Math.floor(p))),f=Math.max(0,Math.min(1,p-i)),a=tr.children[i],b=tr.children[i+1];   // 高さは2つのコメントの間をなめらかに
+  if(a){r.style.transition=anim?'height .28s cubic-bezier(.2,.8,.2,1)':'none';r.style.height=(b&&f?a.offsetHeight+(b.offsetHeight-a.offsetHeight)*f:a.offsetHeight)+'px'}}
+function railGo(r,i,anim=true){const n=+r.dataset.n;i=Math.max(0,Math.min(n-1,i));r.dataset.cur=i;UI.cIdx=i;railPos(r,i,anim&&!matchMedia('(prefers-reduced-motion: reduce)').matches);
   const c=r.closest('.crail-card');c.querySelector('.crail-n').textContent=`${i+1} / ${n}`;const b=c.querySelectorAll('[data-act=cnav]');if(b.length){b[0].disabled=!i;b[1].disabled=i>=n-1}}
-function railFit(r,anim){const i=+(r.dataset.cur??r.dataset.i), sl=r.children[i];if(!sl)return;r.style.transition=anim?'height .25s ease':'none';r.style.height=sl.offsetHeight+'px'}   // 見ているコメントの高さに合わせる
-function railLive(r){const w=r.clientWidth+16,p=Math.max(0,r.scrollLeft/w),i=Math.floor(p),f=p-i,a=r.children[i],b=r.children[i+1];if(!a)return;   // スライドの途中は、2つのコメントの高さの間をなめらかに
-  r.style.transition='none';r.style.height=(b?a.offsetHeight+(b.offsetHeight-a.offsetHeight)*f:a.offsetHeight)+'px'}
+function railFit(r,anim){railPos(r,+r.dataset.cur,anim)}
 function railsInit(){document.querySelectorAll('.crail').forEach(r=>{r.dataset.cur=r.dataset.i;
-  r.querySelectorAll('.cslide').forEach(sl=>{const c=sl.querySelector('.cs-cmt'),b=sl.querySelector('.cs-more');b.hidden=!(c.scrollHeight>c.clientHeight+2)});
-  r.scrollLeft=(+r.dataset.i)*(r.clientWidth+16);railFit(r)})}
-document.addEventListener('scroll',ev=>{const r=ev.target;if(r.classList?.contains('crail')){cancelAnimationFrame(r._f);r._f=requestAnimationFrame(()=>railLive(r));clearTimeout(r._t);r._t=setTimeout(()=>railSync(r),90)}},true);
+  r.querySelectorAll('.cslide').forEach(sl=>{const c=sl.querySelector('.cs-txt'),b=sl.querySelector('.cs-more');b.hidden=!(c.scrollHeight>c.clientHeight+2)});
+  railGo(r,+r.dataset.i,false)})}
+let cG=null;
+document.addEventListener('pointerdown',ev=>{const r=ev.target.closest('.crail');if(!r||ev.target.closest('button'))return;cG={r,x0:ev.clientX,y0:ev.clientY,t:Date.now(),id:ev.pointerId,mode:null}});
+document.addEventListener('pointermove',ev=>{if(!cG||ev.pointerId!==cG.id)return;const dx=ev.clientX-cG.x0,dy=ev.clientY-cG.y0;
+  if(!cG.mode){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){cG.mode='swipe';try{cG.r.setPointerCapture(cG.id)}catch(e){}}else if(Math.abs(dy)>10){cG=null;return}else return}
+  const i=+cG.r.dataset.cur,n=+cG.r.dataset.n,edge=(dx>0&&i===0)||(dx<0&&i===n-1);railPos(cG.r,i-(edge?dx*.25:dx)/railGeo(cG.r),false)});
+function cEnd(ev){if(!cG||ev.pointerId!==cG.id)return;const g=cG;cG=null;if(g.mode!=='swipe')return;const dx=ev.clientX-g.x0,v=Math.abs(dx)/Math.max(1,Date.now()-g.t),i=+g.r.dataset.cur;
+  railGo(g.r,(Math.abs(dx)>60||(v>.45&&Math.abs(dx)>25))?i+(dx<0?1:-1):i)}
+document.addEventListener('pointerup',cEnd);document.addEventListener('pointercancel',cEnd);
+addEventListener('resize',()=>document.querySelectorAll('.crail').forEach(r=>railGo(r,+r.dataset.cur,false)));
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
   const needY=!isY&&!E(m.id,Y)&&(m.joined||TODAY)<=Y;   // 昨日の分がまだ（次の練習までに書けばよい）
@@ -2256,8 +2269,9 @@ document.addEventListener('click',ev=>{
   else if(a==='vplay'){UI.vplay=el.dataset.id;render();setTimeout(()=>document.querySelector('.vplayer')?.play?.().catch(()=>{}),400)}
   else if(a==='vdl'){const v=(ST.videos||[]).find(x=>x.id===el.dataset.id);if(!v)return;const name=(v.title||v.day).replace(/[\\/:*?"<>|]/g,'_')+'.'+v.path.split('.').pop();
     sb.storage.from('videos').createSignedUrl(v.path,3600,{download:name}).then(({data,error})=>{if(error)throw error;const a2=document.createElement('a');a2.href=data.signedUrl;a2.rel='noopener';document.body.appendChild(a2);a2.click();a2.remove()}).catch(e=>toast(errText(e)))}
-  else if(a==='cnav'){const r=el.closest('.crail-card').querySelector('.crail');r.scrollBy({left:(+el.dataset.v)*(r.clientWidth+16),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}
-  else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-cmt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');railFit(el.closest('.crail'),true)}
+  else if(a==='cnav'){const r=el.closest('.crail-card').querySelector('.crail');railGo(r,+r.dataset.cur+ +el.dataset.v)}
+  else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-txt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');
+    if(open)sl.dataset.y=scrollY;railFit(el.closest('.crail'),true);if(!open&&sl.dataset.y!=null)window.scrollTo({top:+sl.dataset.y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
   else if(a==='memo-done'){memoClose(true)}
   else if(a==='memo-cancel'){memoClose(false)}
   else if(a==='memo-open'){memoOpen(el)}
