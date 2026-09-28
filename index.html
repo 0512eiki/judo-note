@@ -437,6 +437,16 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .cslide{flex:0 0 100%;display:grid;gap:8px;align-content:start;min-width:0}
 .cs-day{font-size:calc(13*var(--u));font-weight:700;color:var(--dim)}
 .cs-mine{font-size:calc(13*var(--u));color:var(--dim);white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cs-mine span{display:block;font-size:calc(11*var(--u));font-weight:700;letter-spacing:.04em}
+.calcard{display:grid;gap:10px}.calhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.calhead .hnav{gap:10px}.calhead .hnav b{font-size:calc(14*var(--u));min-width:7em;text-align:center}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calgrid .cw{text-align:center;font-size:calc(11*var(--u));font-weight:700;color:var(--faint)}
+.cc{display:grid;justify-items:center;align-content:start;gap:3px;min-height:52px;padding:5px 2px;border:1px solid transparent;border-radius:12px;background:var(--panel2);font:inherit;color:inherit;cursor:pointer;min-width:0}
+.cc.o{background:none;cursor:default}.cc b{font-size:calc(13*var(--u));font-weight:700;line-height:1.1}
+.cc.today b{color:var(--accent)}.cc.sel{border-color:var(--accent);background:var(--tint)}.cc.fut{opacity:.35;cursor:default}
+.cl{display:block;width:70%;height:4px;border-radius:2px;background:transparent}.cl.good{background:var(--accent)}.cl.mid{background:color-mix(in srgb,var(--accent) 45%,transparent)}.cl.low{background:var(--bad)}.cl.abs{background:var(--warn)}
+.cm{font-size:calc(11*var(--u));line-height:1;letter-spacing:-2px;max-width:100%;overflow:hidden;white-space:nowrap}
+.callg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:calc(11*var(--u));color:var(--dim)}.callg span{display:inline-flex;align-items:center;gap:5px}.callg .cl{width:14px}
+.caldetail{border-top:1px solid var(--line);padding-top:6px}
 .ent-more{display:block;margin-top:8px;padding:6px 0}.ent-rest{display:contents}.ent-rest[hidden]{display:none}
 .cs-txt.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.cs-more{justify-self:start;padding:2px 0}
 .cs-cmt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border-radius:12px;padding:10px 12px;font-size:calc(15*var(--u));line-height:1.6}
@@ -523,7 +533,8 @@ const I18N = {
   v_free_q:'保存容量がいっぱいです。この動画を入れるために、いちばん古い動画 {n}本（{from}〜{to}に送られたもの・合計{mb}）を削除します。', v_free_other:'ほかの選手の動画 {n}本', v_free_yes:'削除して保存', v_free_no:'やめる', v_cancel:'アップロードをやめました', v_changed:'ほかの人が動画を送ったため、もう一度お試しください。',
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
-  cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', memo_chars:'{n}文字',
+  cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cal_title:'カレンダー', cal_help:'日にちを押すと、その日の記録が見られます。', cal_prev:'前の月', cal_next:'次の月', cal_none:'この日の記録はありません。', cal_run:'🏃 ランニング {t}', cal_match:'🥋 試合：{n}', cal_lg:{good:'よい',mid:'ふつう',low:'低め',abs:'欠席・休み'}, cal_marks:['💪 エクストラ','🏃 ランニング','🥋 試合','💬 コメント'],
+  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', memo_chars:'{n}文字',
   prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
@@ -656,7 +667,8 @@ const I18N = {
   v_free_q:'Video storage is full. To add this video, the {n} oldest videos (uploaded {from} – {to}, {mb} total) will be deleted.', v_free_other:'{n} video(s) of other athletes', v_free_yes:'Delete and upload', v_free_no:'Cancel', v_cancel:'Upload cancelled', v_changed:'Someone else just uploaded a video. Please try again.',
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
-  cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', memo_chars:'{n} characters',
+  cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cal_title:'Calendar', cal_help:'Tap a day to see what you logged.', cal_prev:'Previous month', cal_next:'Next month', cal_none:'Nothing logged on this day.', cal_run:'🏃 Run {t}', cal_match:'🥋 Match: {n}', cal_lg:{good:'Good',mid:'OK',low:'Low',abs:'Absent / off'}, cal_marks:['💪 Extra','🏃 Run','🥋 Match','💬 Comment'],
+  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', memo_chars:'{n} characters',
   prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
@@ -1338,7 +1350,7 @@ function athleteView(){
   const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['v',t('t_videos'),UI.view==='v'?0:newV],['note',t('t_note')]];
   let body='';
   if(UI.view==='today')body=athToday();
-  if(UI.view==='log')body=`<div class="stack">${monthCard(m.id,L)}${runsCard(m.id,L,!UI.previewAs)}<div class="grid2"><div>${healthCharts(m.id,L,'full')}</div>${entryList(m.id,L,14,false)}</div></div>`;
+  if(UI.view==='log')body=`<div class="stack">${monthCard(m.id,L)}${calendarCard(m.id,L,false)}${runsCard(m.id,L,!UI.previewAs)}<div class="grid2"><div>${healthCharts(m.id,L,'full')}</div>${entryList(m.id,L,14,false)}</div></div>`;
   if(UI.view==='x')body=extraView(m.id,L,!UI.previewAs);
   if(UI.view==='v')body=videosCard(m.id,L,true);
   if(UI.view==='q')body=questions(m.id,L,false);
@@ -1428,20 +1440,41 @@ function evCard(aid,L,ro){
     <div class="row small">${ne.weigh?`<span class="pill">${T.ev_weigh_s.replace('{d}',fd(ne.weigh,L))}</span>`:''}${wtxt}</div>
     ${!dd&&!ro?`<div><button class="btn sm" data-act="mreview" data-ev="${ne.id}">${ST.mnotes[ne.id]?T.mr_edit:T.mr_now}</button></div>`:''}</div>`;
 }
-function entryList(aid,L,n,coach){
-  const T=I18N[L], SHOW=coach?n:3; let rows='';   // 選手・保護者は最新の3日分だけ見せて、残りは畳む
-  for(let i=0;i<n;i++){const d=addDays(TODAY,-i), e=E(aid,d);if(i===SHOW)rows+='<!--more-->';
-    if(!e){rows+=`<div class="ent"><div class="d">${fd(d,L)}</div><div><div class="muted small">${T.no_entry}</div>${xDayBlock(aid,d,L)}</div></div>`;continue}
+/* ---------- カレンダー：日にちを押すと、その日の記録を下に出す ---------- */
+function calendarCard(aid,L,coach){
+  const T=I18N[L], ym=UI.calYm||curYm(), first=ym+'-01', days=monthDates(ym), sel=UI.calDay&&UI.calDay.startsWith(ym)?UI.calDay:(ym===curYm()?TODAY:days[days.length-1]);
+  const canPrev=first>DAYS[0].slice(0,8)+'01'||first>DAYS[0], canNext=ym<curYm();
+  const cells=[];for(let i=0;i<dow(first);i++)cells.push('<span class="cc o"></span>');
+  days.forEach(d=>{const e=E(aid,d), s=score(e), att=e?attOf(e):null, fut=d>TODAY;
+    const lv=!e?'':att==='absent'||att==='off'||!s?'abs':s>=20?'good':s>=16?'mid':'low';
+    const marks=[XS(aid,d).length?'💪':'',(ST.runs[aid]||[]).some(r=>r.day===d)?'🏃':'',(ST.events||[]).some(ev=>ev.aids.includes(aid)&&ev.date===d)?'🥋':'',e?.comment?'💬':''].join('');
+    cells.push(`<button type="button" class="cc ${d===sel?'sel':''} ${d===TODAY?'today':''} ${fut?'fut':''}" data-act="calday" data-v="${d}" ${fut?'disabled':''} aria-pressed="${d===sel}" aria-label="${fd(d,L)}"><b>${+d.slice(8)}</b>${lv?`<i class="cl ${lv}"></i>`:'<i class="cl"></i>'}<span class="cm">${marks}</span></button>`)});
+  const run=(ST.runs[aid]||[]).find(r=>r.day===sel), evs=(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&ev.date===sel);
+  const extra=[run?`<div class="small">${T.cal_run.replace('{t}',fmtTime(run.sec))}</div>`:'',...evs.map(ev=>`<div class="small">${esc(T.cal_match.replace('{n}',ev.name))}</div>`)].join('');
+  return `<div class="card calcard"><div class="calhead"><h2 style="margin:0">📅 ${T.cal_title}</h2>
+      <div class="hnav"><button type="button" data-act="calnav" data-v="-1" aria-label="${T.cal_prev}" ${canPrev?'':'disabled'}>‹</button><b>${monthLabel(ym,L)}</b><button type="button" data-act="calnav" data-v="1" aria-label="${T.cal_next}" ${canNext?'':'disabled'}>›</button></div></div>
+    <div class="calgrid">${T.wd.map(w=>`<span class="cw">${w}</span>`).join('')}${cells.join('')}</div>
+    <div class="callg">${Object.entries(T.cal_lg).map(([k,v])=>`<span><i class="cl ${k}"></i>${v}</span>`).join('')}${T.cal_marks.map(x=>`<span>${x}</span>`).join('')}</div>
+    <div class="caldetail">${E(aid,sel)||XS(aid,sel).length||extra?`<div class="entries">${entRow(aid,sel,L,coach,'k')}</div>${extra}`:`<div class="ent"><div class="d">${fd(sel,L)}</div><div class="muted small">${T.cal_none}</div></div>`}</div>
+    <div class="small muted">${T.cal_help}</div></div>`;
+}
+function entRow(aid,d,L,coach,idp='c'){   // 1日分の記録（最近の記録とカレンダーで共通）
+    const T=I18N[L], e=E(aid,d);
+    if(!e)return `<div class="ent"><div class="d">${fd(d,L)}</div><div><div class="muted small">${T.no_entry}</div>${xDayBlock(aid,d,L)}</div></div>`;
     const s=score(e);
-    rows+=`<div class="ent"><div class="d">${fd(d,L)} ${coach?newTag(aid,e.upd||e.at):''}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
+    return `<div class="ent"><div class="d">${fd(d,L)} ${coach?newTag(aid,e.upd||e.at):''}<small>${e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:esc(attTxt(e,T)||T.rest)}</small></div><div>
       <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
       ${e.note?`<p>${esc(e.note)}</p>`:''}
       ${xDayBlock(aid,d,L)}
       ${stamp(e,T)}
       ${e.comment?cmtBlock(aid,d,e,T):''}
       ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
-      ${coach&&!e.comment?composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`c-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}):''}
-    </div></div>`;}
+      ${coach&&!e.comment?composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`${idp}-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}):''}
+    </div></div>`;
+}
+function entryList(aid,L,n,coach){
+  const T=I18N[L], SHOW=coach?n:3; let rows='';   // 選手・保護者は最新の3日分だけ見せて、残りは畳む
+  for(let i=0;i<n;i++){if(i===SHOW)rows+='<!--more-->';rows+=entRow(aid,addDays(TODAY,-i),L,coach)}
   const [head,rest]=rows.split('<!--more-->'), open=UI.entOpen===aid;
   return `<div class="card"><h2>${T.recent}</h2><div class="entries">${head}${rest?`<div class="ent-rest" ${open?'':'hidden'}>${rest}</div>`:''}</div>${rest?`<button type="button" class="linkish ent-more" data-act="entmore" data-aid="${aid}">${open?T.cc_less:T.ent_more.replace('{n}',n-SHOW)}</button>`:''}</div>`;
 }
@@ -1538,7 +1571,7 @@ function guardianView(){
   const hello=`${sw}<div class="hello"><div class="sub">${esc(T.g_sub)}${a?.cls?' · '+esc(a.cls):''}</div><h1>${esc(T.g_hello.replace('{n}',a?.name||''))}</h1></div>`;
   let body='';
   if(!a)body=`<div class="card">${T.none}</div>`;
-  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${streakCard(S,L,true)}${evCard(S,L,true)}${monthCard(S,L)}${runsCard(S,L,false)}<div class="grid2"><div>${healthCharts(S,L,'full')}</div>${entryList(S,L,14,false)}</div></div>`;
+  else if(UI.view==='log')body=`<div class="stack">${hello}${a.id&&E(S,TODAY)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}${streakCard(S,L,true)}${evCard(S,L,true)}${monthCard(S,L)}${calendarCard(S,L,false)}${runsCard(S,L,false)}<div class="grid2"><div>${healthCharts(S,L,'full')}</div>${entryList(S,L,14,false)}</div></div>`;
   else if(UI.view==='q')body=`<div class="stack">${hello}${questions(S,L,false,true)}</div>`;
   else if(UI.view==='v')body=`<div class="stack">${hello}${videosCard(S,L,true)}</div>`;
   else {const g=ST.goals[S+'|'+curYm()];body=`<div class="stack">${hello}${eventsCard(S,L,true)}
@@ -1657,7 +1690,7 @@ function coachDetail(aid){
       <div class="grid2">${goalsBanner(aid,L,false)||''}<div></div></div>
       <div class="grid2"><div>${healthCharts(aid,L,'compact')}</div>${entryList(aid,L,7,true)}</div>`;
   }
-  if(tab==='days'){const days=UI.rgDays||28;body=`<div class="row" style="justify-content:space-between">${wToggle()}${rangeBar('rgDays',[[14,T.rg_2w],[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${daysTable(aid,L,days)}`}
+  if(tab==='days'){const days=UI.rgDays||28;body=`${calendarCard(aid,L,true)}<div class="row" style="justify-content:space-between">${wToggle()}${rangeBar('rgDays',[[14,T.rg_2w],[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${daysTable(aid,L,days)}`}
   if(tab==='charts')body=healthCharts(aid,L,'full');
   if(tab==='run')body=runsCard(aid,L,false);
   if(tab==='x')body=extraView(aid,L,false);
@@ -2221,7 +2254,7 @@ document.addEventListener('click',ev=>{
   UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel','xdel','vdel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
-  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','vplay','vdl','closemodal','donehide'].includes(a))return;   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
+  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vplay','vdl','closemodal','donehide'].includes(a))return;   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
   else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
@@ -2272,6 +2305,8 @@ document.addEventListener('click',ev=>{
   else if(a==='vdl'){const v=(ST.videos||[]).find(x=>x.id===el.dataset.id);if(!v)return;const name=(v.title||v.day).replace(/[\\/:*?"<>|]/g,'_')+'.'+v.path.split('.').pop();
     sb.storage.from('videos').createSignedUrl(v.path,3600,{download:name}).then(({data,error})=>{if(error)throw error;const a2=document.createElement('a');a2.href=data.signedUrl;a2.rel='noopener';document.body.appendChild(a2);a2.click();a2.remove()}).catch(e=>toast(errText(e)))}
   else if(a==='cnav'){const r=el.closest('.crail-card').querySelector('.crail');railGo(r,+r.dataset.cur+ +el.dataset.v)}
+  else if(a==='calday'){UI.calDay=el.dataset.v;const c=el.closest('.calcard'),top=c.getBoundingClientRect().top;render();const nc=document.querySelector('.calcard');if(nc)window.scrollBy(0,nc.getBoundingClientRect().top-top)}
+  else if(a==='calnav'){const ym=ymShift(UI.calYm||curYm(),+el.dataset.v);UI.calYm=ym;UI.calDay=ym===curYm()?TODAY:monthDates(ym).slice(-1)[0];const c=el.closest('.calcard'),top=c.getBoundingClientRect().top;render();const nc=document.querySelector('.calcard');if(nc)window.scrollBy(0,nc.getBoundingClientRect().top-top)}
   else if(a==='entmore'){const open=UI.entOpen!==el.dataset.aid;if(open)UI.entY=scrollY;UI.entOpen=open?el.dataset.aid:null;render();if(!open&&UI.entY!=null)window.scrollTo({top:UI.entY,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
   else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-txt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');
     if(open)sl.dataset.y=scrollY;railFit(el.closest('.crail'),true);if(!open&&sl.dataset.y!=null)window.scrollTo({top:+sl.dataset.y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
