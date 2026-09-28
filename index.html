@@ -497,7 +497,7 @@ const I18N = {
   e_team:'チームはもう作られています。コーチから招待コードをもらってください。', e_generic:'うまくいきませんでした（{m}）',
   offline_saved:'電波が弱くて保存できませんでした。入力はこのスマホに残っているので、あとでもう一度「保存」を押してください。', draft_restored:'保存できていなかった入力を戻しました。',
   v_free_q:'保存容量がいっぱいです。この動画を入れるために、いちばん古い動画 {n}本（{from}〜{to}に送られたもの・合計{mb}）を削除します。', v_free_other:'ほかの選手の動画 {n}本', v_free_yes:'削除して保存', v_free_no:'やめる', v_cancel:'アップロードをやめました', v_changed:'ほかの人が動画を送ったため、もう一度お試しください。',
-  v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から確認のうえ削除されます。',
+  v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
   v_done_t:'動画をアップロードしました！', v_done:['選手とコーチがいつでも見られます。','ありがとうございます。練習の振り返りに役立てます。'], v_need:'動画を選んでください', v_too_big:'この動画はこのスマホでは小さくできませんでした。短く切ってから、もう一度お試しください。',
@@ -627,7 +627,7 @@ const I18N = {
   e_team:'A team already exists. Ask your coach for an invite code.', e_generic:'Something went wrong ({m})',
   offline_saved:'Your signal was too weak to save. Your entry is kept on this phone — tap Save again later.', draft_restored:'Restored an entry that hadn’t been saved.',
   v_free_q:'Video storage is full. To add this video, the {n} oldest videos (uploaded {from} – {to}, {mb} total) will be deleted.', v_free_other:'{n} video(s) of other athletes', v_free_yes:'Delete and upload', v_free_no:'Cancel', v_cancel:'Upload cancelled', v_changed:'Someone else just uploaded a video. Please try again.',
-  v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted after you confirm.',
+  v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
   v_done_t:'Video uploaded!', v_done:['The athlete and coach can watch it anytime.','Thank you — this helps with practice reviews.'], v_need:'Choose a video first', v_too_big:'This phone couldn’t make the video smaller. Trim it and try again.',
@@ -1682,8 +1682,7 @@ async function uploadVideo(aid,file,day,title){
     else if(file.size>V_LIMIT)throw new Error('__'+t('v_too_big'));
     if(used+out.size>V_TOTAL){   // いっぱい：古い順に消す分を見せて、確認してから消す
       const plan=must(await sb.rpc('video_plan',{need:out.size}))||[];if(!plan.length)throw new Error('__'+t('v_full'));
-      if(!(await vConfirm(plan)))throw new Error('__'+t('v_cancel'));
-      vProg('prep',0);
+      UI.vFreed=plan.length;   // 確認なしで、古い順に必要な分だけ消す（各自が端末に保存している前提）
       const {data:fr,error:fe}=await sb.functions.invoke('push',{body:{type:'video_free',need:out.size,ids:plan.map(p=>p.id)}});
       if(fe||fr?.error)throw new Error(fr?.error==='changed'||/409/.test(String(fe?.message||''))?'__'+t('v_changed'):(fr?.error||fe.message));
       ST.videos=(ST.videos||[]).filter(v=>!plan.some(p=>p.id===v.id));
@@ -1715,7 +1714,7 @@ function videosCard(aid,L,canUpload){
       <div class="field"><label for="v-name">${T.v_name.replace(/（.*|\(.*/,'')}</label><input class="inp" id="v-name" name="title" maxlength="100" placeholder="${esc(T.v_name)}"></div></div>
     <div class="vprog" id="v-prog" ${busy?'':'hidden'}><div class="vp-t">${busy?T.v_prep:''}</div><div class="vp-bar"><i></i></div><div class="small muted">${T.v_keep}</div></div>
     <div class="row"><button class="btn" type="submit" ${busy?'disabled':''}>${T.v_upload}</button></div>
-    <div class="small muted">${T.v_quality}</div></form>`:'';
+    <div class="small muted">${T.v_quality}</div><div class="small muted">${T.v_auto}</div></form>`:'';
   const list=vs.length?`<div class="vlist">${vs.map(v=>{const up=acct(v.uploaded_by), mine=v.uploaded_by===UI.session, playing=UI.vplay===v.id;
       return `<div class="vitem">
         ${playing?`<video class="vplayer" controls playsinline preload="metadata" data-vsrc="${esc(v.path)}"></video>`
@@ -2312,7 +2311,7 @@ document.addEventListener('submit',ev=>{
     run(async()=>{await saveExtra(d,id);UI.xEdit=null;UI.xDraft=null;UI.xDay=d.day;window.scrollTo(0,0)},()=>id?t('ed_done'):{title:t('ch_x_t'),msg:pick1(t('ch_x')),sub:d.items.map(i=>i.n).join(t('x_sep')),actions:[[t('done_log'),'donego','log']]})}
   if(f.dataset.form==='video'){const file=f.querySelector('[name=file]').files?.[0];if(!file){toast(t('v_need'));UI.pressed=null;return}
     const aid=f.dataset.aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
-    run(()=>uploadVideo(aid,file,day,title),()=>({title:t('v_done_t'),msg:pick1(t('v_done'))}));return}
+    UI.vFreed=0;run(()=>uploadVideo(aid,file,day,title),()=>({title:t('v_done_t'),msg:pick1(t('v_done')),sub:UI.vFreed?t('v_freed').replace('{n}',UI.vFreed):''}));return}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
