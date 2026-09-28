@@ -432,7 +432,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .vprog{display:grid;gap:6px;padding:10px 12px;border-radius:12px;background:var(--tint)}.vp-t{font-weight:700;font-size:calc(14*var(--u))}
 .vp-bar{height:8px;border-radius:4px;background:var(--panel2);overflow:hidden}.vp-bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .3s}
 .crail-card{display:grid;gap:8px}.crail-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.crail{display:flex;gap:16px;align-items:flex-start;transition:height .25s ease;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}.crail::-webkit-scrollbar{display:none}
+.crail{display:flex;gap:16px;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}.cslide{touch-action:pan-x pan-y}.crail::-webkit-scrollbar{display:none}
 .cslide{flex:0 0 100%;scroll-snap-align:start;display:grid;gap:8px;align-content:start;min-width:0}
 .cs-day{font-size:calc(13*var(--u));font-weight:700;color:var(--dim)}
 .cs-mine{font-size:calc(13*var(--u));color:var(--dim);white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cs-mine span{display:block;font-size:calc(11*var(--u));font-weight:700;letter-spacing:.04em}
@@ -1353,13 +1353,15 @@ function coachRail(aid,L){
       ${e.note?`<div class="cs-mine"><span>${T.cc_mine}</span>${esc(e.note)}</div>`:''}<div class="cs-cmt clamp">${esc(e.comment.text)}</div><button type="button" class="linkish cs-more" data-act="cmore" hidden>${T.cc_more}</button></div>`}).join('')}</div>
     ${days.length>1?`<div class="hnav"><button type="button" data-act="cnav" data-v="-1" aria-label="${T.cc_prev}" ${i?'':'disabled'}>‹</button><span>${T.cc_swipe}</span><button type="button" data-act="cnav" data-v="1" aria-label="${T.cc_next}" ${i<days.length-1?'':'disabled'}>›</button></div>`:''}</div>`;
 }
-function railSync(r){const n=+r.dataset.n,i=Math.max(0,Math.min(n-1,Math.round(r.scrollLeft/Math.max(1,r.clientWidth+16))));UI.cIdx=i;r.dataset.cur=i;railFit(r);
+function railSync(r){const n=+r.dataset.n,i=Math.max(0,Math.min(n-1,Math.round(r.scrollLeft/Math.max(1,r.clientWidth+16))));UI.cIdx=i;r.dataset.cur=i;railFit(r,true);
   const c=r.closest('.crail-card');c.querySelector('.crail-n').textContent=`${i+1} / ${n}`;const b=c.querySelectorAll('[data-act=cnav]');if(b.length){b[0].disabled=!i;b[1].disabled=i>=n-1}}
-function railFit(r){const i=+(r.dataset.cur??r.dataset.i), sl=r.children[i];if(sl)r.style.height=sl.offsetHeight+'px'}   // 見ているコメントの高さに合わせる
+function railFit(r,anim){const i=+(r.dataset.cur??r.dataset.i), sl=r.children[i];if(!sl)return;r.style.transition=anim?'height .25s ease':'none';r.style.height=sl.offsetHeight+'px'}   // 見ているコメントの高さに合わせる
+function railLive(r){const w=r.clientWidth+16,p=Math.max(0,r.scrollLeft/w),i=Math.floor(p),f=p-i,a=r.children[i],b=r.children[i+1];if(!a)return;   // スライドの途中は、2つのコメントの高さの間をなめらかに
+  r.style.transition='none';r.style.height=(b?a.offsetHeight+(b.offsetHeight-a.offsetHeight)*f:a.offsetHeight)+'px'}
 function railsInit(){document.querySelectorAll('.crail').forEach(r=>{r.dataset.cur=r.dataset.i;
   r.querySelectorAll('.cslide').forEach(sl=>{const c=sl.querySelector('.cs-cmt'),b=sl.querySelector('.cs-more');b.hidden=!(c.scrollHeight>c.clientHeight+2)});
   r.scrollLeft=(+r.dataset.i)*(r.clientWidth+16);railFit(r)})}
-document.addEventListener('scroll',ev=>{const r=ev.target;if(r.classList?.contains('crail')){clearTimeout(r._t);r._t=setTimeout(()=>railSync(r),60)}},true);
+document.addEventListener('scroll',ev=>{const r=ev.target;if(r.classList?.contains('crail')){cancelAnimationFrame(r._f);r._f=requestAnimationFrame(()=>railLive(r));clearTimeout(r._t);r._t=setTimeout(()=>railSync(r),90)}},true);
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
   const needY=!isY&&!E(m.id,Y)&&(m.joined||TODAY)<=Y;   // 昨日の分がまだ（次の練習までに書けばよい）
@@ -2204,7 +2206,7 @@ document.addEventListener('click',ev=>{
   UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel','xdel','vdel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
-  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav'].includes(a))return;   // 閲覧モードでは何も変えられない
+  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','vplay','vdl','closemodal','donehide'].includes(a))return;   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
   else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
@@ -2255,7 +2257,7 @@ document.addEventListener('click',ev=>{
   else if(a==='vdl'){const v=(ST.videos||[]).find(x=>x.id===el.dataset.id);if(!v)return;const name=(v.title||v.day).replace(/[\\/:*?"<>|]/g,'_')+'.'+v.path.split('.').pop();
     sb.storage.from('videos').createSignedUrl(v.path,3600,{download:name}).then(({data,error})=>{if(error)throw error;const a2=document.createElement('a');a2.href=data.signedUrl;a2.rel='noopener';document.body.appendChild(a2);a2.click();a2.remove()}).catch(e=>toast(errText(e)))}
   else if(a==='cnav'){const r=el.closest('.crail-card').querySelector('.crail');r.scrollBy({left:(+el.dataset.v)*(r.clientWidth+16),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}
-  else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-cmt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');railFit(el.closest('.crail'))}
+  else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-cmt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');railFit(el.closest('.crail'),true)}
   else if(a==='memo-done'){memoClose(true)}
   else if(a==='memo-cancel'){memoClose(false)}
   else if(a==='memo-open'){memoOpen(el)}
