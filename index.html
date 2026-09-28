@@ -342,6 +342,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .xrows{display:grid;gap:8px}
 .xrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;align-items:center}
 .xrm{border:0;background:transparent;color:var(--faint);font-size:15px;cursor:pointer;height:34px;border-radius:10px}.xrm:hover{color:var(--bad,#d9534f);background:var(--panel2)}
+.xchip.on{background:var(--tint);border-color:var(--accent);color:var(--accent)}
 .xchip{display:inline-block;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);font:inherit;font-size:13px;font-weight:600;color:inherit;cursor:pointer}.xchip:active{background:var(--tint);border-color:var(--accent);color:var(--accent)}
 .xmeta{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:10px}
 @media (max-width:520px){.xmeta{grid-template-columns:1fr}}
@@ -452,7 +453,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .done-actions{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 @keyframes draw{to{stroke-dashoffset:0}} @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}} @keyframes fadein{from{opacity:0}}
 @media (prefers-reduced-motion:reduce){.done,.done-card,.done-check circle,.done-check path{animation:none;stroke-dashoffset:0}}
-@media (max-width:520px){.tabs .tab{padding:6px 10px;font-size:13.5px}.tabs{gap:2px;padding-inline:10px}
+@media (max-width:520px){.tabs .tab{padding:6px 4px;font-size:13.5px;text-align:center;min-width:0}.tabs{display:grid;grid-template-columns:repeat(var(--tc,3),minmax(0,1fr));gap:4px;padding-inline:10px;overflow:visible}
   .subtabs{flex-wrap:wrap;overflow:visible}}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
@@ -498,6 +499,7 @@ const I18N = {
   offline_saved:'電波が弱くて保存できませんでした。入力はこのスマホに残っているので、あとでもう一度「保存」を押してください。', draft_restored:'保存できていなかった入力を戻しました。',
   v_free_q:'保存容量がいっぱいです。この動画を入れるために、いちばん古い動画 {n}本（{from}〜{to}に送られたもの・合計{mb}）を削除します。', v_free_other:'ほかの選手の動画 {n}本', v_free_yes:'削除して保存', v_free_no:'やめる', v_cancel:'アップロードをやめました', v_changed:'ほかの人が動画を送ったため、もう一度お試しください。',
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
+  v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
   v_done_t:'動画をアップロードしました！', v_done:['選手とコーチがいつでも見られます。','ありがとうございます。練習の振り返りに役立てます。'], v_need:'動画を選んでください', v_too_big:'この動画はこのスマホでは小さくできませんでした。短く切ってから、もう一度お試しください。',
@@ -628,6 +630,7 @@ const I18N = {
   offline_saved:'Your signal was too weak to save. Your entry is kept on this phone — tap Save again later.', draft_restored:'Restored an entry that hadn’t been saved.',
   v_free_q:'Video storage is full. To add this video, the {n} oldest videos (uploaded {from} – {to}, {mb} total) will be deleted.', v_free_other:'{n} video(s) of other athletes', v_free_yes:'Delete and upload', v_free_no:'Cancel', v_cancel:'Upload cancelled', v_changed:'Someone else just uploaded a video. Please try again.',
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
+  v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
   v_done_t:'Video uploaded!', v_done:['The athlete and coach can watch it anytime.','Thank you — this helps with practice reviews.'], v_need:'Choose a video first', v_too_big:'This phone couldn’t make the video smaller. Trim it and try again.',
@@ -1284,7 +1287,7 @@ function header(tabs){
     <button class="who whobtn" ${UI.student||UI.previewAs?'disabled':''} data-act="accounts" aria-label="${esc(t('ac_title'))}"><span class="avatar">${esc(m.short)}</span><span class="nm">${esc(m.name)}</span>${UI.student||UI.previewAs?'':'<span class="caret">▾</span>'}</button>
     ${UI.previewAs?'':`<button class="icon-btn" data-act="settings" aria-label="${t('settings')}" title="${t('settings')}">${ICON.gear}</button>
     ${UI.student?'':`<button class="icon-btn" data-act="logout" aria-label="${t('logout')}" title="${t('logout')}">${ICON.out}</button>`}`}
-  </div>${UI.student?`<div class="pv-bar st-bar"><span>${esc(I18N[UI.coachLang||'ja'].st_banner)}</span><button class="btn sm" data-act="exitstudent">${I18N[UI.coachLang||'ja'].st_exit}</button></div>`:''}${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
+  </div>${UI.student?`<div class="pv-bar st-bar"><span>${esc(I18N[UI.coachLang||'ja'].st_banner)}</span><button class="btn sm" data-act="exitstudent">${I18N[UI.coachLang||'ja'].st_exit}</button></div>`:''}${UI.previewAs?`<div class="pv-bar"><span>👀 ${esc(I18N[prefs(UI.session).lang].pv_banner.replace('{n}',m.name))}</span><button class="btn sm" data-act="exitpreview">${I18N[prefs(UI.session).lang].pv_exit}</button></div>`:''}<nav class="tabs" style="--tc:${tabs.length<=4?tabs.length:3}">${tabs.map(([v,l,badge])=>`<button class="tab" data-act="view" data-v="${v}" ${UI.view===v?'aria-current="page"':''}>${l}${badge?`<span class="dot">${badge}</span>`:''}</button>`).join('')}</nav></header>`;
 }
 
 /* ---------- 選手の画面 ---------- */
@@ -1304,11 +1307,13 @@ function pushNag(){
 function athleteView(){
   const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
   const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
-  const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['note',t('t_note')]];
+  const newV=(ST.videos||[]).filter(v=>v.athlete_id===m.id&&v.uploaded_by!==m.id&&v.created_at>=new Date(Date.now()-7*864e5).toISOString()).length;
+  const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['v',t('t_videos'),UI.view==='v'?0:newV],['note',t('t_note')]];
   let body='';
   if(UI.view==='today')body=athToday();
   if(UI.view==='log')body=`<div class="stack">${runsCard(m.id,L,!UI.previewAs)}<div class="grid2"><div>${healthCharts(m.id,L,'full')}</div>${entryList(m.id,L,14,false)}</div></div>`;
   if(UI.view==='x')body=extraView(m.id,L,!UI.previewAs);
+  if(UI.view==='v')body=videosCard(m.id,L,true);
   if(UI.view==='q')body=questions(m.id,L,false);
   if(UI.view==='note')body=athNote();
   return header(tabs)+`<main>${pushNag()}${UI.view!=='note'?`<div class="stack" style="margin-bottom:16px">${goalsBanner(m.id,L,!UI.previewAs)}${UI.view==='today'?monthCard(m.id,L):''}</div>`:''}${body}</main>`;
@@ -1322,7 +1327,7 @@ function athToday(){
   const lvl=e.pain[0]?.level||1, att=E(m.id,day)?attOf(e):'present';
   return `<div class="stack">
   <div class="hello"><div class="sub">${fd(day,L)}${m.cls?' · '+esc(m.cls):''}</div><h1>${T.hello.replace('{n}',esc(m.name.split(' ')[L==='ja'?1:0]||m.name))}<br><span class="grad-text">${isY?T.yday_q:T.today_q}</span></h1></div>
-  ${(()=>{const n=(ST.videos||[]).filter(v=>v.athlete_id===m.id&&v.uploaded_by!==m.id&&v.created_at>=new Date(Date.now()-7*864e5).toISOString()).length;return n?`<div class="card row" style="justify-content:space-between"><span>${esc(T.v_new.replace('{n}',n))}</span><button class="btn sm" data-act="view" data-v="note">${T.v_see}</button></div>`:''})()}
+  ${(()=>{const n=(ST.videos||[]).filter(v=>v.athlete_id===m.id&&v.uploaded_by!==m.id&&v.created_at>=new Date(Date.now()-7*864e5).toISOString()).length;return n?`<div class="card row" style="justify-content:space-between"><span>${esc(T.v_new.replace('{n}',n))}</span><button class="btn sm" data-act="view" data-v="v">${T.v_see}</button></div>`:''})()}
   ${streakCard(m.id,L,false)}
   ${needY?`<div class="card row" style="justify-content:space-between"><span class="small">📝 ${esc(T.yday_nudge.replace('{d}',fd(Y,L)))}</span><button class="btn sm" data-act="eday" data-v="${Y}">${T.yday_btn}</button></div>`:''}
   ${E(m.id,day)?.head?.length?`<div class="card alert" role="alert"><h2>${T.head}</h2><div>${T.head_saved}</div></div>`:''}
@@ -1425,7 +1430,6 @@ function athNote(){
   const L=lang(), T=I18N[L], m=me(), ym=curYm(), g=ST.goals[m.id+'|'+ym]||{items:['','',''],review:''};
   return `<div class="stack">
     ${viewersNote(m.id,L)}
-    ${videosCard(m.id,L,true)}
     ${eventsCard(m.id,L)}
     <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
       ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
@@ -1462,12 +1466,15 @@ function guardianView(){
 /* ---------- コーチの画面 ---------- */
 function coachView(){
   const L=lang(), un=ST.threads.filter(unanswered).length;
-  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],['q',t('t_q'),un],['print',t('t_print')],['members',t('t_members')]];
+  let vSeen=0;try{vSeen=+localStorage.getItem('judo-vseen-'+UI.session)||0}catch(e){}
+  const newV=UI.view==='vids'?0:(ST.videos||[]).filter(v=>v.uploaded_by!==UI.session&&tms(v.created_at)>Math.max(vSeen,Date.now()-14*864e5)).length;
+  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],['q',t('t_q'),un],['vids',t('t_videos'),newV],['print',t('t_print')],['members',t('t_members')]];
   let body='';
   if(UI.view==='team')body=UI.sel?coachDetail(UI.sel):coachTeam();
   if(UI.view==='q')body=questions(null,L,true);
   if(UI.view==='print')body=coachPrint();
   if(UI.view==='members')body=membersView();
+  if(UI.view==='vids'){try{localStorage.setItem('judo-vseen-'+UI.session,String(Date.now()))}catch(e){}body=`<div class="stack"><div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${t('t_videos')}</h1></div>${videosCard(null,L,true)}</div>`}
   return header(tabs)+`<main>${pushNag()}${body}</main>`;
 }
 /* ---------- コーチの未読：前回その選手の画面を開いてから、選手が書いたもの（コーチだけの記録。選手には何も届かない） ---------- */
@@ -1706,9 +1713,10 @@ async function hydrateVideos(){const els=[...document.querySelectorAll('[data-vs
   const urls=await vSigned(els.map(e=>e.dataset.vsrc));els.forEach((e,i)=>{if(urls[i])e.src=urls[i]})}
 const fmtDur=(s,T)=>{s=Math.round(s||0);return T.v_min.replace('{m}',Math.floor(s/60)).replace('{s}',pad(s%60))};
 function videosCard(aid,L,canUpload){
-  const T=I18N[L], vs=(ST.videos||[]).filter(v=>v.athlete_id===aid), isCoach=acct(UI.session)?.role==='coach'&&!UI.previewAs;
+  const T=I18N[L], team=aid==null, fa=team?UI.vFilter||'':aid, vs=(ST.videos||[]).filter(v=>team?(!fa||v.athlete_id===fa):v.athlete_id===aid).slice().sort((x,y)=>y.created_at.localeCompare(x.created_at)), isCoach=acct(UI.session)?.role==='coach'&&!UI.previewAs;
   const busy=!!UI.vup;
-  const form=canUpload&&!UI.previewAs?`<form class="stack vform" data-form="video" data-aid="${aid}">
+  const form=canUpload&&!UI.previewAs?`<form class="stack vform" data-form="video" data-aid="${team?'':aid}">
+    ${team?`<div class="field"><label for="v-aid">${T.v_for}</label><select class="inp" id="v-aid" name="aid" required><option value="">${T.v_pick}</option>${ATH.map(a=>`<option value="${a.id}" ${fa===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div>`:''}
     <div class="field"><label for="v-file" class="lbl">${T.v_file}</label><input class="inp" id="v-file" name="file" type="file" accept="video/*" ${busy?'disabled':''}></div>
     <div class="xmeta"><div class="field"><label for="v-day">${T.v_day}</label><input class="inp" id="v-day" name="day" type="date" max="${TODAY}" value="${TODAY}"></div>
       <div class="field"><label for="v-name">${T.v_name.replace(/（.*|\(.*/,'')}</label><input class="inp" id="v-name" name="title" maxlength="100" placeholder="${esc(T.v_name)}"></div></div>
@@ -1719,12 +1727,13 @@ function videosCard(aid,L,canUpload){
       return `<div class="vitem">
         ${playing?`<video class="vplayer" controls playsinline preload="metadata" data-vsrc="${esc(v.path)}"></video>`
           :`<button class="vthumb" data-act="vplay" data-id="${v.id}" aria-label="${esc(T.v_see)}">${v.thumb?`<img alt="" data-vsrc="${esc(v.thumb)}">`:''}<span class="vplay">▶</span>${v.duration?`<span class="vdur">${fmtDur(v.duration,T)}</span>`:''}</button>`}
-        <div class="vmeta"><b>${esc(v.title||fd(v.day,L))}</b>${ST.vdoom?.has(v.id)?`<div><span class="pill warn" title="${esc(T.v_soon_help)}">${T.v_soon}</span><div class="small muted">${T.v_soon_help}</div></div>`:''}<div class="small muted">${fd(v.day,L)}${up?' · '+esc(T.v_by.replace('{n}',up.name)):''} · ${mb(v.bytes)}</div>
+        <div class="vmeta">${team?`<span class="pill acc" style="justify-self:start">${esc(acct(v.athlete_id)?.name||'')}</span>`:''}<b>${esc(v.title||fd(v.day,L))}</b>${ST.vdoom?.has(v.id)?`<div><span class="pill warn" title="${esc(T.v_soon_help)}">${T.v_soon}</span><div class="small muted">${T.v_soon_help}</div></div>`:''}<div class="small muted">${fd(v.day,L)}${up?' · '+esc(T.v_by.replace('{n}',up.name)):''} · ${mb(v.bytes)}</div>
           <div class="row" style="gap:12px">${playing?'':`<button class="linkish" data-act="vplay" data-id="${v.id}">▶ ${T.v_see}</button>`}<button class="linkish" data-act="vdl" data-id="${v.id}">⬇ ${T.v_dl}</button>
           ${(mine||isCoach)&&!UI.previewAs?(UI.confirmRemove==='v'+v.id?`<span class="small" style="color:var(--bad)">${T.v_del_q}</span><button class="btn sm danger-btn" data-act="vdel" data-id="${v.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="v${v.id}">${T.v_del}</button>`):''}</div></div></div>`}).join('')}</div>`
     :`<div class="small muted">${canUpload?T.v_none:T.v_none_ro}</div>`;
   const used=(ST.videos||[]).reduce((a,v)=>a+(+v.bytes||0),0);
-  return `<div class="card vcard"><h2>🎬 ${T.v_title}</h2><div class="small muted" style="margin:-6px 0 10px">${T.v_who}${isCoach?' · '+T.v_usage.replace('{u}',mb(used)).replace('{t}','1GB'):''}</div>${isCoach&&used>=V_TOTAL*.8?`<div class="small" style="color:var(--warn);margin:-4px 0 10px">${T.v_near}</div>`:''}${form?`<details class="vadd" ${vs.length?'':'open'} ${busy?'open':''}><summary class="btn ghost sm">＋ ${T.v_add}</summary>${form}</details>`:''}${list}</div>`;
+  const chips=team&&ATH.length>1?`<div class="chips" style="margin-bottom:12px">${[['',T.v_all],...ATH.map(a=>[a.id,a.name])].map(([id,n])=>`<button type="button" class="xchip ${fa===id?'on':''}" data-act="vfilter" data-id="${id}" aria-pressed="${fa===id}">${esc(n)}</button>`).join('')}</div>`:'';
+  return `<div class="card vcard"><h2>🎬 ${T.v_title}</h2><div class="small muted" style="margin:-6px 0 10px">${team?T.v_team_help+' ':''}${T.v_who}${isCoach?' · '+T.v_usage.replace('{u}',mb(used)).replace('{t}','1GB'):''}</div>${isCoach&&used>=V_TOTAL*.8?`<div class="small" style="color:var(--warn);margin:-4px 0 10px">${T.v_near}</div>`:''}${form?`<details class="vadd" ${vs.length?'':'open'} ${busy?'open':''}><summary class="btn ghost sm">＋ ${T.v_add}</summary>${form}</details>`:''}${chips}${list}</div>`;
 }
 
 /* ---------- エクストラトレーニング（練習以外。日付を選んで、1日に何回でも） ---------- */
@@ -2170,6 +2179,7 @@ document.addEventListener('click',ev=>{
   else if(a==='vplay'){UI.vplay=el.dataset.id;render();setTimeout(()=>document.querySelector('.vplayer')?.play?.().catch(()=>{}),400)}
   else if(a==='vdl'){const v=(ST.videos||[]).find(x=>x.id===el.dataset.id);if(!v)return;const name=(v.title||v.day).replace(/[\\/:*?"<>|]/g,'_')+'.'+v.path.split('.').pop();
     sb.storage.from('videos').createSignedUrl(v.path,3600,{download:name}).then(({data,error})=>{if(error)throw error;const a2=document.createElement('a');a2.href=data.signedUrl;a2.rel='noopener';document.body.appendChild(a2);a2.click();a2.remove()}).catch(e=>toast(errText(e)))}
+  else if(a==='vfilter'){UI.vFilter=el.dataset.id||'';UI.vplay=null;render()}
   else if(a==='vfree'){UI.vResolve&&UI.vResolve(el.dataset.v==='1')}
   else if(a==='vdel'){const id=el.dataset.id;UI.confirmRemove=null;run(async()=>{await deleteVideo(id);if(UI.vplay===id)UI.vplay=null},t('v_deleted'))}
   else if(a==='mtab'){UI.mtab=el.dataset.v;UI.mOpen=null;render()}
@@ -2310,7 +2320,8 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='extra'){const d=xFormData(f), id=f.dataset.id||null;if(!d.items.length){toast(t('x_need'));UI.pressed=null;f.querySelector('[name=xn]')?.focus();return}
     run(async()=>{await saveExtra(d,id);UI.xEdit=null;UI.xDraft=null;UI.xDay=d.day;window.scrollTo(0,0)},()=>id?t('ed_done'):{title:t('ch_x_t'),msg:pick1(t('ch_x')),sub:d.items.map(i=>i.n).join(t('x_sep')),actions:[[t('done_log'),'donego','log']]})}
   if(f.dataset.form==='video'){const file=f.querySelector('[name=file]').files?.[0];if(!file){toast(t('v_need'));UI.pressed=null;return}
-    const aid=f.dataset.aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
+    const aid=f.dataset.aid||fdt.get('aid');if(!aid){toast(t('v_pick'));UI.pressed=null;return}
+    const _a=aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
     UI.vFreed=0;run(()=>uploadVideo(aid,file,day,title),()=>({title:t('v_done_t'),msg:pick1(t('v_done')),sub:UI.vFreed?t('v_freed').replace('{n}',UI.vFreed):''}));return}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
