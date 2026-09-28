@@ -144,9 +144,9 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .card.alert{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
 .card.alert h2{color:var(--bad)}
 .seen{margin-top:6px;font-size:12px;font-weight:700;color:var(--good)}
-.evcard{display:grid;gap:8px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--panel)),color-mix(in srgb,var(--acc-2) 12%,var(--panel)))}
+.evcard{display:grid;gap:6px;padding:12px 14px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--panel)),color-mix(in srgb,var(--acc-2) 12%,var(--panel)))}
 .evcard .k{font-size:13px;font-weight:700;color:var(--dim)}
-.evcard .big{font-size:18px;font-weight:600} .evcard .big b{font-size:40px;line-height:1;font-family:var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:2px}
+.evcard .big{font-size:15px;font-weight:600} .evcard .big b{font-size:28px;line-height:1;font-family:var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:2px}
 .evrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)} .evrow:first-child{border-top:0} .evrow>div{flex:1} .evrow.past{opacity:.55}
 .evform{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 @media (max-width:520px){ .crow{grid-template-columns:1fr} .ends{grid-column:1} .rpe{grid-template-columns:repeat(6,1fr)} }
@@ -220,6 +220,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .sheet-ui{width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--glass);border:1px solid var(--glass-bd);border-radius:24px;box-shadow:var(--shadow),var(--hi);padding:20px;
   -webkit-backdrop-filter:blur(34px) saturate(1.6);backdrop-filter:blur(34px) saturate(1.6)}
 .sheet-ui h3{margin:0 0 14px;font-size:18px}
+.sheet-head{position:sticky;top:-20px;z-index:2;margin:-20px -20px 14px;padding:14px 20px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);border-radius:24px 24px 0 0}.sheet-head h3{margin:0}
 .opt-group{display:grid;gap:8px;margin-bottom:18px}
 .segbar{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
 .segbar button{flex:1;border:0;background:none;padding:7px 8px;border-radius:9px;font-size:14px;font-weight:600;color:var(--dim);cursor:pointer}
@@ -329,8 +330,9 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .goalbar{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 18%,var(--panel)),color-mix(in srgb,var(--acc-2) 12%,var(--panel)));border-color:color-mix(in srgb,var(--accent) 35%,var(--glass-bd))}
 .goalbar .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .goalbar .gk{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--accent)}
-.goalbar ol{margin:6px 0 0;padding-left:1.4em;display:grid;gap:2px;font-size:18px;font-weight:700;line-height:1.45}
-.goalbar ol li::marker{color:var(--accent);font-family:var(--mono);font-size:15px}
+.goalbar{padding:12px 14px}
+.goalbar ol{margin:4px 0 0;padding-left:1.4em;display:grid;gap:1px;font-size:15px;font-weight:700;line-height:1.45}
+.goalbar ol li::marker{color:var(--accent);font-family:var(--mono);font-size:13px}
 .goalbar.empty{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
 .evitem{border-top:1px solid var(--line)} .evitem:first-child{border-top:0} .evitem .evrow{border-top:0}
 .evmore{display:grid;gap:8px;padding:0 0 12px}
@@ -432,14 +434,15 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .utog button[aria-pressed="true"]{background:var(--accent);color:#fff}
 .stamp{margin-top:6px;font-size:12px;color:var(--faint);font-family:var(--mono)}
 .savedbar .stamp{color:inherit;opacity:.8;margin-top:2px}
-.streak{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;background:linear-gradient(135deg,color-mix(in srgb,#ff9a3c 14%,var(--panel)),var(--panel))}
-.stk-main{display:flex;gap:12px;align-items:center;min-width:0} .stk-fire{font-size:34px;line-height:1} .stk-t{font-size:20px;font-weight:800;line-height:1.25}
+.streak{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px;background:linear-gradient(135deg,color-mix(in srgb,#ff9a3c 14%,var(--panel)),var(--panel))}
+.stk-main{display:flex;gap:10px;align-items:center;min-width:0} .stk-fire{font-size:24px;line-height:1} .stk-t{font-size:16px;font-weight:800;line-height:1.3}
+.streak .small{font-size:12px}
 .stk-best{font-size:12px;font-weight:700;color:var(--dim);margin-top:2px}
-.stk-week{display:grid;grid-template-columns:repeat(7,26px);gap:5px}
+.stk-week{display:grid;grid-template-columns:repeat(7,22px);gap:4px}
 .stk-d{display:grid;justify-items:center;gap:2px;font-size:10px;color:var(--faint);font-weight:700}
-.stk-d i{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
+.stk-d i{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
 .stk-d.on i{background:var(--grad);border-color:transparent} .stk-d.today i{outline:2px solid var(--accent);outline-offset:1px}
-@media (max-width:520px){.streak{grid-template-columns:1fr}.stk-week{justify-content:space-between;grid-template-columns:repeat(7,minmax(0,32px))}}
+@media (max-width:520px){.streak{grid-template-columns:1fr;gap:8px}.stk-week{justify-content:space-between;grid-template-columns:repeat(7,minmax(0,28px))}}
 .nag{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;border-color:color-mix(in srgb,var(--warn) 45%,var(--glass-bd));background:color-mix(in srgb,var(--warn) 9%,var(--panel))}
 .savedbar{padding:10px 14px;border-radius:14px;background:var(--good-s);color:var(--good);font-size:14px;font-weight:600}
 .done{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;background:rgba(10,12,20,.25);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadein .15s ease-out}
@@ -500,6 +503,7 @@ const I18N = {
   v_free_q:'保存容量がいっぱいです。この動画を入れるために、いちばん古い動画 {n}本（{from}〜{to}に送られたもの・合計{mb}）を削除します。', v_free_other:'ほかの選手の動画 {n}本', v_free_yes:'削除して保存', v_free_no:'やめる', v_cancel:'アップロードをやめました', v_changed:'ほかの人が動画を送ったため、もう一度お試しください。',
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
+  prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
   v_done_t:'動画をアップロードしました！', v_done:['選手とコーチがいつでも見られます。','ありがとうございます。練習の振り返りに役立てます。'], v_need:'動画を選んでください', v_too_big:'この動画はこのスマホでは小さくできませんでした。短く切ってから、もう一度お試しください。',
@@ -631,6 +635,7 @@ const I18N = {
   v_free_q:'Video storage is full. To add this video, the {n} oldest videos (uploaded {from} – {to}, {mb} total) will be deleted.', v_free_other:'{n} video(s) of other athletes', v_free_yes:'Delete and upload', v_free_no:'Cancel', v_cancel:'Upload cancelled', v_changed:'Someone else just uploaded a video. Please try again.',
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
+  prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
   v_done_t:'Video uploaded!', v_done:['The athlete and coach can watch it anytime.','Thank you — this helps with practice reviews.'], v_need:'Choose a video first', v_too_big:'This phone couldn’t make the video smaller. Trim it and try again.',
@@ -1890,8 +1895,15 @@ function teamReport(ym,L){
 /* ---------- 設定パネル ---------- */
 function settingsView(){
   const p=prefs(UI.session), L=lang(), T=I18N[L];
+  const me0=acct(UI.session);
   return `<div class="scrim noprint" data-act="closeset"><div class="sheet-ui" role="dialog" aria-modal="true" aria-label="${T.settings}" data-stop>
-    <h3>${T.settings}</h3>
+    <div class="sheet-head"><h3>${T.settings}</h3><button class="btn ghost sm" data-act="closeset">✕ ${T.close}</button></div>
+    ${UI.student?'':`<form class="opt-group" data-form="profile"><span class="lbl">${T.prof_title}</span>
+      <div class="field"><label for="pf-name" class="small muted">${T.prof_name}</label><input class="inp" id="pf-name" name="name" maxlength="40" required value="${esc(me0.name)}"></div>
+      ${me0.role==='athlete'?`<div class="xmeta"><div class="field"><label for="pf-cls" class="small muted">${T.wclass}</label><input class="inp" id="pf-cls" name="wclass" maxlength="20" placeholder="${esc(T.wclass_ph)}" value="${esc(me0.cls)}"></div>
+        <div class="field"><label for="pf-lim" class="small muted">${T.wlimit.replace('{u}',WU())}</label><input class="inp mono" id="pf-lim" name="wlimit" type="number" inputmode="decimal" step="0.1" value="${me0.limit?fmtW(me0.limit,WU(),false):''}"></div></div>
+        <div class="small muted">${T.prof_help}</div>`:''}
+      <div><button class="btn sm" type="submit">${T.prof_save}</button></div></form>`}
     <div class="opt-group"><span class="lbl">${T.lang}</span><div class="segbar">${[['ja','日本語'],['en','English']].map(([v,l])=>`<button data-act="pref" data-k="lang" data-v="${v}" aria-pressed="${p.lang===v}">${l}</button>`).join('')}</div></div>
     <div class="opt-group"><span class="lbl">${T.color}</span><div class="swatches">
       ${Object.entries(ACCENTS).map(([k,a])=>`<button class="sw" data-act="pref" data-k="accent" data-v="${k}" aria-pressed="${p.accent===k}"><i style="background:linear-gradient(135deg,${a.l},${a.g2})"></i>${a[L]}</button>`).join('')}
@@ -2202,7 +2214,8 @@ document.addEventListener('click',ev=>{
   else if(a==='xdel'){if(!confirm(t('x_del_q'))){UI.pressed=null;return}const id=el.dataset.id;run(async()=>{await delExtra(id);if(UI.xEdit===id)UI.xEdit=null},t('x_deleted'))}
   else if(a==='openbook'){UI.view='note';UI.pYm=el.dataset.ym;render();window.scrollTo(0,0)}
   else if(a==='gpw'){UI.gpw=el.dataset.id;render()}
-  else if(a==='eday'){UI.eday=el.dataset.v;UI.draft=E(UI.session,UI.eday)?null:loadDraft();render();window.scrollTo(0,0)}
+  else if(a==='eday'){const top=el.getBoundingClientRect().top, inForm=!!el.closest('.segbar');UI.eday=el.dataset.v;UI.draft=E(UI.session,UI.eday)?null:loadDraft();render();
+    const nb=inForm&&document.querySelector(`.segbar [data-act=eday][data-v="${UI.eday}"]`);if(nb)window.scrollBy(0,nb.getBoundingClientRect().top-top);else if(!inForm)document.getElementById('today-form')?.scrollIntoView({block:'start'})}   // 押した場所から動かない
   else if(a==='att'){const v=el.dataset.v;document.getElementById('f-att').value=v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));document.getElementById('abs-fields').hidden=v!=='absent';document.getElementById('prac-fields').hidden=v==='absent'||v==='off';stashDraft()}
   else if(a==='lvl'){document.getElementById('f-level').value=el.dataset.v;el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===el));stashDraft()}
   else if(a==='print'){window.print()}
@@ -2221,7 +2234,7 @@ document.addEventListener('change',ev=>{
   else if(el.dataset.act==='pkind'){UI.pKind=el.value;render()}
   else if(el.dataset.act==='remind'){savePrefs({...prefs(UI.session),remind:el.value}).catch(e=>toast(errText(e)))}
   else if(el.id==='n-events'){savePrefs({...prefs(UI.session),events:el.checked}).then(()=>toast(t('ed_done'))).catch(e=>toast(errText(e)))}
-  else if(el.id==='custom-color'){savePrefs({...prefs(UI.session),accent:'custom',custom:el.value}).catch(e=>toast(errText(e)))}
+  else if(el.id==='custom-color'){const p={...prefs(UI.session),accent:'custom',custom:el.value};ST.prefs[UI.session]=p;applyTheme();document.querySelectorAll('.swatches .sw').forEach(b=>b.setAttribute('aria-pressed',b.contains(el)));savePrefs(p,true).catch(e=>toast(errText(e)))}   // 描き直すと色選びが閉じてしまうので、画面は作り直さない
   else if(el.id==='jn-minor'){document.getElementById('jn-guard').hidden=!el.checked;UI.join={...(UI.join||{}),minor:el.checked}}
   else if(el.name==='painNone'||el.name==='pain'){   // 「痛みや不調はなし」と部位は、どちらか一方だけ
     const f=el.form, parts=[...f.querySelectorAll('input[name=pain]')], none=f.querySelector('#f-pain-none');
@@ -2234,7 +2247,7 @@ document.addEventListener('change',ev=>{
   if(el.closest('#today-form'))stashDraft();
   if(el.closest('#x-form'))stashX();
 });
-document.addEventListener('input',ev=>{if(ev.target.closest('#today-form'))stashDraft();if(ev.target.closest('#x-form'))stashX()});
+document.addEventListener('input',ev=>{if(ev.target.id==='custom-color'){ST.prefs[UI.session]={...prefs(UI.session),accent:'custom',custom:ev.target.value};applyTheme();return}if(ev.target.closest('#today-form'))stashDraft();if(ev.target.closest('#x-form'))stashX()});
 function stashX(){const f=document.getElementById('x-form');if(!f||f.dataset.id)return;const d=xFormData(f);UI.xDay=d.day;UI.xDraft={...d,items:[...new FormData(f).getAll('xn')].map((n,i)=>({n,a:new FormData(f).getAll('xa')[i]||''}))}}
 function stashDraft(){const f=document.getElementById('today-form');if(!f)return;clearTimeout(stashDraft.t);stashDraft.t=setTimeout(()=>saveDraft(formToEntry(new FormData(f))),400)}
 
@@ -2323,6 +2336,9 @@ document.addEventListener('submit',ev=>{
     const aid=f.dataset.aid||fdt.get('aid');if(!aid){toast(t('v_pick'));UI.pressed=null;return}
     const _a=aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
     UI.vFreed=0;run(()=>uploadVideo(aid,file,day,title),()=>({title:t('v_done_t'),msg:pick1(t('v_done')),sub:UI.vFreed?t('v_freed').replace('{n}',UI.vFreed):''}));return}
+  if(f.dataset.form==='profile'){const name=(fdt.get('name')||'').trim();if(!name){toast(t('prof_need'));UI.pressed=null;return}
+    const row={display_name:name};if(acct(UI.session).role==='athlete'){row.weight_class=(fdt.get('wclass')||'').trim();row.weight_limit=wKg(fdt.get('wlimit'))}
+    run(async()=>{must(await sb.from('profiles').update(row).eq('id',UI.session));await loadAll()},t('prof_saved'));return}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
