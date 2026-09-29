@@ -1497,12 +1497,14 @@ function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
   mt.addEventListener('input',()=>{ta.value=mt.value;ta.dispatchEvent(new Event('input',{bubbles:true}));cnt()});
   mt.focus();const n=mt.value.length;try{mt.setSelectionRange(n,n)}catch(e){}
 }
-function memoClose(ok){if(!MEMO)return;const {el,ta,orig,fit,y}=MEMO;MEMO=null;
-  if(!ok&&ta.value!==orig){ta.value=orig;ta.dispatchEvent(new Event('input',{bubbles:true}))}
+function memoClose(ok){if(!MEMO)return;const {el,ta:ta0,orig,fit,y}=MEMO, text=el.querySelector('.memo-ta').value;MEMO=null;
+  const ta=ta0.isConnected?ta0:(ta0.id&&document.getElementById(ta0.id))||ta0;   // 途中で画面が作り直されていても、今ある欄に入れる
+  const want=ok?text:orig;if(ta.value!==want){ta.value=want;ta.dispatchEvent(new Event('input',{bubbles:true}))}
   window.visualViewport?.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('scroll',fit);
   el.remove();document.documentElement.classList.remove('memo-open');document.body.style.top='';window.scrollTo(0,y);
   if(ok&&ta.classList.contains('cw-ta')){const f=ta.closest('form');if(ta.value.trim())cwMode(f,true);else cwGrow(ta)}   // コメント・返信は、そのまま「送る前に確認」へ
   else if(ta.classList.contains('cw-ta'))cwGrow(ta);
+  if(UI.pendingRender){UI.pendingRender=false;renderKeep()}   // 閉じてから、待っていた作り直しをする（書いた文章は引き継ぐ）
 }
 
 /* ---------- 書く欄：打っている間は大きく広がって全文が見える → 「完了」で確認 → 「送信」か「直す」 ---------- */
@@ -2167,6 +2169,7 @@ function membersView(){
 /* ---------- 描画 ---------- */
 const app=document.getElementById('app');
 function render(){
+  if(MEMO){UI.pendingRender=true;return}   // 書く画面を開いている間は、裏の画面を作り直さない（書いた文章の行き先が消えないように）
   applyTheme();
   if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;return}
   if(!UI.session||!me()){app.innerHTML=loginView();return}
@@ -2216,7 +2219,7 @@ async function afterSignIn(user){
   UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
   if(me().role==='guardian')UI.pAid=subject();
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
-  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); window.scrollTo(0,0); refreshPushState().then(()=>render());
+  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); window.scrollTo(0,0); refreshPushState().then(()=>renderKeep());
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
@@ -2226,7 +2229,22 @@ async function signOut(){   // 今のアカウントだけをこの端末から�
   for(const r of reg){const c=clientFor(r.key),{data}=await c.auth.getSession();if(data.session&&r.role!=='athlete'){await activate(r.key,data.session.user);return}}
   setCurKey('judo-auth-none'); sb=clientFor('judo-auth-none'); render();
 }
-async function refreshData(){if(!me()||UI.vup||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))render()}catch(e){}}
+/* 裏での作り直し（新しいデータの読み込みなど）：まだ保存していない入力（文章・数字・選んだボタン）をそのまま引き継ぐ */
+function renderKeep(){
+  if(MEMO){UI.pendingRender=true;return}
+  const keep=[];document.querySelectorAll('#app form textarea[id], #app form input[id]').forEach(el=>{const tp=el.type;
+    if(tp==='file'||tp==='hidden')return;
+    if(tp==='radio'||tp==='checkbox'){if(el.checked!==el.defaultChecked)keep.push([el.form?.id||el.form?.dataset.form||'',el.name,el.value,el.checked,true])}
+    else if(el.value!==el.defaultValue)keep.push([el.id,null,el.value,null,false])});
+  document.querySelectorAll('#app form input[type=radio]:not([id]), #app form input[type=checkbox]:not([id])').forEach(el=>{if(el.checked!==el.defaultChecked)keep.push([el.form?.id||el.form?.dataset.form||'',el.name,el.value,el.checked,true])});
+  const hid={};document.querySelectorAll('#app #today-form input[type=hidden][id]').forEach(el=>{hid[el.id]=el.value});   // 隠し欄は「変わったか」が分からないので、いつも引き継ぐ
+  render();
+  for(const [a,name,v,ch,box] of keep){
+    if(!box){const el=document.getElementById(a);if(el&&el.value!==v){el.value=v;if(el.classList.contains('cw-ta'))cwGrow(el)}}
+    else{const f=document.getElementById(a)||document.querySelector(`#app form[data-form="${a}"]`);const el=f&&[...f.querySelectorAll('input')].find(x=>x.name===name&&x.value===v);if(el)el.checked=ch}}
+  for(const id in hid){const act=id==='f-att'?'att':id==='f-level'?'lvl':null, b=act&&document.querySelector(`#today-form [data-act=${act}][data-v="${hid[id]}"]`);if(b)b.click();else{const el=document.getElementById(id);if(el)el.value=hid[id]}}   // 出欠・痛みの程度のボタンも元どおりに
+}
+async function refreshData(){if(!me()||UI.vup||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))renderKeep()}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
 
 /* ---------- 操作 ---------- */
