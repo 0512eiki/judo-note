@@ -456,6 +456,14 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .memo-x{border:0;background:none;color:var(--accent);font:inherit;font-size:calc(16*var(--u));cursor:pointer;padding:6px 2px}
 .memo-ta{flex:1;width:100%;border:0;outline:0;resize:none;background:transparent;color:var(--text);font:inherit;font-size:calc(17*var(--u));line-height:1.7;padding:16px 18px}
 .memo-count{padding:6px 18px calc(8px + env(safe-area-inset-bottom,0px));font-size:calc(12*var(--u));color:var(--faint);text-align:right}
+.memo-ctx{flex:0 1 auto;max-height:42%;display:flex;flex-direction:column;border-bottom:1px solid var(--line);background:var(--tint)}
+.memo-ctx .mc-body{overflow:auto;padding:10px 16px 4px;display:grid;gap:6px;overscroll-behavior:contain}
+.memo-ctx.hide .mc-body{display:none}
+.mc-toggle{align-self:flex-end;padding:4px 16px 6px;font-size:calc(12*var(--u))}
+.mc-title{font-size:calc(12*var(--u));font-weight:700;color:var(--dim)}
+.mc-facts{display:flex;flex-wrap:wrap;gap:4px}
+.mc-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:calc(15*var(--u));line-height:1.6}
+.mc-msg{padding:6px 10px;border-radius:10px;background:var(--panel)}.mc-msg.me{background:transparent;border:1px dashed var(--line2)}
 html.memo-open,html.memo-open body{overflow:hidden;overscroll-behavior:none;height:100%}html.memo-open body{position:fixed;left:0;right:0;width:100%}
 .memo,.memo-ta{overscroll-behavior:contain}
 textarea[data-memo]{cursor:text}
@@ -541,7 +549,7 @@ const I18N = {
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
   cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cal_title:'カレンダー', cal_help:'日にちを押すと、その日の記録が見られます。', cal_prev:'前の月', cal_next:'次の月', cal_none:'この日の記録はありません。', cal_run:'🏃 ランニング {t}', cal_match:'🥋 試合：{n}', cal_lg:{good:'よい',mid:'ふつう',low:'低め',abs:'欠席・休み'}, cal_marks:['💪 エクストラ','🏃 ランニング','🥋 試合','💬 コメント'],
-  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', memo_chars:'{n}文字',
+  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
   prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
@@ -676,7 +684,7 @@ const I18N = {
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
   cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cal_title:'Calendar', cal_help:'Tap a day to see what you logged.', cal_prev:'Previous month', cal_next:'Next month', cal_none:'Nothing logged on this day.', cal_run:'🏃 Run {t}', cal_match:'🥋 Match: {n}', cal_lg:{good:'Good',mid:'OK',low:'Low',abs:'Absent / off'}, cal_marks:['💪 Extra','🏃 Run','🥋 Match','💬 Comment'],
-  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', memo_chars:'{n} characters',
+  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
   prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
@@ -1495,14 +1503,28 @@ function entryList(aid,L,n,coach){
 const memoOn=()=>matchMedia('(pointer: coarse)').matches||innerWidth<=760;
 function memoPrep(){if(!memoOn())return;document.querySelectorAll('#app textarea:not(.memo-ta)').forEach(ta=>{if(ta.dataset.memo)return;ta.dataset.memo='1';ta.readOnly=true;ta.dataset.act='memo-open'})}
 let MEMO=null;
+function memoContext(ta){   // コーチが書くとき：上に選手が書いた内容を出す
+  if(acct(UI.session)?.role!=='coach'||UI.previewAs)return '';
+  const f=ta.closest('form'), L=lang(), T=I18N[L];if(!f)return '';
+  if(f.dataset.form==='comment'||f.dataset.form==='editcmt'){const aid=f.dataset.aid,d=f.dataset.d,e=E(aid,d),a=acct(aid);if(!e)return '';
+    const s=score(e), facts=[e.min?`${e.min}${T.min} · ${T.rpe} ${e.rpe}`:attTxt(e,T)||T.rest, s!=null?`${T.score} ${s}${T.of25}`:'', ...e.pain.map(p=>`${ptxt(p,T)}・${T.lv[p.level]}`), ...(e.head||[]).map(k=>'⚠ '+T.hs[k])].filter(Boolean);
+    return `<div class="mc-title">${esc(T.mc_note.replace('{n}',a?.name||'').replace('{d}',fd(d,L)))}</div><div class="mc-facts">${facts.map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div>
+      <div class="mc-text">${e.note?esc(e.note):`<span class="muted">${T.mc_none}</span>`}</div>`}
+  if(f.dataset.form==='reply'){const th=ST.threads.find(x=>x.id===f.dataset.id);if(!th)return '';const a=acct(th.aid);
+    const msgs=[{from:'athlete',text:th.text,date:th.date},...th.replies].slice(-4);
+    return `<div class="mc-title">${esc(T.mc_q.replace('{n}',a?.name||''))}</div>${msgs.map(m=>`<div class="mc-msg ${m.from==='coach'?'me':''}"><span class="small muted">${m.from==='coach'?T.coach:esc(a?.name||'')} · ${fd(m.date,L)}</span><div class="mc-text">${esc(m.text)}</div></div>`).join('')}`}
+  return '';
+}
 function memoLabel(ta){const id=ta.id, lb=id&&document.querySelector(`label[for="${id}"]`);return (lb?.textContent||ta.placeholder||'').trim().slice(0,40)}
 function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
   const el=document.createElement('div');el.className='memo';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');
+  const ctx=memoContext(ta);
   el.innerHTML=`<div class="memo-bar"><button type="button" class="memo-x" data-act="memo-cancel">${T.memo_cancel}</button><b>${esc(memoLabel(ta))}</b><button type="button" class="btn sm" data-act="memo-done">${T.memo_done}</button></div>
+    ${ctx?`<div class="memo-ctx"><div class="mc-body">${ctx}</div><button type="button" class="linkish mc-toggle" data-act="memo-ctx">${T.mc_hide}</button></div>`:''}
     <textarea class="memo-ta" ${ta.maxLength>0?`maxlength="${ta.maxLength}"`:''} placeholder="${esc(ta.placeholder||'')}"></textarea><div class="memo-count"></div>`;
   document.body.appendChild(el);const mt=el.querySelector('.memo-ta');mt.value=ta.value;
   const y=scrollY;MEMO={el,ta,orig:ta.value,y};document.documentElement.classList.add('memo-open');document.body.style.top=(-y)+'px';   // 後ろのページを固定（iPhoneは overflow:hidden だけでは動いてしまう）
-  el.addEventListener('touchmove',e=>{if(!e.target.closest('.memo-ta'))e.preventDefault()},{passive:false});
+  el.addEventListener('touchmove',e=>{if(!e.target.closest('.memo-ta,.mc-body'))e.preventDefault()},{passive:false});
   let raf=0;const fit=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const vv=window.visualViewport;if(vv){el.style.top=vv.offsetTop+'px';el.style.height=vv.height+'px'}})};MEMO.fit=fit;fit();
   window.visualViewport?.addEventListener('resize',fit);window.visualViewport?.addEventListener('scroll',fit);
   const cnt=()=>{el.querySelector('.memo-count').textContent=T.memo_chars.replace('{n}',mt.value.length)+(ta.maxLength>0?` / ${ta.maxLength}`:'')};cnt();
@@ -2366,6 +2388,7 @@ document.addEventListener('click',ev=>{
     if(open)sl.dataset.y=scrollY;railFit(el.closest('.crail'),true);if(!open&&sl.dataset.y!=null)window.scrollTo({top:+sl.dataset.y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
   else if(a==='memo-done'){memoClose(true)}
   else if(a==='memo-cancel'){memoClose(false)}
+  else if(a==='memo-ctx'){const c=el.closest('.memo-ctx'),hid=c.classList.toggle('hide');el.textContent=t(hid?'mc_show':'mc_hide');document.querySelector('.memo-ta')?.focus()}
   else if(a==='memo-open'){memoOpen(el)}
   else if(a==='vfilter'){UI.vFilter=el.dataset.id||'';UI.vplay=null;render()}
   else if(a==='vfree'){UI.vResolve&&UI.vResolve(el.dataset.v==='1')}
