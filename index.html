@@ -450,7 +450,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .ent-more{display:block;margin-top:8px;padding:6px 0}.ent-rest{display:contents}.ent-rest[hidden]{display:none}
 .cs-txt.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.cs-more{justify-self:start;padding:2px 0}
 .cs-cmt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border-radius:12px;padding:10px 12px;font-size:calc(15*var(--u));line-height:1.6}
-.memo{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:80;background:var(--base);box-shadow:0 0 0 100vmax var(--base);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.memo{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:80;will-change:transform;background:var(--base);box-shadow:0 0 0 100vmax var(--base);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 .memo-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .memo-bar b{flex:1;text-align:center;font-size:calc(15*var(--u));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .memo-x{border:0;background:none;color:var(--accent);font:inherit;font-size:calc(16*var(--u));cursor:pointer;padding:6px 2px}
@@ -1524,8 +1524,13 @@ function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
     <textarea class="memo-ta" ${ta.maxLength>0?`maxlength="${ta.maxLength}"`:''} placeholder="${esc(ta.placeholder||'')}"></textarea><div class="memo-count"></div>`;
   document.body.appendChild(el);const mt=el.querySelector('.memo-ta');mt.value=ta.value;
   const y=scrollY;MEMO={el,ta,orig:ta.value,y};document.documentElement.classList.add('memo-open');document.body.style.top=(-y)+'px';   // 後ろのページを固定（iPhoneは overflow:hidden だけでは動いてしまう）
-  el.addEventListener('touchmove',e=>{if(!e.target.closest('.memo-ta,.mc-body'))e.preventDefault()},{passive:false});
-  let raf=0;const fit=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const vv=window.visualViewport;if(vv){el.style.top=vv.offsetTop+'px';el.style.height=vv.height+'px'}})};MEMO.fit=fit;fit();
+  let ly=0, sc=null;   // 欄のスクロールが端まで行ったら、その先の動きを画面全体に伝えない（iPhoneで画面が揺れるのを防ぐ）
+  el.addEventListener('touchstart',e=>{ly=e.touches[0].clientY;sc=e.target.closest('.memo-ta,.mc-body')},{passive:true});
+  el.addEventListener('touchmove',e=>{const y=e.touches[0].clientY, dy=y-ly;ly=y;
+    if(!sc){e.preventDefault();return}
+    const top=sc.scrollTop<=0, bot=sc.scrollTop+sc.clientHeight>=sc.scrollHeight-1;
+    if(sc.scrollHeight<=sc.clientHeight+1||(dy>0&&top)||(dy<0&&bot))e.preventDefault()},{passive:false});
+  const fit=()=>{const vv=window.visualViewport;if(vv){el.style.transform=`translateY(${vv.offsetTop}px)`;el.style.height=vv.height+'px'}};MEMO.fit=fit;fit();   // 表示位置がずれたら、その場ですぐ合わせる（遅れて追いかけると揺れて見える）
   window.visualViewport?.addEventListener('resize',fit);window.visualViewport?.addEventListener('scroll',fit);
   const cnt=()=>{el.querySelector('.memo-count').textContent=T.memo_chars.replace('{n}',mt.value.length)+(ta.maxLength>0?` / ${ta.maxLength}`:'')};cnt();
   mt.addEventListener('input',()=>{ta.value=mt.value;ta.dispatchEvent(new Event('input',{bubbles:true}));cnt()});
