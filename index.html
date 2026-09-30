@@ -30,7 +30,7 @@
   --glass-bd:rgba(255,255,255,.78); --hi:inset 0 1px 0 rgba(255,255,255,.9);
   --shadow:0 10px 34px rgba(40,50,90,.14); --line:rgba(30,40,80,.10); --line2:rgba(30,40,80,.20);
   --good:#1f8a4c; --good-s:rgba(31,138,76,.13); --warn:#b86e00; --warn-s:rgba(214,138,0,.15); --bad:#cf3434; --bad-s:rgba(207,52,52,.12);
-  --blob-op:1; --frost:26px; --radius:20px; --c-load:#e0691f; --c-weight:#0f8b98;
+  --blob-op:1; --frost:26px; --radius:20px; --panel-solid:rgba(255,255,255,.8); --c-load:#e0691f; --c-weight:#0f8b98;
   --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Helvetica Neue",sans-serif;
   --mincho:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
@@ -44,7 +44,7 @@
     --glass-bd:rgba(255,255,255,.14); --hi:inset 0 1px 0 rgba(255,255,255,.08);
     --shadow:0 12px 40px rgba(0,0,0,.5); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.2);
     --good:#5fd18c; --good-s:rgba(95,209,140,.15); --warn:#f2b451; --warn-s:rgba(242,180,81,.15); --bad:#ff7a7a; --bad-s:rgba(255,122,122,.15);
-    --blob-op:.45; color-scheme:dark; --c-load:#ff9a57; --c-weight:#4fd0dc;
+    --blob-op:.45; color-scheme:dark; --c-load:#ff9a57; --c-weight:#4fd0dc; --panel-solid:rgba(26,30,44,.88);
   }
 }
 :root[data-theme="dark"]:not([data-mode="light"]), :root[data-mode="dark"]{
@@ -53,7 +53,7 @@
   --glass-bd:rgba(255,255,255,.14); --hi:inset 0 1px 0 rgba(255,255,255,.08);
   --shadow:0 12px 40px rgba(0,0,0,.5); --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.2);
   --good:#5fd18c; --good-s:rgba(95,209,140,.15); --warn:#f2b451; --warn-s:rgba(242,180,81,.15); --bad:#ff7a7a; --bad-s:rgba(255,122,122,.15);
-  --blob-op:.45; color-scheme:dark; --c-load:#ff9a57; --c-weight:#4fd0dc;
+  --blob-op:.45; color-scheme:dark; --c-load:#ff9a57; --c-weight:#4fd0dc; --panel-solid:rgba(26,30,44,.88);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -491,6 +491,12 @@ textarea[data-memo]{cursor:text}
 .st-bar{color:var(--accent)}
 .danger-btn{background:var(--bad);box-shadow:none}
 .btn:disabled{opacity:.55;cursor:wait}
+/* スマホ：カード1枚ずつのリアルタイムのぼかしと、動く背景をやめて軽くする（見た目はほぼ同じ・スクロールで固まらない） */
+@media (pointer:coarse){
+  body::after{animation:none}
+  .card{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .card:not(.goalbar):not(.evcard):not(.streak):not(.hl):not(.nag){background:var(--panel-solid)}
+}
 </style>
 </head>
 <body>
@@ -513,6 +519,7 @@ const I18N = {
   n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
   n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}にチームのまとめ（午前なら前日の分：記録した人数・まだの人・欠席・痛みやケガ・未返信の質問）。',
   n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
+  e_timeout:'通信に時間がかかっています。電波のよい場所で、もう一度お試しください（書いた内容は残っています）。', pv_blocked:'閲覧モードでは変更できません。「閲覧モードを終わる」で戻れます。', boot_slow:'読み込みに時間がかかっています。電波のよい場所で、もう一度読み込んでください。', boot_retry:'もう一度読み込む', v_stall:'動画の変換が止まってしまいました。もう一度お試しください。',
   pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
   inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、メッセージアプリなどから選手に送る（日本語・英語を選べます）',
   inv_s3:'選手がリンクを開き、自分でIDとパスワードを決めて登録する → 下の「選手」に名前が出たら完了', inv_s4:'保護者は、選手の登録が終わってから、その選手の欄の「＋ 保護者用コード」で同じように送る',
@@ -647,6 +654,7 @@ const I18N = {
   n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
   n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Daily at {h}: a team summary (in the morning it covers yesterday: logged, not logged, absent, pain/injury, unanswered questions).',
   n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
+  e_timeout:'This is taking too long. Try again where the signal is better (what you wrote is still here).', pv_blocked:'You can’t change anything in preview. Tap “Exit preview” to go back.', boot_slow:'Loading is taking a long time. Please reload where the signal is better.', boot_retry:'Reload', v_stall:'Video conversion stopped. Please try again.',
   pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
   inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via Messages or another app (Japanese or English)',
   inv_s3:'The athlete opens the link and picks their own ID and password → when their name appears under “Athletes”, you’re done', inv_s4:'For a parent/guardian: after the athlete has joined, tap “＋ Guardian code” in that athlete’s row and send it the same way',
@@ -811,7 +819,11 @@ const curKey=()=>{try{return localStorage.getItem(CUR_KEY)||LEGACY_KEY}catch(e){
 const setCurKey=k=>{try{localStorage.setItem(CUR_KEY,k)}catch(e){}};
 const keyFor=login=>regLoad().find(r=>r.login===login)?.key||('judo-auth-'+login);
 const CLIENTS={};
-const clientFor=k=>CLIENTS[k]||(CLIENTS[k]=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:k}}));
+/* 通信は25秒で打ち切る（電波が弱いと、いつまでも「保存中…」のまま固まって見えるため） */
+function fetchT(url,opts={}){const c=new AbortController(), tm=setTimeout(()=>c.abort(new DOMException('timeout','TimeoutError')),25000);
+  if(opts.signal){if(opts.signal.aborted)c.abort();else opts.signal.addEventListener('abort',()=>c.abort(),{once:true})}
+  return fetch(url,{...opts,signal:c.signal}).catch(e=>{if(c.signal.aborted&&!opts.signal?.aborted){logErr('timeout',String(url).replace(/^https?:\/\/[^/]+/,'').slice(0,100));throw new Error('__'+t('e_timeout'))}throw e}).finally(()=>clearTimeout(tm))}
+const clientFor=k=>CLIENTS[k]||(CLIENTS[k]=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:k},global:{fetch:fetchT}}));
 let sb=clientFor(curKey());
 const idToEmail=id=>`${id.trim().toLowerCase()}@${ID_DOMAIN}`;
 const ID_RE=/^[a-z0-9_-]{3,20}$/;
@@ -973,7 +985,7 @@ async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI
 
 const DEMO_PW_KEY='judo-demo-pw';
 let coachSb=null, demoSb=null;
-const getDemoSb=()=>demoSb||(demoSb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-demo-auth'}}));
+const getDemoSb=()=>demoSb||(demoSb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'judo-demo-auth'},global:{fetch:fetchT}}));
 const newDemoPw=()=>{const a=new Uint8Array(18);crypto.getRandomValues(a);return 'Demo-'+Array.from(a,b=>(b%36).toString(36)).join('')};
 const demoAcct=()=>ACCOUNTS.find(a=>a.demo);
 async function enterStudentMode(){
@@ -1775,7 +1787,8 @@ async function shrinkVideo(file,onProg,factor=1){
     mp4.releaseUsedSamples(id,samples[samples.length-1].number+1)};
   mp4.setExtractionOptions(vt.id,null,{nbSamples:60}); if(at)mp4.setExtractionOptions(at.id,null,{nbSamples:200});
   mp4.start(); const sk=mp4.seek(0,true); off=sk&&typeof sk.offset==='number'?sk.offset:0;
-  while(off<file.size&&!err){await feed();while((dec.decodeQueueSize>12||enc.encodeQueueSize>12)&&!err)await new Promise(r=>setTimeout(r,8))}
+  let lastDone=-1, lastMove=Date.now();   // 30秒進まなければ止める（固まったままにしない）
+  while(off<file.size&&!err){await feed();while((dec.decodeQueueSize>12||enc.encodeQueueSize>12)&&!err){await new Promise(r=>setTimeout(r,8));if(done!==lastDone){lastDone=done;lastMove=Date.now()}else if(Date.now()-lastMove>30000){logErr('video','stall '+Math.round(done)+'s');throw new Error('__'+t('v_stall'))}}}
   mp4.flush(); await dec.flush(); await enc.flush(); if(err)throw err;
   mux.finalize(); const blob=new Blob([target.buffer],{type:'video/mp4'});
   if(blob.size>V_LIMIT){if(factor>.5)return shrinkVideo(file,onProg,factor*.7);throw new Error('__'+t('v_too_big'))}
@@ -2181,10 +2194,32 @@ function render(){
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
+/* ---------- 不具合の記録：エラーや「固まった」時間を、原因調査のために送る ---------- */
+let ERRN=0;const ERRSEEN=new Set();
+function logErr(kind,msg){try{if(ERRN>=20||!UI.session)return;const key=kind+'|'+String(msg).slice(0,120);if(ERRSEEN.has(key))return;ERRSEEN.add(key);ERRN++;
+  const place=[acct(UI.session)?.role,UI.view,UI.ctab,UI.previewAs?'preview':'',MEMO?'memo':'',UI.vup?'video':''].filter(Boolean).join('/');
+  const row={kind,msg:String(msg).slice(0,800),place:place.slice(0,120),ua:navigator.userAgent.slice(0,300)};
+  sb.from('client_errors').insert(row).then(({error})=>{if(error)errQueue(row)},()=>errQueue(row))}catch(e){}}
+function errQueue(row){try{const q=JSON.parse(localStorage.getItem('judo-errq')||'[]');q.push({...row,msg:row.msg+' (@'+new Date().toISOString()+')'});localStorage.setItem('judo-errq',JSON.stringify(q.slice(-20)))}catch(e){}}   // 電波がないときは端末に残して、あとで送る
+function errFlush(){try{const q=JSON.parse(localStorage.getItem('judo-errq')||'[]');if(!q.length||!UI.session)return;localStorage.removeItem('judo-errq');sb.from('client_errors').insert(q).then(({error})=>{if(error)localStorage.setItem('judo-errq',JSON.stringify(q))},()=>localStorage.setItem('judo-errq',JSON.stringify(q)))}catch(e){}}
+addEventListener('error',e=>logErr('error',(e.message||'')+' @'+(e.lineno||'')));
+addEventListener('unhandledrejection',e=>logErr('promise',e.reason?.message||String(e.reason)));
+// 画面が止まった時間をはかる：1秒ごとの見張りが2.5秒以上遅れたら「固まった」として記録（アプリを開き直した直後は除く）
+let HB=performance.now(), HBskip=0;
+setInterval(()=>{const now=performance.now(), gap=now-HB;HB=now;if(document.visibilityState!=='visible'||now<HBskip)return;if(gap>2500)logErr('freeze',Math.round(gap)+'ms')},1000);
+document.addEventListener('visibilitychange',()=>{HB=performance.now();HBskip=HB+3000;if(document.visibilityState==='visible'){unstick();setTimeout(errFlush,4000)}});
+addEventListener('online',()=>setTimeout(errFlush,2000));
+/* 固まったままにならないように：書く画面やスクロールの固定が残っていたら元に戻す */
+function unstick(){
+  if(MEMO&&!MEMO.el.isConnected){MEMO=null;logErr('stuck','memo')}
+  if(!MEMO&&document.documentElement.classList.contains('memo-open')){document.documentElement.classList.remove('memo-open');document.body.style.top='';logErr('stuck','scroll-lock')}
+  if(!MEMO&&UI.pendingRender){UI.pendingRender=false;renderKeep()}
+}
 function errText(e){
   const T=I18N[lang()], m=String(e?.message||e||'');
   if(m.startsWith('__'))return m.slice(2);
   if(/Failed to fetch|NetworkError|network|Load failed/i.test(m))return T.e_net;
+  if(/timeout|aborted/i.test(m))return T.e_timeout;
   if(/already registered|already exists|User already/i.test(m))return T.e_taken;
   if(/invalid invite/i.test(m))return T.code_bad;
   if(/guardian consent/i.test(m))return T.e_consent;
@@ -2219,7 +2254,7 @@ async function afterSignIn(user){
   UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
   if(me().role==='guardian')UI.pAid=subject();
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
-  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); window.scrollTo(0,0); refreshPushState().then(()=>renderKeep());
+  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); setTimeout(errFlush,3000); window.scrollTo(0,0); refreshPushState().then(()=>renderKeep());
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
@@ -2263,16 +2298,17 @@ function celebrate(d){
 async function run(fn,done,btn){
   const o=pressBusy(btn||UI.pressed); UI.pressed=null;
   try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;render();celebrate(typeof done==='function'?done(r):done)}
-  catch(e){UI.busy=false;UI.cwSending=null;pressDone(o);console.error(e);toast(errText(e));render()}
+  catch(e){UI.busy=false;UI.cwSending=null;pressDone(o);console.error(e);if(!String(e?.message||'').startsWith('__'))logErr('action',String(e?.message||e));toast(errText(e));renderKeep()}   // 失敗しても、書いた内容は消さない
 }
 document.addEventListener('click',ev=>{
+  unstick();
   const el=ev.target.closest('[data-act]'); if(!el){if(ev.target.id==='done')document.getElementById('done').hidden=true;return}
   if(el.dataset.act==='donehide'){document.getElementById('done').hidden=true;return}
   if(el.dataset.act==='donego'){document.getElementById('done').hidden=true;UI.view=el.dataset.v;render();window.scrollTo(0,0);return}
   UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel','xdel','vdel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
-  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vplay','vdl','closemodal','donehide'].includes(a))return;   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
+  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vplay','vdl','closemodal','donehide'].includes(a)){toast(t('pv_blocked'));return}   // 何も起きないと固まったように見えるので、理由を出す   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
   else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
@@ -2498,13 +2534,14 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
   const m=/^#join-([A-Za-z0-9]{6,12})$/.exec(location.hash);
   if(m){UI.auth='join';UI.join={code:m[1].toUpperCase()};history.replaceState(null,'',location.pathname)}
   UI.booting=true; render();
+  const slow=setTimeout(()=>{if(!me()){const T=I18N[UI.loginLang];app.innerHTML=`<div class="login"><div class="card stack" style="max-width:360px"><div>${T.boot_slow}</div><button class="btn" onclick="location.reload()">${T.boot_retry}</button></div></div>`;logErr('boot','slow')}},15000);
   try{
     const {data}=await sb.auth.getSession();
     UI.booting=false;
-    if(data.session&&!m){await afterSignIn(data.session.user);rememberCurrent(curKey());return}
+    if(data.session&&!m){await afterSignIn(data.session.user);clearTimeout(slow);rememberCurrent(curKey());return}
     if(m)UI.authUser=null;
-  }catch(e){UI.booting=false;UI.err=errText(e)}
-  render();
+  }catch(e){UI.booting=false;UI.err=errText(e);logErr('boot',String(e?.message||e))}
+  clearTimeout(slow);render();
   if(UI.join?.code)document.querySelector('[data-act=checkcode]')?.click();
 })();
 
