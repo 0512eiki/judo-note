@@ -467,6 +467,9 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 html.memo-open,html.memo-open body{overflow:hidden;overscroll-behavior:none;height:100%}html.memo-open body{position:fixed;left:0;right:0;width:100%}
 .memo,.memo-ta{overscroll-behavior:contain}
 textarea[data-memo]{cursor:text}
+.fab-close{position:fixed;z-index:15;top:calc(env(safe-area-inset-top,0px) + var(--hdr,110px) + 12px);right:max(16px,calc((100vw - 1100px)/2 + 16px));width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-bd);
+  background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 6px 20px rgba(20,24,40,.18),var(--hi);color:var(--text);font-size:calc(18*var(--u));font-weight:700;display:grid;place-items:center;cursor:pointer}
+.fab-close:active{transform:scale(.94)}
 .utog{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;vertical-align:middle;flex:none}
 .utog button{border:0;background:var(--panel2);color:var(--dim);font:inherit;font-size:calc(12*var(--u));font-weight:700;padding:3px 9px;cursor:pointer;line-height:1.3}
 .utog button[aria-pressed="true"]{background:var(--accent);color:#fff}
@@ -640,7 +643,7 @@ const I18N = {
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
-  waiting:'返信待ち', answered:'返信済み', back:'← 選手一覧', goals:'今月の目標', goals_save:'目標を保存', goals_saved:'目標を保存しました',
+  waiting:'返信待ち', answered:'返信済み', back:'← 選手一覧', back_team:'選手一覧に戻る', goals:'今月の目標', goals_save:'目標を保存', goals_saved:'目標を保存しました',
   booklet:'選手用・月刊ノート（A5）', report:'コーチ用・チームレポート（A4）', month:'月', athlete:'選手', kind:'種類',
   print_hint:'1ヶ月分を冊子の形にまとめたものです。「印刷・PDFで保存」から印刷できます（パソコンのChromeがおすすめ）。ノートの言語と色は、その選手の設定に合わせています。',
   my_note_hint:'毎月この冊子を印刷して、手元に残せます。',
@@ -775,7 +778,7 @@ const I18N = {
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
-  waiting:'Awaiting reply', answered:'Answered', back:'← Team', goals:'This month’s goals', goals_save:'Save goals', goals_saved:'Goals saved',
+  waiting:'Awaiting reply', answered:'Answered', back:'← Team', back_team:'Back to the team', goals:'This month’s goals', goals_save:'Save goals', goals_saved:'Goals saved',
   booklet:'Athlete notebook (A5)', report:'Team report for coach (A4)', month:'Month', athlete:'Athlete', kind:'Type',
   print_hint:'One month bound as a booklet. Print it with “Print / save as PDF” (Chrome on a computer works best). Each notebook uses that athlete’s language and color.',
   my_note_hint:'Print this booklet every month and keep it on your shelf.',
@@ -1717,7 +1720,7 @@ function modalView(){
 function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid), tab=UI.ctab||'over';
   const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['x',T.t_x],['v',T.t_videos],['matches',T.events],['qa',T.ct_qa]];
-  const head=`<div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
+  const head=`<button type="button" class="fab-close noprint" data-act="back" aria-label="${esc(T.back_team)}" title="${esc(T.back_team)}">✕</button><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
    <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
    <nav class="subtabs">${tabs.map(([k,l])=>`<button class="tab" data-act="ctab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${l}</button>`).join('')}</nav>`;
   let body='';
@@ -2217,6 +2220,7 @@ function render(){
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
+  const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
   drawHealth(); railsInit(); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
@@ -2357,7 +2361,7 @@ document.addEventListener('click',ev=>{
     const copy=()=>(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>toast(t('msg_copied'))).catch(()=>{const ta=document.getElementById('msg-'+el.dataset.code);if(ta){ta.select()}});
     if(a==='share'&&navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
   else if(a==='open'){const id=el.dataset.id;UI.prevSeen[id]=seenOf(id);UI.ctab='over';UI.sel=id;markSeen(id);render();window.scrollTo(0,0)}
-  else if(a==='back'){markSeen(UI.sel);UI.sel=null;render()}   // 見ている間に届いた分も既読に
+  else if(a==='back'){markSeen(UI.sel);UI.sel=null;render();window.scrollTo(0,0)}   // 見ている間に届いた分も既読に
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
   else if(a==='naglater'){try{localStorage.setItem('judo-nag-'+UI.session,String(Date.now()))}catch(e){}render()}
