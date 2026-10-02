@@ -1450,8 +1450,8 @@ function athToday(){
      <div class="field" id="f-pain-lv" ${e.pain.length?'':'hidden'}><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
      <div class="field"><span class="lbl">${T.head}</span><div class="small muted">${T.head_help}</div><div class="chips">${Object.keys(T.hs).map(k=>`<label class="chk danger"><input type="checkbox" name="head" value="${k}" ${e.head?.includes(k)?'checked':''}><span>${T.hs[k]}</span></label>`).join('')}</div></div>
    </div>
-   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><div class="small muted">${T.note_hint}</div><textarea class="inp" id="f-note" name="note" placeholder="${esc(T.note_ph)}" style="min-height:110px">${esc(e.note)}</textarea></div>
-     <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea></div>
+   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><div class="small muted">${T.note_hint}</div><textarea class="inp" id="f-note" name="note" maxlength="4000" placeholder="${esc(T.note_ph)}" style="min-height:110px">${esc(e.note)}</textarea></div>
+     <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" maxlength="4000" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea></div>
      <div><button class="btn" type="submit">${T.save}</button></div></div>
   </form></div>`;
 }
@@ -1553,7 +1553,7 @@ function memoClose(ok){if(!MEMO)return;const {el,ta:ta0,orig,fit,y}=MEMO, text=e
 function composer({form,attrs,id,name,ph,value,send,extra,cancel}){
   const T=I18N[lang()], st=(UI.cw||(UI.cw={}))[id], v=st?st.v:(value||''), prev=!!st?.prev;
   return `<form class="compose" data-form="${form}" ${attrs} data-cw="${id}">
-    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="2000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
+    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="4000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
       <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${cancel||''}${extra||''}</div></div>
     <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl">${T.cw_check}<small>${T.cw_tap}</small></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
       <div class="row"><button class="btn sm" type="submit">${send}</button><button type="button" class="btn ghost sm" data-act="cwedit">${T.cw_edit}</button>${cancel||''}</div></div></form>`;
@@ -1569,7 +1569,7 @@ document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta
 document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
 function bubble(m,cls,by,T,ro){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
-  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="2000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
+  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="4000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
   return `<div class="bubble ${cls}"><div class="by">${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}${mine?` <button class="linkish" data-act="msgedit" data-id="${m.id}">${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
 }
 function cmtBlock(aid,d,e,T){   // コーチのコメント（コーチは直せる）
@@ -1585,7 +1585,7 @@ function questions(aid,L,coach,ro){
       ${bubble({id:q.mid,author:q.author,text:q.text,edited:q.edited},'',esc(a.name),T,ro)}
       ${q.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,ro)).join('')}
       ${ro?'':composer({form:'reply',attrs:`data-id="${q.id}"`,id:`r-${q.id}`,name:'r',ph:T.reply_ph,send:T.reply})}</div>`}).join('');
-  const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
+  const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" maxlength="4000" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
   return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
 }
 function athNote(){
@@ -1595,7 +1595,7 @@ function athNote(){
     ${eventsCard(m.id,L)}
     <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
       ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
-      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
+      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" maxlength="4000" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
       <div><button class="btn ghost" type="submit">${T.goals_save}</button></div></form></div>
     <div class="card"><h2>${T.booklet}</h2><p class="small muted" style="margin-top:0">${T.my_note_hint}</p><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(m.id,UI.pYm)}</div></div>`;
@@ -1754,7 +1754,7 @@ function eventsCard(aid,L,ro){
     const view=n&&(n.result||n.good||n.issues||n.next_steps)?`<div class="refl">${[['result',T.mr_result],['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].filter(([k])=>n[k]).map(([k,l])=>`<div><b>${l}</b><p>${esc(n[k])}</p></div>`).join('')}</div>`:`<div class="small muted">${T.mr_none}</div>`;
     const form=`<form class="stack refl-form" data-form="mnote" data-ev="${ev.id}">
       <div class="field"><label for="mr-r-${ev.id}">${T.mr_result}</label><input class="inp" id="mr-r-${ev.id}" name="result" maxlength="200" placeholder="${esc(T.mr_result_ph)}" value="${esc(n?.result||'')}"></div>
-      ${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].map(([k,l])=>`<div class="field"><label for="mr-${k}-${ev.id}">${l}</label><textarea class="inp" id="mr-${k}-${ev.id}" name="${k}" maxlength="2000">${esc(n?.[k]||'')}</textarea></div>`).join('')}
+      ${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].map(([k,l])=>`<div class="field"><label for="mr-${k}-${ev.id}">${l}</label><textarea class="inp" id="mr-${k}-${ev.id}" name="${k}" maxlength="4000">${esc(n?.[k]||'')}</textarea></div>`).join('')}
       <div class="row"><button class="btn sm" type="submit">${T.mr_save}</button><button class="btn ghost sm" type="button" data-act="medit" data-ev="">${T.cancel}</button></div></form>`;
     return `<div class="evmore"><div class="lbl">${T.mr_title}</div>${editing?form:view}
       ${mine&&!ro&&!editing?`<div><button class="btn ghost sm" data-act="medit" data-ev="${ev.id}">${n?T.mr_edit:T.mr_write}</button></div>`:''}
