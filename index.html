@@ -1544,7 +1544,7 @@ function memoClose(ok){if(!MEMO)return;const {el,ta:ta0,orig,fit,y}=MEMO, text=e
   const want=ok?text:orig;if(ta.value!==want){ta.value=want;ta.dispatchEvent(new Event('input',{bubbles:true}))}
   window.visualViewport?.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('scroll',fit);
   el.remove();document.documentElement.classList.remove('memo-open');document.body.style.top='';window.scrollTo(0,y);
-  if(ok&&ta.classList.contains('cw-ta')){const f=ta.closest('form');if(ta.value.trim())cwMode(f,true);else cwGrow(ta)}   // コメント・返信は、そのまま「送る前に確認」へ
+  if(ok&&ta.classList.contains('cw-ta')&&ta.closest('form')?.querySelector('.cw-edit')){const f=ta.closest('form');if(ta.value.trim())cwMode(f,true);else cwGrow(ta)}   // コメント・返信は、そのまま「送る前に確認」へ
   else if(ta.classList.contains('cw-ta'))cwGrow(ta);
   if(UI.pendingRender){UI.pendingRender=false;renderKeep()}   // 閉じてから、待っていた作り直しをする（書いた文章は引き継ぐ）
 }
@@ -1805,18 +1805,19 @@ async function shrinkVideo(file,onProg,factor=1){
   const mux=new Mp4Muxer.Muxer({target,fastStart:'in-memory',firstTimestampBehavior:'offset',video:{codec:'avc',width:W,height:H,rotation:rot},...(at?{audio:{codec:'aac',numberOfChannels:at.audio.channel_count,sampleRate:at.audio.sample_rate}}:{})});
   let err=null, lastT=-1e12, lastKey=-1e12, thumb=null, done=0;
   const cv=new OffscreenCanvas(W,H), cx=cv.getContext('2d');
-  const enc=new VideoEncoder({output:(c,meta)=>{try{mux.addVideoChunk(c,meta)}catch(e){err=err||e}},error:e=>{err=err||e}}); enc.configure(ecfg);
+  const FD=Math.round(1e6/30);   // 1コマの長さ（30fps）。Safari は長さを空で返すことがあるので、こちらで入れる
+  const enc=new VideoEncoder({output:(c,meta)=>{try{const d=new Uint8Array(c.byteLength);c.copyTo(d);mux.addVideoChunkRaw(d,c.type,c.timestamp,c.duration>0?c.duration:FD,meta)}catch(e){err=err||e}},error:e=>{err=err||e}}); enc.configure(ecfg);
   const dec=new VideoDecoder({output:f=>{try{const ts=f.timestamp;
       if(ts-lastT<1e6/30*.9){f.close();return}lastT=ts;   // 60fps の動画は30fpsに
       cx.drawImage(f,0,0,W,H);f.close();
       if(!thumb){thumb=true;const tc=new OffscreenCanvas(Math.round(W*240/Math.max(W,H)),Math.round(H*240/Math.max(W,H)));tc.getContext('2d').drawImage(cv,0,0,tc.width,tc.height);tc.convertToBlob({type:'image/jpeg',quality:.72}).then(b=>{thumb=b}).catch(()=>{thumb=null})}
-      const nf=new VideoFrame(cv,{timestamp:ts}), key=ts-lastKey>=2e6;if(key)lastKey=ts;enc.encode(nf,{keyFrame:key});nf.close();
+      const nf=new VideoFrame(cv,{timestamp:ts,duration:FD}), key=ts-lastKey>=2e6;if(key)lastKey=ts;enc.encode(nf,{keyFrame:key});nf.close();
       done=ts/1e6;onProg&&onProg(Math.min(.99,done/dur))}catch(e){err=err||e;try{f.close()}catch(_){}}},error:e=>{err=err||e}});
   dec.configure(dcfg);
   let aFirst=true; const seen={};   // 先頭に戻って読み直すと同じサンプルがもう一度来るので、一度処理したものは飛ばす
   mp4.onSamples=(id,u,samples)=>{try{for(const x of samples){if(x.number<=(seen[id]??-1))continue;seen[id]=x.number;const ts=1e6*x.cts/x.timescale, d=1e6*x.duration/x.timescale;
       if(id===vt.id)dec.decode(new EncodedVideoChunk({type:x.is_sync?'key':'delta',timestamp:ts,duration:d,data:x.data}));
-      else{mux.addAudioChunkRaw(x.data,'key',ts,d,aFirst?{decoderConfig:{codec:'mp4a.40.2',numberOfChannels:at.audio.channel_count,sampleRate:at.audio.sample_rate,description:aacASC(at.audio.sample_rate,at.audio.channel_count)}}:undefined);aFirst=false}}
+      else{mux.addAudioChunkRaw(x.data,'key',ts,d>0?d:1,aFirst?{decoderConfig:{codec:'mp4a.40.2',numberOfChannels:at.audio.channel_count,sampleRate:at.audio.sample_rate,description:aacASC(at.audio.sample_rate,at.audio.channel_count)}}:undefined);aFirst=false}}
     mp4.releaseUsedSamples(id,samples[samples.length-1].number+1)}catch(e){err=err||e}};
   mp4.setExtractionOptions(vt.id,null,{nbSamples:60}); if(at)mp4.setExtractionOptions(at.id,null,{nbSamples:200});
   mp4.start(); const sk=mp4.seek(0,true); off=sk&&typeof sk.offset==='number'?sk.offset:0;
@@ -1867,7 +1868,7 @@ async function uploadVideo(aid,file,day,title){
     if(error){await sb.storage.from('videos').remove([path,tpath].filter(Boolean));throw error}
     ST.videos=[row,...(ST.videos||[])];
     try{const dm=await sb.rpc('video_doomed');ST.vdoom=new Set((dm.data||[]).map(r=>typeof r==='string'?r:Object.values(r)[0]))}catch(e){}
-  }finally{UI.vup=null;try{lock&&lock.release()}catch(e){}}
+  }finally{UI.vup=null;const pg=document.getElementById('v-prog');if(pg)pg.hidden=true;document.querySelectorAll('.vform button,.vform input').forEach(x=>x.disabled=false);try{lock&&lock.release()}catch(e){}}
 }
 async function deleteVideo(id){const v=(ST.videos||[]).find(x=>x.id===id);if(!v)return;
   must(await sb.from('videos').delete().eq('id',id));await sb.storage.from('videos').remove([v.path,v.thumb].filter(Boolean));ST.videos=ST.videos.filter(x=>x.id!==id)}
