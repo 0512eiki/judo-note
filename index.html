@@ -448,6 +448,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .callg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:calc(11*var(--u));color:var(--dim)}.callg span{display:inline-flex;align-items:center;gap:5px}.callg .cl{width:14px}
 .caldetail{border-top:1px solid var(--line);padding-top:6px}
 .ent-more{display:block;margin-top:8px;padding:6px 0}.ent-rest{display:contents}.ent-rest[hidden]{display:none}
+.vnote{white-space:pre-wrap;overflow-wrap:anywhere;font-size:calc(14*var(--u));line-height:1.55;margin-top:2px}.vnote.clamp{-webkit-line-clamp:4}
 .cs-txt.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.cs-more{justify-self:start;padding:2px 0}
 .cs-cmt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border-radius:12px;padding:10px 12px;font-size:calc(15*var(--u));line-height:1.6}
 .memo{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:80;will-change:transform;background:var(--base);box-shadow:0 0 0 100vmax var(--base);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -554,6 +555,7 @@ const I18N = {
   cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cal_title:'カレンダー', cal_help:'日にちを押すと、その日の記録が見られます。', cal_prev:'前の月', cal_next:'次の月', cal_none:'この日の記録はありません。', cal_run:'🏃 ランニング {t}', cal_match:'🥋 試合：{n}', cal_lg:{good:'よい',mid:'ふつう',low:'低め',abs:'欠席・休み'}, cal_marks:['💪 エクストラ','🏃 ランニング','🥋 試合','💬 コメント'],
   cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
   prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
+  v_note:'コメント（なくてもOK）', v_note_ph:'例：1回戦です。組み手の入り方を見てください', v_edit:'直す', v_save:'保存', v_saved:'保存しました',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
   v_dl:'ダウンロード', v_del:'削除', v_del_q:'この動画を削除しますか？元に戻せません。', v_deleted:'削除しました', v_shrink:'動画を小さくしています… {p}%', v_up:'アップロード中… {p}%', v_prep:'準備しています…', v_keep:'終わるまで、この画面を開いたままにしてください。',
   v_done_t:'動画をアップロードしました！', v_done:['選手とコーチがいつでも見られます。','ありがとうございます。練習の振り返りに役立てます。'], v_need:'動画を選んでください', v_too_big:'この動画はこのスマホでは小さくできませんでした。短く切ってから、もう一度お試しください。',
@@ -689,6 +691,7 @@ const I18N = {
   cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cal_title:'Calendar', cal_help:'Tap a day to see what you logged.', cal_prev:'Previous month', cal_next:'Next month', cal_none:'Nothing logged on this day.', cal_run:'🏃 Run {t}', cal_match:'🥋 Match: {n}', cal_lg:{good:'Good',mid:'OK',low:'Low',abs:'Absent / off'}, cal_marks:['💪 Extra','🏃 Run','🥋 Match','💬 Comment'],
   cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
   prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
+  v_note:'Comment (optional)', v_note_ph:'e.g. Round 1 — please look at how I grip', v_edit:'Edit', v_save:'Save', v_saved:'Saved',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
   v_dl:'Download', v_del:'Delete', v_del_q:'Delete this video? This can’t be undone.', v_deleted:'Deleted', v_shrink:'Making the video smaller… {p}%', v_up:'Uploading… {p}%', v_prep:'Getting ready…', v_keep:'Keep this screen open until it finishes.',
   v_done_t:'Video uploaded!', v_done:['The athlete and coach can watch it anytime.','Thank you — this helps with practice reviews.'], v_need:'Choose a video first', v_too_big:'This phone couldn’t make the video smaller. Trim it and try again.',
@@ -1845,7 +1848,7 @@ function vConfirm(plan){   // 容量を空けるために消す動画を見せ�
 }
 function vProg(phase,p){UI.vup={phase,p};const el=document.getElementById('v-prog');if(!el)return;const T=I18N[lang()];
   el.hidden=false;el.querySelector('.vp-t').textContent=phase==='prep'?T.v_prep:(phase==='shrink'?T.v_shrink:T.v_up).replace('{p}',Math.round(p*100));el.querySelector('.vp-bar i').style.width=Math.round((phase==='up'?.5+p*.5:phase==='shrink'?p*.5:0)*100)+'%'}
-async function uploadVideo(aid,file,day,title){
+async function uploadVideo(aid,file,day,title,note=''){
   let lock=null;try{lock=await navigator.wakeLock?.request('screen')}catch(e){}   // 画面が消えると止まるので、終わるまで点けておく
   try{
     vProg('prep',0);
@@ -1864,7 +1867,7 @@ async function uploadVideo(aid,file,day,title){
     const id=crypto.randomUUID(), ext=out===file&&/quicktime/.test(file.type)?'mov':'mp4', path=`${aid}/${id}.${ext}`;
     await xhrUpload(path,out.type?out:new Blob([out],{type:'video/mp4'}),p=>vProg('up',p));
     let tpath=null;if(thumb){try{await xhrUpload(`${aid}/${id}.jpg`,thumb);tpath=`${aid}/${id}.jpg`}catch(e){}}
-    const {data:row,error}=await sb.from('videos').insert({athlete_id:aid,day,title,path,thumb:tpath,bytes:out.size,duration:dur}).select().single();
+    const {data:row,error}=await sb.from('videos').insert({athlete_id:aid,day,title,note,path,thumb:tpath,bytes:out.size,duration:dur}).select().single();
     if(error){await sb.storage.from('videos').remove([path,tpath].filter(Boolean));throw error}
     ST.videos=[row,...(ST.videos||[])];
     try{const dm=await sb.rpc('video_doomed');ST.vdoom=new Set((dm.data||[]).map(r=>typeof r==='string'?r:Object.values(r)[0]))}catch(e){}
@@ -1887,6 +1890,7 @@ function videosCard(aid,L,canUpload){
     <div class="field"><label for="v-file" class="lbl">${T.v_file}</label><input class="inp" id="v-file" name="file" type="file" accept="video/*" ${busy?'disabled':''}></div>
     <div class="xmeta"><div class="field"><label for="v-day">${T.v_day}</label><input class="inp" id="v-day" name="day" type="date" max="${TODAY}" value="${TODAY}"></div>
       <div class="field"><label for="v-name">${T.v_name.replace(/（.*|\(.*/,'')}</label><input class="inp" id="v-name" name="title" maxlength="100" placeholder="${esc(T.v_name)}"></div></div>
+    <div class="field"><label for="v-note">${T.v_note}</label><textarea class="inp" id="v-note" name="note" maxlength="4000" placeholder="${esc(T.v_note_ph)}"></textarea></div>
     <div class="vprog" id="v-prog" ${busy?'':'hidden'}><div class="vp-t">${busy?T.v_prep:''}</div><div class="vp-bar"><i></i></div><div class="small muted">${T.v_keep}</div></div>
     <div class="row"><button class="btn" type="submit" ${busy?'disabled':''}>${T.v_upload}</button></div>
     <div class="small muted">${T.v_quality}</div><div class="small muted">${T.v_auto}</div></form>`:'';
@@ -1894,8 +1898,9 @@ function videosCard(aid,L,canUpload){
       return `<div class="vitem">
         ${playing?`<video class="vplayer" controls playsinline preload="metadata" data-vsrc="${esc(v.path)}"></video>`
           :`<button class="vthumb" data-act="vplay" data-id="${v.id}" aria-label="${esc(T.v_see)}">${v.thumb?`<img alt="" data-vsrc="${esc(v.thumb)}">`:''}<span class="vplay">▶</span>${v.duration?`<span class="vdur">${fmtDur(v.duration,T)}</span>`:''}</button>`}
-        <div class="vmeta">${team?`<span class="pill acc" style="justify-self:start">${esc(acct(v.athlete_id)?.name||'')}</span>`:''}<b>${esc(v.title||fd(v.day,L))}</b>${ST.vdoom?.has(v.id)?`<div><span class="pill warn" title="${esc(T.v_soon_help)}">${T.v_soon}</span><div class="small muted">${T.v_soon_help}</div></div>`:''}<div class="small muted">${fd(v.day,L)}${up?' · '+esc(T.v_by.replace('{n}',up.name)):''} · ${mb(v.bytes)}</div>
-          <div class="row" style="gap:12px">${playing?'':`<button class="linkish" data-act="vplay" data-id="${v.id}">▶ ${T.v_see}</button>`}<button class="linkish" data-act="vdl" data-id="${v.id}">⬇ ${T.v_dl}</button>
+        <div class="vmeta">${team?`<span class="pill acc" style="justify-self:start">${esc(acct(v.athlete_id)?.name||'')}</span>`:''}${UI.vEdit===v.id?`<form class="stack" data-form="vedit" data-id="${v.id}" style="gap:6px"><input class="inp" id="ve-t-${v.id}" name="title" maxlength="100" value="${esc(v.title||'')}" placeholder="${esc(T.v_name)}"><textarea class="inp" id="ve-n-${v.id}" name="note" maxlength="4000" placeholder="${esc(T.v_note_ph)}">${esc(v.note||'')}</textarea><div class="row"><button class="btn sm" type="submit">${T.v_save}</button><button class="btn ghost sm" type="button" data-act="vedit" data-id="">${T.cancel}</button></div></form>`
+          :`<b>${esc(v.title||fd(v.day,L))}</b>${v.note?`<div class="vnote cs-txt clamp">${esc(v.note)}</div><button type="button" class="linkish cs-more" data-act="vnmore" hidden>${T.cc_more}</button>`:''}`}${ST.vdoom?.has(v.id)?`<div><span class="pill warn" title="${esc(T.v_soon_help)}">${T.v_soon}</span><div class="small muted">${T.v_soon_help}</div></div>`:''}<div class="small muted">${fd(v.day,L)}${up?' · '+esc(T.v_by.replace('{n}',up.name)):''} · ${mb(v.bytes)}</div>
+          <div class="row" style="gap:12px">${playing?'':`<button class="linkish" data-act="vplay" data-id="${v.id}">▶ ${T.v_see}</button>`}<button class="linkish" data-act="vdl" data-id="${v.id}">⬇ ${T.v_dl}</button>${(mine||isCoach)&&!UI.previewAs&&UI.vEdit!==v.id?`<button class="linkish" data-act="vedit" data-id="${v.id}">✏️ ${T.v_edit}</button>`:''}
           ${(mine||isCoach)&&!UI.previewAs?(UI.confirmRemove==='v'+v.id?`<span class="small" style="color:var(--bad)">${T.v_del_q}</span><button class="btn sm danger-btn" data-act="vdel" data-id="${v.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="v${v.id}">${T.v_del}</button>`):''}</div></div></div>`}).join('')}</div>`
     :`<div class="small muted">${canUpload?T.v_none:T.v_none_ro}</div>`;
   const used=(ST.videos||[]).reduce((a,v)=>a+(+v.bytes||0),0);
@@ -2225,7 +2230,7 @@ function render(){
   if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
-  drawHealth(); railsInit(); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
+  drawHealth(); railsInit(); document.querySelectorAll('.vnote').forEach(n=>{const b=n.nextElementSibling;if(b)b.hidden=!(n.scrollHeight>n.clientHeight+2)}); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
@@ -2343,7 +2348,7 @@ document.addEventListener('click',ev=>{
   UI.pressed=['seen','pushon','pushoff','invdel','remove','gunlink','demoreset','ginvite','evdel','rundel','xdel','vdel'].includes(el.dataset.act)?el:null;   // 保存・送信のボタンだけ「保存中…」にする
   if(el.dataset.act==='closeset'&&ev.target.closest('[data-stop]')&&el.classList.contains('scrim'))return;
   const a=el.dataset.act;
-  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vplay','vdl','closemodal','donehide'].includes(a)){toast(t('pv_blocked'));return}   // 何も起きないと固まったように見えるので、理由を出す   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
+  if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vnmore','vplay','vdl','closemodal','donehide'].includes(a)){toast(t('pv_blocked'));return}   // 何も起きないと固まったように見えるので、理由を出す   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
   else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
@@ -2404,6 +2409,8 @@ document.addEventListener('click',ev=>{
   else if(a==='memo-ctx'){const c=el.closest('.memo-ctx'),hid=c.classList.toggle('hide');el.textContent=t(hid?'mc_show':'mc_hide');document.querySelector('.memo-ta')?.focus()}
   else if(a==='memo-open'){memoOpen(el)}
   else if(a==='vfilter'){UI.vFilter=el.dataset.id||'';UI.vplay=null;render()}
+  else if(a==='vedit'){UI.vEdit=el.dataset.id||null;render()}
+  else if(a==='vnmore'){const n=el.previousElementSibling,open=n.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more')}
   else if(a==='vfree'){UI.vResolve&&UI.vResolve(el.dataset.v==='1')}
   else if(a==='vdel'){const id=el.dataset.id;UI.confirmRemove=null;run(async()=>{await deleteVideo(id);if(UI.vplay===id)UI.vplay=null},t('v_deleted'))}
   else if(a==='mtab'){UI.mtab=el.dataset.v;UI.mOpen=null;render()}
@@ -2546,11 +2553,13 @@ document.addEventListener('submit',ev=>{
     run(async()=>{await saveExtra(d,id);UI.xEdit=null;UI.xDraft=null;UI.xDay=d.day;window.scrollTo(0,0)},()=>id?t('ed_done'):{title:t('ch_x_t'),msg:pick1(t('ch_x')),sub:d.items.map(i=>i.n).join(t('x_sep')),actions:[[t('done_log'),'donego','log']]})}
   if(f.dataset.form==='video'){const file=f.querySelector('[name=file]').files?.[0];if(!file){toast(t('v_need'));UI.pressed=null;return}
     const aid=f.dataset.aid||fdt.get('aid');if(!aid){toast(t('v_pick'));UI.pressed=null;return}
-    const _a=aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
-    UI.vFreed=0;run(()=>uploadVideo(aid,file,day,title),()=>({title:t('v_done_t'),msg:pick1(t('v_done')),sub:UI.vFreed?t('v_freed').replace('{n}',UI.vFreed):''}));return}
+    const _a=aid,day=fdt.get('day')||TODAY,title=(fdt.get('title')||'').trim(),note=(fdt.get('note')||'').trim();f.querySelectorAll('button,input').forEach(x=>x.disabled=true);
+    UI.vFreed=0;run(()=>uploadVideo(aid,file,day,title,note),()=>({title:t('v_done_t'),msg:pick1(t('v_done')),sub:UI.vFreed?t('v_freed').replace('{n}',UI.vFreed):''}));return}
   if(f.dataset.form==='profile'){const name=(fdt.get('name')||'').trim();if(!name){toast(t('prof_need'));UI.pressed=null;return}
     const row={display_name:name};if(acct(UI.session).role==='athlete'){row.weight_class=(fdt.get('wclass')||'').trim();row.weight_limit=wKg(fdt.get('wlimit'))}
     run(async()=>{must(await sb.from('profiles').update(row).eq('id',UI.session));await loadAll()},t('prof_saved'));return}
+  if(f.dataset.form==='vedit'){const id=f.dataset.id,row={title:(fdt.get('title')||'').trim(),note:(fdt.get('note')||'').trim()};
+    run(async()=>{must(await sb.from('videos').update(row).eq('id',id));const v=ST.videos.find(x=>x.id===id);if(v)Object.assign(v,row);UI.vEdit=null},t('v_saved'));return}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
