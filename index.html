@@ -509,6 +509,8 @@ textarea[data-memo]{cursor:text}
   .card{-webkit-backdrop-filter:none;backdrop-filter:none}
   .card:not(.goalbar):not(.evcard):not(.streak):not(.hl):not(.nag){background:var(--panel-solid)}
 }
+.paper .nt,.paper .cm,.paper .typed{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden}   /* 冊子：とても長い文章は数行で「…」（全文はアプリで） */
+.paper .qa .q,.paper .qa .a{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;overflow:hidden}
 </style>
 </head>
 <body>
@@ -1453,8 +1455,8 @@ function athToday(){
      <div class="field" id="f-pain-lv" ${e.pain.length?'':'hidden'}><span class="lbl">${T.pain_lv}</span><div class="segbar" style="max-width:320px">${[1,2,3].map(v=>`<button type="button" data-act="lvl" data-v="${v}" aria-pressed="${lvl===v}">${T.lv[v]}</button>`).join('')}</div><input type="hidden" name="level" id="f-level" value="${lvl}"></div>
      <div class="field"><span class="lbl">${T.head}</span><div class="small muted">${T.head_help}</div><div class="chips">${Object.keys(T.hs).map(k=>`<label class="chk danger"><input type="checkbox" name="head" value="${k}" ${e.head?.includes(k)?'checked':''}><span>${T.hs[k]}</span></label>`).join('')}</div></div>
    </div>
-   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><div class="small muted">${T.note_hint}</div><textarea class="inp" id="f-note" name="note" maxlength="4000" placeholder="${esc(T.note_ph)}" style="min-height:110px">${esc(e.note)}</textarea></div>
-     <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" maxlength="4000" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea></div>
+   <div class="card stack"><div class="field"><label for="f-note">${T.note}</label><div class="small muted">${T.note_hint}</div><textarea class="inp" id="f-note" name="note" maxlength="20000" placeholder="${esc(T.note_ph)}" style="min-height:110px">${esc(e.note)}</textarea></div>
+     <div class="field"><label for="f-ask">${T.ask}</label><textarea class="inp" id="f-ask" name="ask" maxlength="20000" placeholder="${esc(T.ask_ph)}" style="min-height:60px"></textarea></div>
      <div><button class="btn" type="submit">${T.save}</button></div></div>
   </form></div>`;
 }
@@ -1556,7 +1558,7 @@ function memoClose(ok){if(!MEMO)return;const {el,ta:ta0,orig,fit,y}=MEMO, text=e
 function composer({form,attrs,id,name,ph,value,send,extra,cancel}){
   const T=I18N[lang()], st=(UI.cw||(UI.cw={}))[id], v=st?st.v:(value||''), prev=!!st?.prev;
   return `<form class="compose" data-form="${form}" ${attrs} data-cw="${id}">
-    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="4000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
+    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="20000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
       <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${cancel||''}${extra||''}</div></div>
     <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl">${T.cw_check}<small>${T.cw_tap}</small></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
       <div class="row"><button class="btn sm" type="submit">${send}</button><button type="button" class="btn ghost sm" data-act="cwedit">${T.cw_edit}</button>${cancel||''}</div></div></form>`;
@@ -1572,7 +1574,7 @@ document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta
 document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
 function bubble(m,cls,by,T,ro){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
-  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="4000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
+  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="20000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
   return `<div class="bubble ${cls}"><div class="by">${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}${mine?` <button class="linkish" data-act="msgedit" data-id="${m.id}">${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
 }
 function cmtBlock(aid,d,e,T){   // コーチのコメント（コーチは直せる）
@@ -1588,7 +1590,7 @@ function questions(aid,L,coach,ro){
       ${bubble({id:q.mid,author:q.author,text:q.text,edited:q.edited},'',esc(a.name),T,ro)}
       ${q.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,ro)).join('')}
       ${ro?'':composer({form:'reply',attrs:`data-id="${q.id}"`,id:`r-${q.id}`,name:'r',ph:T.reply_ph,send:T.reply})}</div>`}).join('');
-  const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" maxlength="4000" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
+  const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" maxlength="20000" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
   return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
 }
 function athNote(){
@@ -1598,7 +1600,7 @@ function athNote(){
     ${eventsCard(m.id,L)}
     <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
       ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
-      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" maxlength="4000" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
+      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" maxlength="20000" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
       <div><button class="btn ghost" type="submit">${T.goals_save}</button></div></form></div>
     <div class="card"><h2>${T.booklet}</h2><p class="small muted" style="margin-top:0">${T.my_note_hint}</p><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(m.id,UI.pYm)}</div></div>`;
@@ -1757,11 +1759,11 @@ function eventsCard(aid,L,ro){
     const view=n&&(n.result||n.good||n.issues||n.next_steps)?`<div class="refl">${[['result',T.mr_result],['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].filter(([k])=>n[k]).map(([k,l])=>`<div><b>${l}</b><p>${esc(n[k])}</p></div>`).join('')}</div>`:`<div class="small muted">${T.mr_none}</div>`;
     const form=`<form class="stack refl-form" data-form="mnote" data-ev="${ev.id}">
       <div class="field"><label for="mr-r-${ev.id}">${T.mr_result}</label><input class="inp" id="mr-r-${ev.id}" name="result" maxlength="200" placeholder="${esc(T.mr_result_ph)}" value="${esc(n?.result||'')}"></div>
-      ${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].map(([k,l])=>`<div class="field"><label for="mr-${k}-${ev.id}">${l}</label><textarea class="inp" id="mr-${k}-${ev.id}" name="${k}" maxlength="4000">${esc(n?.[k]||'')}</textarea></div>`).join('')}
+      ${[['good',T.mr_good],['issues',T.mr_issues],['next_steps',T.mr_next]].map(([k,l])=>`<div class="field"><label for="mr-${k}-${ev.id}">${l}</label><textarea class="inp" id="mr-${k}-${ev.id}" name="${k}" maxlength="20000">${esc(n?.[k]||'')}</textarea></div>`).join('')}
       <div class="row"><button class="btn sm" type="submit">${T.mr_save}</button><button class="btn ghost sm" type="button" data-act="medit" data-ev="">${T.cancel}</button></div></form>`;
     return `<div class="evmore"><div class="lbl">${T.mr_title}</div>${editing?form:view}
       ${mine&&!ro&&!editing?`<div><button class="btn ghost sm" data-act="medit" data-ev="${ev.id}">${n?T.mr_edit:T.mr_write}</button></div>`:''}
-      ${isCoach?`<form class="stack cnote" data-form="cnote" data-ev="${ev.id}" data-aid="${aid}"><label class="lbl" for="cn-${ev.id}">${T.cn_label}</label><textarea class="inp" id="cn-${ev.id}" name="body" maxlength="4000">${esc(cn?.body||'')}</textarea><div><button class="btn ghost sm" type="submit">${T.cn_save}</button></div></form>`:''}</div>`;
+      ${isCoach?`<form class="stack cnote" data-form="cnote" data-ev="${ev.id}" data-aid="${aid}"><label class="lbl" for="cn-${ev.id}">${T.cn_label}</label><textarea class="inp" id="cn-${ev.id}" name="body" maxlength="20000">${esc(cn?.body||'')}</textarea><div><button class="btn ghost sm" type="submit">${T.cn_save}</button></div></form>`:''}</div>`;
   };
   return `<div class="card"><h2>${T.events}</h2>
    <div class="entries">${list.length?list.map(ev=>`<div class="evitem"><div class="evrow ${ev.date<TODAY?'past':''}"><div><b>${esc(ev.name)}</b><div class="small muted">${T.ev_date} ${fd(ev.date,L)}${ev.weigh?' · '+T.ev_weigh_s.replace('{d}',fd(ev.weigh,L)):''}${ev.target?' · '+fmtW(ev.target):''} · ${ev.by==='coach'?T.ev_by_c:mine?T.ev_by_a:T.ev_by_a_c}</div></div>${ev.date>=TODAY?`<span class="pill acc">${T.ev_days.replace('{d}',dayDiff(TODAY,ev.date))}</span>`:''}${ro||UI.previewAs?'':`<button class="btn ghost sm" data-act="evdel" data-id="${ev.id}" data-aid="${aid}">${T.ev_del}</button>`}</div>${reflect(ev)}</div>`).join(''):`<div class="muted small">${T.ev_none}</div>`}</div>
@@ -1890,7 +1892,7 @@ function videosCard(aid,L,canUpload){
     <div class="field"><label for="v-file" class="lbl">${T.v_file}</label><input class="inp" id="v-file" name="file" type="file" accept="video/*" ${busy?'disabled':''}></div>
     <div class="xmeta"><div class="field"><label for="v-day">${T.v_day}</label><input class="inp" id="v-day" name="day" type="date" max="${TODAY}" value="${TODAY}"></div>
       <div class="field"><label for="v-name">${T.v_name.replace(/（.*|\(.*/,'')}</label><input class="inp" id="v-name" name="title" maxlength="100" placeholder="${esc(T.v_name)}"></div></div>
-    <div class="field"><label for="v-note">${T.v_note}</label><textarea class="inp" id="v-note" name="note" maxlength="4000" placeholder="${esc(T.v_note_ph)}"></textarea></div>
+    <div class="field"><label for="v-note">${T.v_note}</label><textarea class="inp" id="v-note" name="note" maxlength="20000" placeholder="${esc(T.v_note_ph)}"></textarea></div>
     <div class="vprog" id="v-prog" ${busy?'':'hidden'}><div class="vp-t">${busy?T.v_prep:''}</div><div class="vp-bar"><i></i></div><div class="small muted">${T.v_keep}</div></div>
     <div class="row"><button class="btn" type="submit" ${busy?'disabled':''}>${T.v_upload}</button></div>
     <div class="small muted">${T.v_quality}</div><div class="small muted">${T.v_auto}</div></form>`:'';
@@ -1898,7 +1900,7 @@ function videosCard(aid,L,canUpload){
       return `<div class="vitem">
         ${playing?`<video class="vplayer" controls playsinline preload="metadata" data-vsrc="${esc(v.path)}"></video>`
           :`<button class="vthumb" data-act="vplay" data-id="${v.id}" aria-label="${esc(T.v_see)}">${v.thumb?`<img alt="" data-vsrc="${esc(v.thumb)}">`:''}<span class="vplay">▶</span>${v.duration?`<span class="vdur">${fmtDur(v.duration,T)}</span>`:''}</button>`}
-        <div class="vmeta">${team?`<span class="pill acc" style="justify-self:start">${esc(acct(v.athlete_id)?.name||'')}</span>`:''}${UI.vEdit===v.id?`<form class="stack" data-form="vedit" data-id="${v.id}" style="gap:6px"><input class="inp" id="ve-t-${v.id}" name="title" maxlength="100" value="${esc(v.title||'')}" placeholder="${esc(T.v_name)}"><textarea class="inp" id="ve-n-${v.id}" name="note" maxlength="4000" placeholder="${esc(T.v_note_ph)}">${esc(v.note||'')}</textarea><div class="row"><button class="btn sm" type="submit">${T.v_save}</button><button class="btn ghost sm" type="button" data-act="vedit" data-id="">${T.cancel}</button></div></form>`
+        <div class="vmeta">${team?`<span class="pill acc" style="justify-self:start">${esc(acct(v.athlete_id)?.name||'')}</span>`:''}${UI.vEdit===v.id?`<form class="stack" data-form="vedit" data-id="${v.id}" style="gap:6px"><input class="inp" id="ve-t-${v.id}" name="title" maxlength="100" value="${esc(v.title||'')}" placeholder="${esc(T.v_name)}"><textarea class="inp" id="ve-n-${v.id}" name="note" maxlength="20000" placeholder="${esc(T.v_note_ph)}">${esc(v.note||'')}</textarea><div class="row"><button class="btn sm" type="submit">${T.v_save}</button><button class="btn ghost sm" type="button" data-act="vedit" data-id="">${T.cancel}</button></div></form>`
           :`<b>${esc(v.title||fd(v.day,L))}</b>${v.note?`<div class="vnote cs-txt clamp">${esc(v.note)}</div><button type="button" class="linkish cs-more" data-act="vnmore" hidden>${T.cc_more}</button>`:''}`}${ST.vdoom?.has(v.id)?`<div><span class="pill warn" title="${esc(T.v_soon_help)}">${T.v_soon}</span><div class="small muted">${T.v_soon_help}</div></div>`:''}<div class="small muted">${fd(v.day,L)}${up?' · '+esc(T.v_by.replace('{n}',up.name)):''} · ${mb(v.bytes)}</div>
           <div class="row" style="gap:12px">${playing?'':`<button class="linkish" data-act="vplay" data-id="${v.id}">▶ ${T.v_see}</button>`}<button class="linkish" data-act="vdl" data-id="${v.id}">⬇ ${T.v_dl}</button>${(mine||isCoach)&&!UI.previewAs&&UI.vEdit!==v.id?`<button class="linkish" data-act="vedit" data-id="${v.id}">✏️ ${T.v_edit}</button>`:''}
           ${(mine||isCoach)&&!UI.previewAs?(UI.confirmRemove==='v'+v.id?`<span class="small" style="color:var(--bad)">${T.v_del_q}</span><button class="btn sm danger-btn" data-act="vdel" data-id="${v.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button>`:`<button class="linkish danger" data-act="remove-ask" data-id="v${v.id}">${T.v_del}</button>`):''}</div></div></div>`}).join('')}</div>`
