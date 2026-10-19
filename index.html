@@ -355,6 +355,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .runlist{display:grid;gap:0} .runrow{display:grid;grid-template-columns:7em 5.5em 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:calc(14*var(--u))} .runrow:first-child{border-top:0}
 .timein{display:grid;grid-template-columns:minmax(4.5em,7em) auto minmax(4.5em,7em) auto;gap:6px;align-items:center;justify-content:start}
 .runform .timef{grid-column:1/-1}
+.runedit{border-top:0;padding:10px;margin:4px 0;border-radius:12px;background:var(--tint)}
 .runform{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
 @media (max-width:520px){.runrow{grid-template-columns:6.5em 4.5em minmax(0,1fr) auto}.runrow .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rbig{font-size:calc(34*var(--u))}}
 .moncard .goalhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap} .moncard .gk{font-size:calc(14*var(--u));font-weight:700;color:var(--accent)}
@@ -593,6 +594,7 @@ const I18N = {
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
   mr_title:'試合の振り返り', mr_result:'結果', mr_result_ph:'例：2回戦敗退、ベスト8、優勝', mr_good:'よかったこと', mr_issues:'反省点', mr_next:'これからの課題', mr_write:'✍️ 振り返りを書く', mr_edit:'直す', mr_save:'振り返りを保存', mr_saved:'振り返りを保存しました', mr_none:'振り返りはまだ書かれていません',
   cn_label:'🔒 コーチのメモ（自分だけ。選手と保護者には見えません）', cn_save:'メモを保存', cn_saved:'メモを保存しました', ev_past_hint:'終わった試合も登録して、振り返りを書けます。', cancel:'やめる',
+  run_edit:'直す', run_save:'保存', run_fixed:'ランニングの記録を直しました', run_del_q:'この記録を削除しますか？',
   run_title:'ランニング', run_latest:'最新', run_best:'自己ベスト', run_hist:'これまでの記録', run_add:'記録を追加', run_date:'測った日', run_dist:'距離（km）', run_time:'タイム', run_min:'分', run_sec:'秒', run_note:'メモ（任意）',
   run_saved:'ランニングの記録を保存しました', run_none:'まだ記録がありません。測ったときに入れよう。', run_pace:'1kmあたり', run_del:'削除', run_chart:'タイムの推移（上にいくほど速い）', run_up:'前回より {s} 速い', run_down:'前回より {s} 遅い', run_same:'前回と同じ',
   mon_title:'📘 {m}のまとめ', mon_days:'稽古', mon_time:'稽古時間', mon_avg:'平均の調子', mon_run:'ランニング最新', mon_match:'試合', mon_open:'冊子で見る', mon_day_u:'日', mon_match_u:'試合',
@@ -729,6 +731,7 @@ const I18N = {
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
   mr_title:'Match review', mr_result:'Result', mr_result_ph:'e.g. lost in round 2, best 8, won', mr_good:'What went well', mr_issues:'What went wrong', mr_next:'What to work on next', mr_write:'✍️ Write a review', mr_edit:'Edit', mr_save:'Save review', mr_saved:'Review saved', mr_none:'No review yet',
   cn_label:'🔒 Coach’s note (only you — hidden from the athlete and guardians)', cn_save:'Save note', cn_saved:'Note saved', ev_past_hint:'You can also add a past match to write a review.', cancel:'Cancel',
+  run_edit:'Edit', run_save:'Save', run_fixed:'Run updated', run_del_q:'Delete this record?',
   run_title:'Running', run_latest:'Latest', run_best:'Personal best', run_hist:'All records', run_add:'Add record', run_date:'Date', run_dist:'Distance (km)', run_time:'Time', run_min:'min', run_sec:'sec', run_note:'Note (optional)',
   run_saved:'Run saved', run_none:'No runs yet. Add one when you’re timed.', run_pace:'per km', run_del:'Delete', run_chart:'Your times (higher = faster)', run_up:'{s} faster than last time', run_down:'{s} slower than last time', run_same:'Same as last time',
   mon_title:'📘 {m} summary', mon_days:'Training', mon_time:'Time', mon_avg:'Avg. condition', mon_run:'Latest run', mon_match:'Matches', mon_open:'Open notebook', mon_day_u:' d', mon_match_u:'',
@@ -1047,6 +1050,9 @@ async function saveExtra(d,id){
   const list=(ST.extras[UI.session]||[]).filter(x=>x.id!==r.id); list.push(mapX(r)); list.sort((a,b)=>a.at.localeCompare(b.at)); ST.extras[UI.session]=list;
 }
 async function delExtra(id){must(await sb.from('extras').delete().eq('id',id));ST.extras[UI.session]=(ST.extras[UI.session]||[]).filter(x=>x.id!==id)}
+async function editRun(id,d){   // ランニングの記録を直す（日付・タイム・メモ）
+  const r=must(await sb.from('runs').update({day:d.day,time_sec:d.sec,note:d.note}).eq('id',id).select().single());
+  const list=ST.runs[UI.session]||[], x=list.find(z=>z.id===id);if(x)Object.assign(x,{day:r.day,sec:r.time_sec,note:r.note||''});list.sort((a,b)=>b.day.localeCompare(a.day))}
 async function delRun(id){must(await sb.from('runs').delete().eq('id',id));ST.runs[UI.session]=(ST.runs[UI.session]||[]).filter(r=>r.id!==id)}
 async function saveMNote(ev,f){
   const row={event_id:ev,athlete_id:UI.session,...f,updated_at:new Date().toISOString()};
@@ -1954,7 +1960,13 @@ function runsCard(aid,L,editable){
     if(rs.length>1){const ch=rs.slice().reverse(), vs=ch.map(r=>r.sec), mx=Math.max(...vs), mn=Math.min(...vs), pd=Math.max(5,(mx-mn)*.15);
       chartHtml=`<div class="chart"><div class="t"><small>${esc(T.run_chart)}</small></div>${chart(vs.map(v=>-v),{min:-(mx+pd),max:-(mn-pd),h:120,ticks:[],labels:ch.map((r,i)=>[i,md(r.day)]).filter((_,i,a)=>i===0||i===a.length-1||a.length<=6)})}</div>`}
   }
-  const hist=rs.length?`<div class="lbl" style="margin-top:6px">${T.run_hist}</div><div class="runlist">${rs.map(r=>`<div class="runrow"><span class="mono">${fd(r.day,L)}</span><b class="mono">${fmtTime(r.sec)}${r.sec===bestSec?' 🏅':''}</b><span class="small muted">${esc(r.note)}</span>${editable?`<button class="linkish danger" data-act="rundel" data-id="${r.id}">${T.run_del}</button>`:''}</div>`).join('')}</div>`:`<div class="small muted">${T.run_none}</div>`;
+  const hist=rs.length?`<div class="lbl" style="margin-top:6px">${T.run_hist}</div><div class="runlist">${rs.map(r=>editable&&UI.runEdit===r.id?`<form class="runform runedit" data-form="runedit" data-id="${r.id}">
+      <div class="field"><label for="re-day-${r.id}">${T.run_date}</label><input class="inp" id="re-day-${r.id}" name="day" type="date" max="${TODAY}" value="${r.day}" required></div>
+      <div class="field timef"><span class="lbl">${T.run_time}</span><div class="timein"><input class="inp mono" name="min" type="number" inputmode="numeric" min="0" max="600" value="${Math.floor(r.sec/60)}" aria-label="${T.run_min}" required><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" inputmode="numeric" min="0" max="59" value="${Math.round(r.sec%60)}" aria-label="${T.run_sec}"><span>${T.run_sec}</span></div></div>
+      <div class="field"><label for="re-note-${r.id}">${T.run_note}</label><input class="inp" id="re-note-${r.id}" name="note" maxlength="200" value="${esc(r.note)}"></div>
+      <div class="row"><button class="btn sm" type="submit">${T.run_save}</button><button class="btn ghost sm" type="button" data-act="runedit" data-id="">${T.cancel}</button></div></form>`
+    :`<div class="runrow"><span class="mono">${fd(r.day,L)}</span><b class="mono">${fmtTime(r.sec)}${r.sec===bestSec?' 🏅':''}</b><span class="small muted">${esc(r.note)}</span>${editable?(UI.confirmRemove==='r'+r.id?`<span class="row" style="gap:6px;justify-content:flex-end"><button class="btn sm danger-btn" data-act="rundel" data-id="${r.id}">${T.remove_yes}</button><button class="btn ghost sm" data-act="remove-cancel">${T.close}</button></span>`
+      :`<span class="row" style="gap:10px;justify-content:flex-end;flex-wrap:nowrap"><button class="linkish" data-act="runedit" data-id="${r.id}">${T.run_edit}</button><button class="linkish danger" data-act="remove-ask" data-id="r${r.id}">${T.run_del}</button></span>`):''}</div>`).join('')}</div>`:`<div class="small muted">${T.run_none}</div>`;
   const form=editable?`<form class="runform" data-form="run">
     <div class="field"><label for="rn-day">${T.run_date}</label><input class="inp" id="rn-day" name="day" type="date" max="${TODAY}" value="${TODAY}" required></div>
     <div class="field timef"><span class="lbl">${T.run_time}</span><div class="timein"><input class="inp mono" name="min" type="number" inputmode="numeric" min="0" max="600" placeholder="12" aria-label="${T.run_min}" required><span>${T.run_min}</span><input class="inp mono" name="sec" type="number" inputmode="numeric" min="0" max="59" placeholder="34" aria-label="${T.run_sec}"><span>${T.run_sec}</span></div></div>
@@ -2425,7 +2437,8 @@ document.addEventListener('click',ev=>{
   else if(a==='msgedit'){UI.msgEdit=el.dataset.id||null;render();if(UI.msgEdit)document.getElementById('em-'+UI.msgEdit)?.focus()}
   else if(a==='cmtedit'){UI.cmtEdit=el.dataset.k||null;render()}
   else if(a==='medit'){UI.mEdit=el.dataset.ev||null;render()}
-  else if(a==='rundel'){run(()=>delRun(el.dataset.id))}
+  else if(a==='rundel'){UI.confirmRemove=null;run(()=>delRun(el.dataset.id))}
+  else if(a==='runedit'){UI.runEdit=el.dataset.id||null;UI.confirmRemove=null;render()}
   else if(a==='xaddrow'){const box=document.getElementById('x-rows');box.insertAdjacentHTML('beforeend',xRow(null,I18N[lang()]));box.lastElementChild.querySelector('input').focus()}
   else if(a==='xrmrow'){const box=document.getElementById('x-rows'), r=el.closest('.xrow');if(box.children.length>1)r.remove();else r.querySelectorAll('input').forEach(i=>i.value='');stashX()}
   else if(a==='xpick'){const box=document.getElementById('x-rows');let r=[...box.children].find(x=>!x.querySelector('[name=xn]').value.trim());
@@ -2562,6 +2575,8 @@ document.addEventListener('submit',ev=>{
     run(async()=>{must(await sb.from('profiles').update(row).eq('id',UI.session));await loadAll()},t('prof_saved'));return}
   if(f.dataset.form==='vedit'){const id=f.dataset.id,row={title:(fdt.get('title')||'').trim(),note:(fdt.get('note')||'').trim()};
     run(async()=>{must(await sb.from('videos').update(row).eq('id',id));const v=ST.videos.find(x=>x.id===id);if(v)Object.assign(v,row);UI.vEdit=null},t('v_saved'));return}
+  if(f.dataset.form==='runedit'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec){UI.pressed=null;return}const id=f.dataset.id;
+    run(async()=>{await editRun(id,{day:fdt.get('day')||TODAY,sec,note:(fdt.get('note')||'').trim()});UI.runEdit=null},t('run_fixed'));return}
   if(f.dataset.form==='mnote'){const ev=f.dataset.ev;run(async()=>{await saveMNote(ev,{result:(fdt.get('result')||'').trim(),good:(fdt.get('good')||'').trim(),issues:(fdt.get('issues')||'').trim(),next_steps:(fdt.get('next_steps')||'').trim()});UI.mEdit=null},()=>({title:t('ch_mr_t'),msg:pick1(t('ch_mr'))}))}
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
