@@ -199,7 +199,11 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .cw-edit,.cw-prev{display:grid;gap:8px}
 .cw-ta{min-height:44px;resize:none;overflow:hidden;line-height:1.55;padding:9px 12px}
 .cw-bar{gap:8px}
-.cw-lbl{font-size:calc(12*var(--u));font-weight:700;color:var(--dim);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.cw-lbl small{font-weight:500;color:var(--faint)}
+.cw-lbl{font-size:calc(12*var(--u));font-weight:700;color:var(--dim);display:flex;gap:8px;align-items:center;justify-content:space-between}.cw-lbl>span{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.cw-lbl small{font-weight:500;color:var(--faint)}
+.cw-far{margin-left:auto;display:flex;gap:8px}   /* 見たよ・やめる は右端に離す */
+.cw-editbtn{flex:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);background:var(--panel);color:var(--accent);font:inherit;font-size:calc(13*var(--u));font-weight:700;cursor:pointer}
+.cw-editbtn:active{transform:scale(.96)}
+.cmt b.cmt-h,.by.edh{display:flex;align-items:center;gap:6px}.cmt-h .cw-editbtn,.edh .cw-editbtn{margin-left:auto;padding:4px 10px;font-size:calc(12*var(--u))}
 .cw-text{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--tint);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:14px;padding:10px 13px;font-size:calc(15*var(--u));line-height:1.6;cursor:text}
 .cform .inp{padding:7px 10px;font-size:calc(16*var(--u))}
 @media (max-width:520px){.ent{grid-template-columns:1fr;gap:4px}}
@@ -638,7 +642,7 @@ const I18N = {
   ch_goal_t:'今月の目標を保存しました！', ch_goal:['毎日少しずつ近づこう。応援しているよ！','目標があると練習が変わる。がんばろう！'],
   ch_ev_t:'試合の予定を追加しました', ch_ev:['準備していこう！体調管理も大事だよ。'],
   ch_inv_t:'招待コードを発行しました', ch_inv:['下の「📤 送る」から届けましょう。'],
-  ed_edit:'編集', ed_mark:'（編集済み）', ed_save:'直す', ed_done:'直しました',
+  ed_edit:'編集', ed_mark:'（編集済み）', ed_save:'保存', ed_done:'直しました',
   ac_title:'この端末のアカウント', ac_help:'家族で1台のスマホを使うときは、ここで切り替えます。選手のアカウントは、親のスマホで使い終わると自動でログアウトします（次はパスワードが必要です）。', ac_add:'＋ 別の人がログインする',
   ac_needpw:'パスワードが必要', ac_now:'使用中', ac_role:{coach:'コーチ',athlete:'選手',guardian:'保護者'}, ac_saved:'この端末のアカウント', ac_forget:'この端末から外す', ac_switched:'{n}さんに切り替えました', ac_tap:'名前を押すと切り替えられます',
   pain_none:'痛みや不調はなし', ct_over:'概要', ct_days:'毎日の記録', ct_charts:'グラフ', ct_qa:'質問・目標', rg_2w:'2週間', rg_4w:'4週間', rg_3m:'3ヶ月', rg_all:'すべて', tap_big:'タップで大きく表示',
@@ -1600,9 +1604,9 @@ function composer({form,attrs,id,name,ph,value,send,extra,cancel}){
   const T=I18N[lang()], st=(UI.cw||(UI.cw={}))[id], v=st?st.v:(value||''), prev=!!st?.prev;
   return `<form class="compose" data-form="${form}" ${attrs} data-cw="${id}">
     <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="20000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
-      <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${cancel||''}${extra||''}</div></div>
-    <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl">${T.cw_check}<small>${T.cw_tap}</small></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
-      <div class="row"><button class="btn sm" type="submit">${send}</button><button type="button" class="btn ghost sm" data-act="cwedit">${T.cw_edit}</button>${cancel||''}</div></div></form>`;
+      <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${extra||cancel?`<span class="cw-far">${extra||''}${cancel||''}</span>`:''}</div></div>
+    <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl"><span>${T.cw_check}<small>${T.cw_tap}</small></span><button type="button" class="cw-editbtn" data-act="cwedit">✏️ ${T.cw_edit}</button></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
+      <div class="row cw-bar"><button class="btn sm" type="submit">${send} ➤</button>${cancel?`<span class="cw-far">${cancel}</span>`:''}</div></div></form>`;   // 「直す」は文章の右上に離して置く（送信・見たよ と押し間違えないように）
 }
 function cwGrow(ta){ta.style.height='auto';ta.style.height=Math.max(ta.scrollHeight+2,ta.classList.contains('has')||document.activeElement===ta?120:44)+'px'}
 function cwMode(f,prev){const ta=f.querySelector('.cw-ta');f.querySelector('.cw-edit').hidden=prev;f.querySelector('.cw-prev').hidden=!prev;
@@ -1615,13 +1619,13 @@ document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta
 document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
 function bubble(m,cls,by,T,ro){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
-  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="20000">${esc(m.text)}</textarea><div class="row"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
-  return `<div class="bubble ${cls}"><div class="by">${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}${mine?` <button class="linkish" data-act="msgedit" data-id="${m.id}">${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
+  if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="20000">${esc(m.text)}</textarea><div class="row cw-bar"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm cw-far" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
+  return `<div class="bubble ${cls}"><div class="by edh"><span>${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}</span>${mine?`<button class="cw-editbtn" data-act="msgedit" data-id="${m.id}">✏️ ${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
 }
 function cmtBlock(aid,d,e,T){   // コーチのコメント（コーチは直せる）
   const canEdit=acct(UI.session)?.role==='coach'&&!UI.previewAs, key=aid+'|'+d;
   if(canEdit&&UI.cmtEdit===key)return composer({form:'editcmt',attrs:`data-aid="${aid}" data-d="${d}"`,id:`ec-${aid}-${d}`,name:'c',value:e.comment.text,send:T.ed_save,cancel:`<button class="btn ghost sm" type="button" data-act="cmtedit" data-k="">${T.cancel}</button>`});
-  return `<div class="cmt"><b>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}${canEdit?` <button class="linkish" data-act="cmtedit" data-k="${key}">${T.ed_edit}</button>`:''}</b><div class="txt">${esc(e.comment.text)}</div></div>`;
+  return `<div class="cmt"><b class="cmt-h"><span>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}</span>${canEdit?`<button class="cw-editbtn" data-act="cmtedit" data-k="${key}">✏️ ${T.ed_edit}</button>`:''}</b><div class="txt">${esc(e.comment.text)}</div></div>`;
 }
 function questions(aid,L,coach,ro){
   const T=I18N[L];
