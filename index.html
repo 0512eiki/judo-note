@@ -230,6 +230,9 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .scrim.closing{animation:ovOut .28s ease-out forwards;pointer-events:none;z-index:49}
 .scrim.closing>.sheet-ui{animation:shDown .28s cubic-bezier(.4,0,.6,1) forwards}
 .dialog p{margin:2px 0 16px;line-height:1.6}
+.scrim,.sheet-ui{overscroll-behavior:contain}   /* 中を端までスクロールしても、後ろの画面に動きを伝えない */
+.modal-x{position:sticky;top:-8px;z-index:3;display:flex;justify-content:flex-end;margin:-8px -8px 6px 0;pointer-events:none}   /* 閉じるボタンは、下までスクロールしてもいつも見える */
+.modal-x .btn{pointer-events:auto;background:var(--panel-solid,var(--panel));color:var(--text);border:1px solid var(--line);box-shadow:var(--shadow)}
 @keyframes ovIn{from{background:rgba(10,12,20,0)}}
 @keyframes ovOut{to{background:rgba(10,12,20,0)}}
 @keyframes shUp{0%{transform:translateY(12px) scale(.97);opacity:0;filter:blur(6px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:none}}
@@ -483,6 +486,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .mc-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:calc(15*var(--u));line-height:1.6}
 .mc-msg{padding:6px 10px;border-radius:10px;background:var(--panel)}.mc-msg.me{background:transparent;border:1px dashed var(--line2)}
 html.memo-open,html.memo-open body{overflow:hidden;overscroll-behavior:none;height:100%}html.memo-open body{position:fixed;left:0;right:0;width:100%}
+html.ov-open,html.ov-open body{overflow:hidden;overscroll-behavior:none}   /* シートを開いている間は後ろの画面を動かさない（位置はそのまま） */
 .memo,.memo-ta{overscroll-behavior:contain}
 textarea[data-memo]{cursor:text}
 .fab-close{position:fixed;z-index:15;top:calc(env(safe-area-inset-top,0px) + var(--hdr,110px) + 12px);right:max(16px,calc((100vw - 1100px)/2 + 16px));width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-bd);
@@ -1508,15 +1512,20 @@ function calendarCard(aid,L,coach){
   days.forEach(d=>{const e=E(aid,d), s=score(e), att=e?attOf(e):null, fut=d>TODAY;
     const lv=!e?'':att==='absent'||att==='off'||!s?'abs':s>=20?'good':s>=16?'mid':'low';
     const marks=[XS(aid,d).length?'💪':'',(ST.runs[aid]||[]).some(r=>r.day===d)?'🏃':'',(ST.events||[]).some(ev=>ev.aids.includes(aid)&&ev.date===d)?'🥋':'',e?.comment?'💬':''].join('');
-    cells.push(`<button type="button" class="cc ${d===sel?'sel':''} ${d===TODAY?'today':''} ${fut?'fut':''}" data-act="calday" data-v="${d}" ${fut?'disabled':''} aria-pressed="${d===sel}" aria-label="${fd(d,L)}"><b>${+d.slice(8)}</b>${lv?`<i class="cl ${lv}"></i>`:'<i class="cl"></i>'}<span class="cm">${marks}</span></button>`)});
-  const run=(ST.runs[aid]||[]).find(r=>r.day===sel), evs=(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&ev.date===sel);
-  const extra=[run?`<div class="small">${T.cal_run.replace('{t}',fmtTime(run.sec))}</div>`:'',...evs.map(ev=>`<div class="small">${esc(T.cal_match.replace('{n}',ev.name))}</div>`)].join('');
+    cells.push(`<button type="button" class="cc ${d===sel?'sel':''} ${d===TODAY?'today':''} ${fut?'fut':''}" data-act="calday" data-v="${d}" data-aid="${aid}" data-coach="${coach?1:''}" ${fut?'disabled':''} aria-pressed="${d===sel}" aria-label="${fd(d,L)}"><b>${+d.slice(8)}</b>${lv?`<i class="cl ${lv}"></i>`:'<i class="cl"></i>'}<span class="cm">${marks}</span></button>`)});
   return `<div class="card calcard"><div class="calhead"><h2 style="margin:0">📅 ${T.cal_title}</h2>
       <div class="hnav"><button type="button" data-act="calnav" data-v="-1" aria-label="${T.cal_prev}" ${canPrev?'':'disabled'}>‹</button><b>${monthLabel(ym,L)}</b><button type="button" data-act="calnav" data-v="1" aria-label="${T.cal_next}" ${canNext?'':'disabled'}>›</button></div></div>
     <div class="calgrid">${T.wd.map(w=>`<span class="cw">${w}</span>`).join('')}${cells.join('')}</div>
     <div class="callg">${Object.entries(T.cal_lg).map(([k,v])=>`<span><i class="cl ${k}"></i>${v}</span>`).join('')}${T.cal_marks.map(x=>`<span>${x}</span>`).join('')}</div>
-    <div class="caldetail">${E(aid,sel)||XS(aid,sel).length||extra?`<div class="entries">${entRow(aid,sel,L,coach,'k')}</div>${extra}`:`<div class="ent"><div class="d">${fd(sel,L)}</div><div class="muted small">${T.cal_none}</div></div>`}</div>
     <div class="small muted">${T.cal_help}</div></div>`;
+}
+function calExtra(aid,d,T){   // その日のランニング・試合
+  const run=(ST.runs[aid]||[]).find(r=>r.day===d), evs=(ST.events||[]).filter(ev=>ev.aids.includes(aid)&&ev.date===d);
+  return [run?`<div class="small">${T.cal_run.replace('{t}',fmtTime(run.sec))}</div>`:'',...evs.map(ev=>`<div class="small">${esc(T.cal_match.replace('{n}',ev.name))}</div>`)].join('');
+}
+function calDayBody(aid,d,L){   // カレンダーで押した日（ポップアップの中身）
+  const T=I18N[L], extra=calExtra(aid,d,T);
+  return E(aid,d)||XS(aid,d).length||extra?`<div class="entries">${entRow(aid,d,L,false,'k')}</div>${extra?`<div class="stack" style="gap:4px;margin-top:8px">${extra}</div>`:''}`:`<div class="ent"><div class="d">${fd(d,L)}</div><div class="muted small">${T.cal_none}</div></div>`;
 }
 function entRow(aid,d,L,coach,idp='c'){   // 1日分の記録（最近の記録とカレンダーで共通）
     const T=I18N[L], e=E(aid,d);
@@ -1751,8 +1760,9 @@ function modalView(){
   const m=UI.modal, L=lang(), T=I18N[L]; if(!m)return '';
   let body='';
   if(m.type==='chart'){const days=UI.rgBig||90;body=`<div class="row" style="justify-content:space-between;margin-bottom:8px"><b>${esc(acct(m.aid)?.name||'')}</b>${rangeBar('rgBig',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${oneChart(m.aid,L,m.k,days,true)}`}
-  if(m.type==='day')body=entryModal(m.aid,m.d,L);
-  return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui wide" role="dialog" aria-modal="true" data-stop><div style="text-align:right"><button class="btn ghost sm" data-act="closemodal">✕ ${T.close2}</button></div>${body}</div></div>`;
+  if(m.type==='day'){body=entryModal(m.aid,m.d,L);const ex=calExtra(m.aid,m.d,T);if(ex)body+=`<div class="stack" style="gap:4px;margin-top:12px">${ex}</div>`}
+  if(m.type==='cal')body=calDayBody(m.aid,m.d,L);
+  return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui wide" role="dialog" aria-modal="true" data-stop><div class="modal-x"><button class="btn sm" data-act="closemodal">✕ ${T.close2}</button></div>${body}</div></div>`;
 }
 function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid), tab=UI.ctab||'over';
@@ -2283,8 +2293,8 @@ const app=document.getElementById('app');
 function render(){
   if(MEMO){UI.pendingRender=true;return}   // 書く画面を開いている間は、裏の画面を作り直さない（書いた文章の行き先が消えないように）
   applyTheme();
-  if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;return}
-  if(!UI.session||!me()){app.innerHTML=loginView();return}
+  if(UI.booting){app.innerHTML=`<div class="login"><div class="muted">${I18N[UI.loginLang].loading}</div></div>`;ovSync();return}
+  if(!UI.session||!me()){app.innerHTML=loginView();ovSync();return}
   const m=me(), before=ovBefore();
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   ovAfter(before);
@@ -2297,10 +2307,21 @@ function render(){
 /* シート・ポップアップ：開いたままの描き直しでは動かさない。閉じたものは、その要素だけを薄れさせてから取り除く（すぐ別の画面を開いても消されない） */
 const noMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const OVT={};
+function ovSync(){document.documentElement.classList.toggle('ov-open',!!document.querySelector('#app>.scrim, #ovlayer>.scrim.ask:not(.closing)'))}
+// シートの中を端までスクロールしたら、その先の動きを後ろの画面に伝えない（iPhoneで後ろが一緒に動いて見えるのを防ぐ）。暗い背景をなぞっても動かない
+let OVTY=0, OVTX=0, OVSC=null;
+document.addEventListener('touchstart',e=>{if(MEMO||!document.documentElement.classList.contains('ov-open'))return;OVTY=e.touches[0].clientY;OVTX=e.touches[0].clientX;OVSC=e.target.closest('.sheet-ui')},{passive:true});
+document.addEventListener('touchmove',e=>{if(MEMO||!document.documentElement.classList.contains('ov-open')||e.touches.length>1)return;const y=e.touches[0].clientY, x=e.touches[0].clientX, dy=y-OVTY, dx=x-OVTX;OVTY=y;OVTX=x;
+  if(Math.abs(dx)>Math.abs(dy)&&e.target.closest('.sheet-ui'))return;   // 横の動き（グラフのスワイプなど）は止めない
+  if(e.target.closest('.sheets'))return;   // 横に動かす表（印刷ノート）はそのまま
+  const sc=OVSC;if(!sc){e.preventDefault();return}
+  const top=sc.scrollTop<=0, bot=sc.scrollTop+sc.clientHeight>=sc.scrollHeight-1;
+  if(sc.scrollHeight<=sc.clientHeight+1||(dy>0&&top)||(dy<0&&bot))e.preventDefault()},{passive:false});
 function ovBefore(){return [...app.querySelectorAll(':scope > .scrim')].map(x=>({el:x,key:x.dataset.act,top:x.firstElementChild?.scrollTop||0}))}
 function ovAfter(before){
   const now=[...app.querySelectorAll(':scope > .scrim')], keys=new Set(now.map(x=>x.dataset.act)), had=new Set(before.map(b=>b.key));
   const t=performance.now();
+  ovSync();
   now.forEach(x=>{const k=x.dataset.act;if(!had.has(k)){OVT[k]=t;return}const el=t-(OVT[k]||0);   // 開いた直後に描き直されたときは、動きを途中から続ける
     if(el>=600)x.classList.add('stay');else[x,x.firstElementChild].forEach(n=>n&&(n.style.animationDelay=-el+'ms'))});
   if(noMotion())return;
@@ -2311,10 +2332,10 @@ function ovAfter(before){
 /* 確認の小さい箱（画面の真ん中）。OK なら true */
 function askBox(msg,okLabel){return new Promise(res=>{const T=I18N[lang()], ly=document.getElementById('ovlayer'), ov=document.createElement('div');
   ov.className='scrim ask noprint';ov.innerHTML=`<div class="sheet-ui dialog" role="alertdialog" aria-modal="true"><p>${esc(msg)}</p><div class="row" style="justify-content:flex-end;gap:8px"><button class="btn ghost sm" type="button" data-k="0">${T.cancel}</button><button class="btn sm danger-btn" type="button" data-k="1">${esc(okLabel||'OK')}</button></div></div>`;
-  const done=ok=>{document.removeEventListener('keydown',key,true);if(noMotion())ov.remove();else{ov.classList.add('closing');setTimeout(()=>ov.remove(),280)}res(ok)};
+  const done=ok=>{document.removeEventListener('keydown',key,true);if(noMotion())ov.remove();else{ov.classList.add('closing');setTimeout(()=>ov.remove(),280)}ovSync();res(ok)};
   const key=e=>{if(e.key==='Escape'){e.stopPropagation();done(false)}};
   ov.addEventListener('click',e=>{e.stopPropagation();if(ov.classList.contains('closing'))return;const b=e.target.closest('[data-k]');if(b)done(b.dataset.k==='1');else if(!e.target.closest('.dialog'))done(false)});
-  document.addEventListener('keydown',key,true);ly.append(ov)})}
+  document.addEventListener('keydown',key,true);ly.append(ov);ovSync()})}
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,msg.length>30?5600:2200)}
 /* ---------- 不具合の記録：エラーや「固まった」時間を、原因調査のために送る ---------- */
 let ERRN=0;const ERRSEEN=new Set();
@@ -2481,7 +2502,7 @@ document.addEventListener('click',ev=>{
   else if(a==='vdl'){const v=(ST.videos||[]).find(x=>x.id===el.dataset.id);if(!v)return;const name=(v.title||v.day).replace(/[\\/:*?"<>|]/g,'_')+'.'+v.path.split('.').pop();
     sb.storage.from('videos').createSignedUrl(v.path,3600,{download:name}).then(({data,error})=>{if(error)throw error;const a2=document.createElement('a');a2.href=data.signedUrl;a2.rel='noopener';document.body.appendChild(a2);a2.click();a2.remove()}).catch(e=>toast(errText(e)))}
   else if(a==='cnav'){const r=el.closest('.crail-card').querySelector('.crail');railGo(r,+r.dataset.cur+ +el.dataset.v)}
-  else if(a==='calday'){UI.calDay=el.dataset.v;const c=el.closest('.calcard'),top=c.getBoundingClientRect().top;render();const nc=document.querySelector('.calcard');if(nc)window.scrollBy(0,nc.getBoundingClientRect().top-top)}
+  else if(a==='calday'){const d=el.dataset.v, aid=el.dataset.aid;UI.calDay=d;UI.modal={type:el.dataset.coach&&!UI.previewAs&&E(aid,d)?'day':'cal',aid,d};render()}   // 押した日の記録はポップアップで（コーチはそのままコメントも書ける）
   else if(a==='calnav'){const ym=ymShift(UI.calYm||curYm(),+el.dataset.v);UI.calYm=ym;UI.calDay=ym===curYm()?TODAY:monthDates(ym).slice(-1)[0];const c=el.closest('.calcard'),top=c.getBoundingClientRect().top;render();const nc=document.querySelector('.calcard');if(nc)window.scrollBy(0,nc.getBoundingClientRect().top-top)}
   else if(a==='entmore'){const open=UI.entOpen!==el.dataset.aid;if(open)UI.entY=scrollY;UI.entOpen=open?el.dataset.aid:null;render();if(!open&&UI.entY!=null)window.scrollTo({top:UI.entY,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
   else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-txt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');
