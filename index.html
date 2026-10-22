@@ -122,6 +122,21 @@ main.wide{max-width:1320px}
 .rm-f{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
 .r-target{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--bad-s);color:var(--bad);font-weight:700;font-size:calc(12*var(--u));margin-bottom:10px}
 .r-ctx{font-size:calc(13*var(--u));color:var(--dim);white-space:pre-wrap;overflow-wrap:anywhere;max-height:9em;overflow:auto;padding:8px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);margin-bottom:10px}
+.r-sec{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.r-lbl{font-size:calc(11*var(--u));font-weight:700;color:var(--dim);letter-spacing:.04em;margin:8px 0 4px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.r-tools{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.r-back{margin-top:8px;padding:9px 11px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:calc(13*var(--u));white-space:pre-wrap;overflow-wrap:anywhere;color:var(--dim)}
+.r-warn{margin-top:6px;font-size:calc(12*var(--u));color:var(--warn);background:var(--warn-s);border-radius:10px;padding:6px 9px;white-space:pre-wrap}
+.r-tr{margin-top:8px;padding:9px 11px;border-radius:12px;background:var(--panel2);border:1px dashed color-mix(in srgb,var(--acc-2) 45%,transparent);font-size:calc(13*var(--u));white-space:pre-wrap;overflow-wrap:anywhere}
+.r-tr .tg{font-size:calc(10*var(--u));font-weight:800;color:var(--acc-2);background:color-mix(in srgb,var(--acc-2) 15%,transparent);border-radius:6px;padding:1px 6px;margin-right:6px}
+.r-trbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:6px}
+.r-trbar button{font:inherit;font-size:calc(11*var(--u));font-weight:700;color:var(--accent);background:var(--panel2);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:2px 10px;cursor:pointer}
+.r-trbar button[aria-pressed="true"]{background:var(--grad);color:#fff;border-color:transparent}
+.r-paste{margin-top:8px;display:grid;gap:6px}
+.kt{display:grid;gap:4px;margin-top:6px}.kt-row{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:8px;font-size:calc(13*var(--u))}.kt-row>b{font-size:calc(11*var(--u));color:var(--dim);padding-top:2px}
+.kt-it{display:flex;gap:6px;align-items:flex-start;justify-content:space-between}.kt-it span{white-space:pre-wrap;overflow-wrap:anywhere}.kt-it small{color:var(--faint);font-family:var(--mono);margin-right:4px}
+.kt-x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:calc(12*var(--u));padding:0 4px}
+.kt-add{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;margin-top:8px}.kt-add select,.kt-add input{min-width:0}
 @media (max-width:1100px){.rgrid{grid-template-columns:190px minmax(0,1fr) 330px}}
 @media (max-width:899px){
   .rgrid{display:block}.rgrid>.rcol{display:none;position:static;max-height:none;overflow:visible}
@@ -716,7 +731,7 @@ const I18N = {
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
   ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'返信待ち',
-  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ',
+  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ', r_ja:'日本語で書く', r_en:'英語（選手に届く文・直せる）', r_copy:'📋 頼み方ごとコピー', r_paste:'📥 貼り付け', r_back:'日本語に戻すと（意味のずれの確認）', r_copied:'コピーしました。ChatGPT に貼り付けてください', r_pasted:'貼り付けました', r_pastebox:'ここに ChatGPT の答えを貼り付けて「読み込む」', r_pastego:'読み込む', r_nocb:'自動で貼り付けできませんでした。下の欄に貼り付けてください', r_tcopy:'📋 コピー', r_tpaste:'📥 訳を貼る', r_tshow:'日本語訳', r_tall:'日本語訳を全部表示', r_tg:'訳', r_tstale:'元の文が書き直されています', r_tsaved:'訳を保存しました', k_title:'カルテ', k_goal:'目標', k_waza:'得意技', k_issue:'課題', k_advice:'アドバイス', k_add:'追加', k_ph:'カルテに書く', k_mgoal:'選手の今月の目標', k_need:'カルテと訳の保存は、データベースの準備のあとに使えます', k_del:'カルテから消しますか？',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -859,7 +874,7 @@ const I18N = {
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
   ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'To reply',
-  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only',
+  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only', r_ja:'Write in Japanese', r_en:'English (sent to the athlete, editable)', r_copy:'📋 Copy with instructions', r_paste:'📥 Paste', r_back:'Back-translated (check the meaning)', r_copied:'Copied. Paste it into ChatGPT', r_pasted:'Pasted', r_pastebox:'Paste the ChatGPT answer here, then “Load”', r_pastego:'Load', r_nocb:'Couldn’t paste automatically. Paste into the box below', r_tcopy:'📋 Copy', r_tpaste:'📥 Paste translation', r_tshow:'Translation', r_tall:'Show all translations', r_tg:'Tr.', r_tstale:'The original was edited', r_tsaved:'Translation saved', k_title:'Notes', k_goal:'Goals', k_waza:'Best techniques', k_issue:'To work on', k_advice:'Advice', k_add:'Add', k_ph:'Add a note', k_mgoal:'Athlete’s goals this month', k_need:'Notes and translations work after the database update', k_del:'Remove this note?',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -994,6 +1009,9 @@ async function loadAllOnce(){
   ST.mnotes={};must(mn).forEach(n=>ST.mnotes[n.event_id]=n);
   ST.links=must(gl);
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
+  if(acct(UI.session)?.role==='coach'){   // カルテと貼った訳（コーチだけの表。まだ表がなくても画面は動くように）
+    const [kr,tr]=await Promise.all([sb.from('karte_items').select('*').is('archived_at',null).order('created_at'),sb.from('translations').select('*')]);
+    ST.karteOk=!kr.error&&!tr.error; ST.karte=kr.error?[]:kr.data; ST.trans={};(tr.error?[]:tr.data).forEach(x=>ST.trans[x.src+':'+x.src_id]=x)}
   if(acct(UI.session)?.role==='coach'){ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
     ST.push={};const ps=await sb.rpc('team_push_status');(ps.data||[]).forEach(r=>ST.push[r.user_id]=r.devices)}   // 通知オンかどうかだけ
   UI.loadedAt=Date.now();
@@ -1661,6 +1679,7 @@ function cwMode(f,prev){const ta=f.querySelector('.cw-ta');f.querySelector('.cw-
   if(prev)f.querySelector('.cw-text').textContent=ta.value;
   else if(memoOn()&&ta.readOnly){cwGrow(ta);memoOpen(ta)}
   else{ta.focus();const n=ta.value.length;try{ta.setSelectionRange(n,n)}catch(e){}cwGrow(ta)}}
+document.addEventListener('input',ev=>{const j=ev.target.closest?.('[data-rja]');if(j)(UI.rja||(UI.rja={}))[j.dataset.rja]=j.value});   // 返信ページの「日本語で書く」
 document.addEventListener('input',ev=>{const ta=ev.target.closest?.('.cw-ta');if(!ta)return;ta.classList.toggle('has',!!ta.value);cwGrow(ta);(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:ta.value,prev:false}});
 document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta'))cwGrow(ev.target)});
 document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
@@ -1787,6 +1806,60 @@ const replyTotal=()=>ATH.reduce((n,a)=>n+pendItems(a.id).length,0);
 function replyOrder(){return ATH.map(a=>{const p=pendItems(a.id);return {a,n:p.length,first:p[0]?.date||''}})
   .sort((x,y)=>(!!y.n-!!x.n)||x.first.localeCompare(y.first)||x.a.name.localeCompare(y.a.name,'ja'))}
 function replySelect(id){if(!id)return;UI.prevSeen[id]=seenOf(id);UI.rsel=id;UI.rtarget=replyKey(pendItems(id)[0]);UI.rdays=30;UI.rscroll=true;markSeen(id)}
+/* ---------- ChatGPT とのコピペを楽に（アプリの中に AI は入れない） ---------- */
+const GPT_REPLY=ja=>`柔道コーチから選手への返信です。英語に訳してください。
+・柔道用語はローマ字のまま（uchi-mata, kuzushi, randori, ne-waza など）
+・説明の付け足し、言い換え、ていねいにする直しはしない
+・意味がずれやすい所があれば1行で教えて
+答えは次の形だけで：
+[EN]
+（英語）
+[JA]
+（その英語を日本語に戻した文）
+[NOTE]
+（ずれの注意。なければ「なし」）
+---
+${ja}`;
+const GPT_READ=txt=>`柔道の選手が書いた英文です。日本語に訳してください。柔道用語はそのまま。要約せず全文を訳して、訳文だけを答えてください。
+---
+${txt}`;
+function parseGpt(raw){const s=String(raw||'').replace(/\*\*/g,'').replace(/```[a-z]*\n?/gi,'');
+  const g=k=>{const m=s.match(new RegExp('\\['+k+'\\][ \\t]*\\n?([\\s\\S]*?)(?=\\n[ \\t]*\\[(?:EN|JA|NOTE)\\]|$)'));return m?m[1].trim():''};
+  const en=g('EN');return en?{en,ja:g('JA'),note:/^(なし|none|特になし)[。.]?$/i.test(g('NOTE'))?'':g('NOTE')}:{en:s.trim(),ja:'',note:''}}
+const hashS=s=>{let h=5381;for(const c of String(s))h=((h<<5)+h+c.codePointAt(0))|0;return (h>>>0).toString(36)+'-'+String(s).length};
+async function copyText(text){try{await navigator.clipboard.writeText(text);return true}catch(e){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();return ok}}
+async function readClip(){try{return await navigator.clipboard.readText()}catch(e){return null}}
+const rjaId=k=>'rja-'+k.replace(/[|]/g,'-');
+const cwIdOf=k=>{const p=k.split('|');return p[0]==='e'?`rp-${p[1]}-${p[2]}`:`rp-${p[1]}`};
+function rJa(aid,key,T){if(prefs(aid).lang!=='en')return '';const pb=UI.rpbox===key;
+  return `<div class="r-lbl">${T.r_ja}</div><textarea class="inp" id="${rjaId(key)}" data-rja="${esc(key)}" rows="3" maxlength="20000">${esc(UI.rja?.[key]||'')}</textarea>
+    <div class="r-tools"><button type="button" class="btn ghost sm" data-act="rcopy" data-k="${esc(key)}">${T.r_copy}</button><button type="button" class="btn ghost sm" data-act="rpaste" data-k="${esc(key)}">${T.r_paste}</button></div>
+    ${pb?`<div class="r-paste"><textarea class="inp" id="rpb-${rjaId(key)}" rows="4" placeholder="${esc(T.r_pastebox)}"></textarea><div><button type="button" class="btn sm" data-act="rpastego" data-k="${esc(key)}">${T.r_pastego}</button></div></div>`:''}
+    <div class="r-lbl">${T.r_en}</div>`}
+function rBack(key,T){const b=UI.rback?.[key];if(!b||(!b.ja&&!b.note))return '';
+  return `${b.ja?`<div class="r-lbl">${T.r_back}</div><div class="r-back">${esc(b.ja)}</div>`:''}${b.note?`<div class="r-warn">⚠ ${esc(b.note)}</div>`:''}`}
+function rApplyPaste(key,raw){const p=parseGpt(raw);if(!p.en)return false;const id=cwIdOf(key);(UI.cw||(UI.cw={}))[id]={v:p.en,prev:false};(UI.rback||(UI.rback={}))[key]={ja:p.ja,note:p.note};UI.rpbox=null;return true}
+function trBlock(aid,src,id,text,T){if(prefs(aid).lang!=='en'||!ST.karteOk||!text||!id)return '';
+  const k=src+':'+id, tr=ST.trans?.[k], open=tr&&(UI.trAll||UI.trOpen?.[k]), pb=UI.tpbox===k;
+  return `<div class="r-trbar"><button data-act="tcopy" data-src="${src}" data-id="${id}">${T.r_tcopy}</button><button data-act="tpaste" data-src="${src}" data-id="${id}">${T.r_tpaste}</button>${tr?`<button data-act="ttoggle" data-k="${k}" aria-pressed="${!!open}">${T.r_tshow} ${open?'▴':'▾'}</button>`:''}</div>
+    ${pb?`<div class="r-paste"><textarea class="inp" id="tpb-${id}" rows="3" placeholder="${esc(T.r_pastebox)}"></textarea><div style="text-align:right"><button class="btn sm" data-act="tpastego" data-src="${src}" data-id="${id}">${T.r_pastego}</button></div></div>`:''}
+    ${open?`<div class="r-tr"><span class="tg">${T.r_tg}</span>${tr.src_hash!==hashS(text)?`<span class="pill warn">${T.r_tstale}</span> `:''}${esc(tr.body)}</div>`:''}`}
+function srcText(src,id){if(src==='entry'){for(const a of Object.keys(ST.entries))for(const e of Object.values(ST.entries[a]||{}))if(e.id===id)return {aid:a,text:e.note};return null}
+  for(const th of ST.threads){if(th.mid===id)return {aid:th.aid,text:th.text};const r=th.replies.find(x=>x.id===id);if(r)return {aid:th.aid,text:r.text}}return null}
+async function transSave(src,id,body){const s0=srcText(src,id);if(!s0)throw new Error('not found');
+  const r=must(await sb.from('translations').upsert({athlete_id:s0.aid,src,src_id:id,src_hash:hashS(s0.text),body},{onConflict:'src,src_id'}).select().single());
+  ST.trans[src+':'+id]=r;(UI.trOpen||(UI.trOpen={}))[src+':'+id]=true;UI.tpbox=null;setTimeout(()=>toast(t('r_tsaved')),60)}
+/* カルテ：コーチが手で書く覚え書き（コーチだけの表） */
+const KINDS=['goal','waza','issue','advice'];
+function karteBlock(aid,L){const T=I18N[L];
+  if(!ST.karteOk)return `<div class="r-sec"><div class="r-lbl">${T.k_title}</div><div class="small muted">${T.k_need}</div></div>`;
+  const items=(ST.karte||[]).filter(x=>x.athlete_id===aid), g=ST.goals[aid+'|'+curYm()], gi=(g?.items||[]).filter(Boolean);
+  const rows=KINDS.map(k=>{const its=items.filter(x=>x.kind===k);if(!its.length&&!(k==='goal'&&gi.length))return '';
+    return `<div class="kt-row"><b>${T['k_'+k]}</b><div>${its.map(x=>`<div class="kt-it"><span>${k==='advice'?`<small>${md(localDay(x.created_at))}</small>`:''}${esc(x.body)}</span><button class="kt-x" data-act="kdel" data-id="${x.id}" aria-label="×">✕</button></div>`).join('')}
+      ${k==='goal'&&gi.length?`<div class="small muted" style="margin-top:2px">${T.k_mgoal}：${gi.map(esc).join('／')}</div>`:''}</div></div>`}).join('');
+  return `<div class="r-sec"><div class="r-lbl">${T.k_title}<span>🔒</span></div><div class="kt">${rows}</div>
+    <form class="kt-add" data-form="karte" data-aid="${aid}"><select class="inp" name="kind">${KINDS.map(k=>`<option value="${k}" ${UI.kkind===k?'selected':''}>${T['k_'+k]}</option>`).join('')}</select><input class="inp" name="body" maxlength="1000" placeholder="${esc(T.k_ph)}" autocomplete="off"><button class="btn sm" type="submit">${T.k_add}</button></form></div>`}
 function replyView(){
   const L=lang(), T=I18N[L], order=replyOrder(), total=order.reduce((n,x)=>n+x.n,0);
   if(!UI.rsel||!acct(UI.rsel))replySelect((order.find(x=>x.n)||order[0])?.a.id);
@@ -1814,18 +1887,19 @@ function replyView(){
     if(it.k==='e'){const e=E(aid,it.d), key=`e|${aid}|${it.d}`, p=pkeys.has(key), s=score(e);
       return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_e}</span>${newTag(aid,e.upd||e.at)}</div>
         <div class="meta">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}${s!=null?`<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>`:''}${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(q=>`<span class="pill ${q.level>=2?'warn':''}">${esc(ptxt(q,T))}・${T.lv[q.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
-        ${e.note?`<p class="rm-txt">${esc(e.note)}</p>`:''}
+        ${e.note?`<p class="rm-txt">${esc(e.note)}</p>${trBlock(aid,'entry',e.id,e.note,T)}`:''}
         ${e.comment?cmtBlock(aid,it.d,e,T):e.seen?`<div class="seen">${T.seen_pill}</div>`:''}
         ${p?`<div class="rm-f"><button class="btn ghost sm" data-act="seen" data-aid="${aid}" data-d="${it.d}">${T.seen_btn}</button><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}
     const th=it.th, key=`q|${th.id}`, p=pkeys.has(key);
     return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_q}</span>${th.coachOnly?`<span class="pill">${T.r_conly}</span>`:''}</div>
-      ${bubble({id:th.mid,author:th.author,text:th.text,edited:th.edited},'',`${esc(a.name)} · ${fd(th.date,L)}`,T)}
-      ${th.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T)).join('')}
+      ${bubble({id:th.mid,author:th.author,text:th.text,edited:th.edited},'',`${esc(a.name)} · ${fd(th.date,L)}`,T)}${trBlock(aid,'message',th.mid,th.text,T)}
+      ${th.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T)+(r.from==='coach'?'':trBlock(aid,'message',r.id,r.text,T))).join('')}
       ${p?`<div class="rm-f"><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}).join('');
   const log=`<div class="rcol r-log stack">
     <div class="row r-mob" style="justify-content:space-between"><button class="btn ghost sm" data-act="rpane" data-v="list">${T.r_list}</button>${total?`<button class="btn ghost sm" data-act="rnext">${T.r_next}</button>`:''}</div>
     <div class="r-who"><h1>${esc(a.name)}</h1><span class="small muted">${esc(a.cls||'')} · ${prefs(aid).lang==='en'?'English':'日本語'}${pend.length?' · '+T.r_pend.replace('{n}',pend.length):''}</span></div>
     ${cond}
+    ${prefs(aid).lang==='en'&&ST.karteOk?`<div class="r-trbar" style="margin:0"><button data-act="trall" aria-pressed="${!!UI.trAll}">${T.r_tall}</button></div>`:''}
     <div class="r-feed"><div style="text-align:center"><button class="linkish" data-act="rolder">${T.r_older}</button></div>${feed||`<div class="muted small" style="text-align:center">${T.r_none30}</div>`}</div>
     ${pend.length?`<button class="btn r-fab" data-act="rpane" data-v="write">${T.r_write}（${pend.length}）</button>`:''}</div>`;
   // 右：返信を書く（今の「コメント」「返信」の欄をそのまま使う＝選手側に届く形は今と同じ）
@@ -1833,11 +1907,11 @@ function replyView(){
   const k=(UI.rtarget||'').split('|');
   if(k[0]==='e'&&E(k[1],k[2])){const e=E(k[1],k[2]);
     wr=`<div class="r-target"><span>${T.r_to}：${fd(k[2],L)} · ${T.r_k_e}</span></div>${e.note?`<div class="r-ctx">${esc(e.note)}</div>`:''}
-      ${composer({form:'comment',attrs:`data-aid="${k[1]}" data-d="${k[2]}"`,id:`rp-${k[1]}-${k[2]}`,name:'c',ph:T.cmt_ph,send:T.send,extra:`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${k[1]}" data-d="${k[2]}">${T.seen_btn}</button>`})}`}
+      ${rJa(aid,UI.rtarget,T)}${composer({form:'comment',attrs:`data-aid="${k[1]}" data-d="${k[2]}"`,id:`rp-${k[1]}-${k[2]}`,name:'c',ph:T.cmt_ph,send:T.send,extra:`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${k[1]}" data-d="${k[2]}">${T.seen_btn}</button>`})}${rBack(UI.rtarget,T)}`}
   if(k[0]==='q'){const th=ST.threads.find(x=>x.id===k[1]);if(th){const last=th.replies.filter(r=>r.from!=='coach').slice(-1)[0];
     wr=`<div class="r-target"><span>${T.r_to}：${fd(thLast(th),L)} · ${T.r_k_q}</span></div><div class="r-ctx">${esc(last?last.text:th.text)}</div>
-      ${composer({form:'reply',attrs:`data-id="${th.id}"`,id:`rp-${th.id}`,name:'r',ph:T.reply_ph,send:T.reply})}`}}
-  const write=`<div class="rcol r-write card"><div class="row r-mob" style="margin-bottom:10px"><button class="btn ghost sm" data-act="rpane" data-v="log">${T.r_log}</button></div>${wr}<div class="small muted" style="margin-top:12px">${T.r_lock}</div></div>`;
+      ${rJa(aid,UI.rtarget,T)}${composer({form:'reply',attrs:`data-id="${th.id}"`,id:`rp-${th.id}`,name:'r',ph:T.reply_ph,send:T.reply})}${rBack(UI.rtarget,T)}`}}
+  const write=`<div class="rcol r-write card"><div class="row r-mob" style="margin-bottom:10px"><button class="btn ghost sm" data-act="rpane" data-v="log">${T.r_log}</button></div>${wr}${karteBlock(aid,L)}<div class="small muted" style="margin-top:12px">${T.r_lock}</div></div>`;
   return `<div class="rgrid" data-pane="${pane}">${list}${log}${write}</div>`;
 }
 function rangeBar(key,opts){const cur=UI[key]||opts[1][0];return `<div class="segbar" style="max-width:${opts.length*110}px">${opts.map(([v,l])=>`<button type="button" data-act="range" data-key="${key}" data-v="${v}" aria-pressed="${cur==v}">${l}</button>`).join('')}</div>`}
@@ -2634,6 +2708,15 @@ document.addEventListener('click',ev=>{
   else if(a==='rtarget'){UI.rtarget=el.dataset.k;UI.rpane='write';render();if(innerWidth<900)window.scrollTo(0,0)}
   else if(a==='rpane'){UI.rpane=el.dataset.v;if(el.dataset.v==='write'&&!UI.rtarget)UI.rtarget=replyKey(pendItems(UI.rsel)[0]);render();window.scrollTo(0,0)}
   else if(a==='rolder'){UI.rdays=(UI.rdays||30)+30;render()}
+  else if(a==='rcopy'){const k=el.dataset.k, ja=(document.getElementById(rjaId(k))?.value||'').trim();if(!ja)return toast(t('r_ja'));copyText(GPT_REPLY(ja)).then(ok=>toast(ok?t('r_copied'):t('r_nocb')))}
+  else if(a==='rpaste'){const k=el.dataset.k;readClip().then(txt=>{if(txt&&rApplyPaste(k,txt)){toast(t('r_pasted'));renderKeep()}else{UI.rpbox=k;toast(t('r_nocb'));renderKeep()}})}
+  else if(a==='rpastego'){const k=el.dataset.k, v=document.getElementById('rpb-'+rjaId(k))?.value||'';if(rApplyPaste(k,v))renderKeep()}
+  else if(a==='tcopy'){const s0=srcText(el.dataset.src,el.dataset.id);if(s0)copyText(GPT_READ(s0.text)).then(ok=>toast(ok?t('r_copied'):t('r_nocb')))}
+  else if(a==='tpaste'){const src=el.dataset.src,id=el.dataset.id;readClip().then(txt=>{txt=(txt||'').trim();if(txt)run(()=>transSave(src,id,txt),()=>null);else{UI.tpbox=src+':'+id;toast(t('r_nocb'));renderKeep()}})}
+  else if(a==='tpastego'){const src=el.dataset.src,id=el.dataset.id,v=(document.getElementById('tpb-'+id)?.value||'').trim();if(v)run(()=>transSave(src,id,v),()=>null)}
+  else if(a==='ttoggle'){const k=el.dataset.k;(UI.trOpen||(UI.trOpen={}))[k]=!(UI.trAll||UI.trOpen[k]);if(UI.trAll&&!UI.trOpen[k])UI.trAll=false;renderKeep()}
+  else if(a==='trall'){UI.trAll=!UI.trAll;if(!UI.trAll)UI.trOpen={};renderKeep()}
+  else if(a==='kdel'){const id=el.dataset.id;askBox(t('k_del')).then(ok=>{if(ok)run(async()=>{must(await sb.from('karte_items').update({archived_at:new Date().toISOString()}).eq('id',id));ST.karte=ST.karte.filter(x=>x.id!==id)},()=>null)})}
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
   else if(a==='naglater'){try{localStorage.setItem('judo-nag-'+UI.session,String(Date.now()))}catch(e){}render()}
@@ -2810,6 +2893,8 @@ document.addEventListener('submit',ev=>{
     return;
   }
   UI.cwSending=f.dataset.cw||null;   // 送れたときだけ下書きを消す（電波が悪くて失敗しても文章は残る）
+  if(f.dataset.form==='karte'){const aid=f.dataset.aid, kind=fdt.get('kind'), body=(fdt.get('body')||'').trim();if(!body||!KINDS.includes(kind))return;UI.kkind=kind;
+    run(async()=>{const r=must(await sb.from('karte_items').insert({athlete_id:aid,kind,body}).select().single());ST.karte.push(r)},()=>null);return}
   if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;run(()=>sendFeedback(f.dataset.aid,f.dataset.d,v),()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
   if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;run(()=>sendReply(f.dataset.id,v),()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
   if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),()=>({title:t('ch_ask_t'),msg:pick1(t('ch_ask'))}))}
