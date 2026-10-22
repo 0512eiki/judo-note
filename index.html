@@ -95,6 +95,42 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ── レイアウトとガラスカード ── */
 main{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;overflow-x:clip}
 main.wide{max-width:1320px}
+/* ── 返信ページ（コーチだけ）：左＝選手／真ん中＝ログ／右＝返信を書く。スマホでは1枚ずつ切り替え ── */
+.rgrid{display:grid;grid-template-columns:230px minmax(0,1fr) 400px;gap:14px;align-items:start}
+.rcol.card{padding:12px}
+.r-list,.r-write{position:sticky;top:calc(var(--hdr,64px) + 12px);max-height:calc(100vh - var(--hdr,64px) - 28px);overflow:auto;overscroll-behavior:contain}
+.r-fab{display:none}
+.rp-h{display:flex;justify-content:space-between;align-items:center;font-size:calc(11*var(--u));letter-spacing:.08em;font-weight:700;color:var(--dim);padding:4px 6px 8px}
+.rp-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:9px;align-items:center;width:100%;text-align:left;padding:9px 10px;border-radius:14px;border:1px solid transparent;background:none;font:inherit;color:inherit;cursor:pointer}
+.rp-row .rdot{width:8px;height:8px;border-radius:50%;background:var(--bad);box-shadow:0 0 8px var(--bad)} .rp-row .rdot.none{background:transparent;box-shadow:none}
+.rp-row b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .rp-row small{display:block;color:var(--dim);font-size:calc(11*var(--u))}
+.rp-row[aria-current="true"]{background:var(--tint);border-color:color-mix(in srgb,var(--accent) 35%,transparent);box-shadow:var(--hi),0 6px 18px color-mix(in srgb,var(--accent) 18%,transparent)} .rp-row[aria-current="true"] b{color:var(--accent)}
+.rp-row.rp-ok{opacity:.6}
+.rp-row .cnt{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--bad);color:#fff;font-size:calc(11*var(--u));font-weight:700}
+.rp-sep{font-size:calc(11*var(--u));color:var(--faint);font-weight:700;letter-spacing:.06em;padding:12px 10px 2px}
+.r-who{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.r-who h1{margin:0;font-family:var(--mincho);font-weight:800;font-size:calc(26*var(--u));letter-spacing:.02em}
+.r-cond{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center;padding:10px 14px;border-radius:16px;background:var(--panel2);border:1px solid var(--glass-bd);box-shadow:var(--hi);font-size:calc(12*var(--u))}
+.r-cond .k{color:var(--dim);font-weight:600}.r-cond .c-spark{display:inline-flex}.r-cond .it{display:inline-flex;gap:6px;align-items:center}
+.r-feed{display:grid;gap:10px}
+.r-day{font-size:calc(11*var(--u));color:var(--faint);text-align:center;font-weight:700;letter-spacing:.06em;margin-top:4px}
+.rm{max-width:92%;justify-self:start;border-radius:18px;border-top-left-radius:6px;padding:11px 14px;background:var(--panel);border:1px solid var(--glass-bd);box-shadow:var(--hi),0 4px 14px rgba(40,50,90,.06)}
+.rm .bubble{max-width:none}
+.rm.pending{border:1.5px solid color-mix(in srgb,var(--bad) 70%,transparent);box-shadow:var(--hi),0 0 0 4px var(--bad-s),0 8px 24px color-mix(in srgb,var(--bad) 16%,transparent)}
+.rm.target{outline:2px solid var(--accent);outline-offset:3px}
+.rm-h{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:calc(11*var(--u));color:var(--dim);font-weight:600;margin-bottom:6px}
+.rm-txt{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}
+.rm-f{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
+.r-target{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--bad-s);color:var(--bad);font-weight:700;font-size:calc(12*var(--u));margin-bottom:10px}
+.r-ctx{font-size:calc(13*var(--u));color:var(--dim);white-space:pre-wrap;overflow-wrap:anywhere;max-height:9em;overflow:auto;padding:8px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);margin-bottom:10px}
+@media (max-width:1100px){.rgrid{grid-template-columns:190px minmax(0,1fr) 330px}}
+@media (max-width:899px){
+  .rgrid{display:block}.rgrid>.rcol{display:none;position:static;max-height:none;overflow:visible}
+  .rgrid[data-pane=list]>.r-list,.rgrid[data-pane=log]>.r-log,.rgrid[data-pane=write]>.r-write{display:block}
+  .rgrid[data-pane=log] .r-fab{display:block;position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:15;text-align:center;padding:13px;border-radius:16px}
+  .rgrid[data-pane=log]>.r-log{padding-bottom:70px}
+  .rm{max-width:100%}
+}
+@media (min-width:900px){.r-mob{display:none!important}}
 .card{background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--radius);box-shadow:var(--shadow),var(--hi);padding:18px;
   -webkit-backdrop-filter:blur(var(--frost)) saturate(1.5);backdrop-filter:blur(var(--frost)) saturate(1.5)}
 .card h2{margin:0 0 12px;font-size:calc(12*var(--u));letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -643,6 +679,10 @@ const I18N = {
   ch_ev_t:'試合の予定を追加しました', ch_ev:['準備していこう！体調管理も大事だよ。'],
   ch_inv_t:'招待コードを発行しました', ch_inv:['下の「📤 送る」から届けましょう。'],
   ed_edit:'編集', ed_mark:'（編集済み）', ed_save:'保存', ed_done:'直しました',
+  forgot:'パスワードを忘れた', fg_title:'パスワードを忘れたとき', fg_help:'IDを入れて「知らせる」を押すと、コーチに通知が届きます（選手は保護者にも届きます）。新しいパスワードを教えてもらってください。', fg_send:'知らせる', fg_sent:'お知らせしました。新しいパスワードを、コーチか保護者から教えてもらってください。', fg_noid:'IDを入れてください。IDも忘れたときは、コーチに直接聞いてください。', fg_back:'ログインに戻る',
+  pr_title:'🔑 パスワードを忘れた人がいます', pr_help_c:'新しいパスワードを入れて「パスワード再設定」を押し、本人に直接伝えてください。', pr_help_g:'新しいパスワードを入れて「パスワード再設定」を押し、お子さんに伝えてください。コーチにも同じ通知が届いているので、どちらかが設定すれば大丈夫です。', pr_dismiss:'対応済みにする',
+  g_pw_title:'お子さんのパスワード', g_pw_help:'お子さんがパスワードを忘れたときは、ここで新しいパスワードにできます。', g_reset_done:'パスワードを変更しました。お子さんに伝えてください。',
+  mypw_title:'パスワードを変える', mypw_cur:'今のパスワード', mypw_save:'パスワードを変える', mypw_done:'パスワードを変えました。次のログインから新しいパスワードを使ってください。', mypw_bad:'今のパスワードがちがいます。',
   ac_title:'この端末のアカウント', ac_help:'家族で1台のスマホを使うときは、ここで切り替えます。選手のアカウントは、親のスマホで使い終わると自動でログアウトします（次はパスワードが必要です）。', ac_add:'＋ 別の人がログインする',
   ac_needpw:'パスワードが必要', ac_now:'使用中', ac_role:{coach:'コーチ',athlete:'選手',guardian:'保護者'}, ac_saved:'この端末のアカウント', ac_forget:'この端末から外す', ac_switched:'{n}さんに切り替えました', ac_tap:'名前を押すと切り替えられます',
   pain_none:'痛みや不調はなし', ct_over:'概要', ct_days:'毎日の記録', ct_charts:'グラフ', ct_qa:'質問・目標', rg_2w:'2週間', rg_4w:'4週間', rg_3m:'3ヶ月', rg_all:'すべて', tap_big:'タップで大きく表示',
@@ -675,7 +715,8 @@ const I18N = {
   seen_btn:'見たよ', seen_sent:'「見たよ」を送りました', seen_pill:'✓ 見たよ', seen_ath:'✓ コーチが見ました', ev_target:'目標体重（{u}）', ev_prompt:'次の試合は決まった？ 自分で登録しておこう', ev_go:'試合を登録する', ev_by_a:'自分で登録', ev_by_c:'コーチが登録', ev_by_a_c:'選手が登録',
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
   ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
-  s_logged:'本日の入力', s_attn:'要チェック', s_unans:'未返信の質問',
+  s_logged:'本日の入力', s_attn:'要チェック', s_unans:'返信待ち',
+  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -781,6 +822,10 @@ const I18N = {
   ch_ev_t:'Match added', ch_ev:['Let’s prepare well — look after your body too.'],
   ch_inv_t:'Invite code created', ch_inv:['Send it with the “📤 Send” button below.'],
   ed_edit:'Edit', ed_mark:'(edited)', ed_save:'Save', ed_done:'Updated',
+  forgot:'Forgot password?', fg_title:'Forgot your password?', fg_help:'Enter your ID and tap “Notify”. Your coach (and, for athletes, your parents) will get a notification and can set a new password for you.', fg_send:'Notify', fg_sent:'Sent. Ask your coach or parent for your new password.', fg_noid:'Enter your ID. If you forgot your ID too, ask your coach directly.', fg_back:'Back to sign in',
+  pr_title:'🔑 Someone forgot their password', pr_help_c:'Enter a new password, tap “Reset password” and tell them in person.', pr_help_g:'Enter a new password, tap “Reset password” and tell your child. The coach got the same notification — either of you can do it.', pr_dismiss:'Mark as handled',
+  g_pw_title:'Your child’s password', g_pw_help:'If your child forgets their password, you can set a new one here.', g_reset_done:'Password changed. Let your child know.',
+  mypw_title:'Change password', mypw_cur:'Current password', mypw_save:'Change password', mypw_done:'Password changed. Use the new one next time you sign in.', mypw_bad:'Your current password is wrong.',
   ac_title:'Accounts on this device', ac_help:'Switch here when your family shares one phone. An athlete’s account signs out automatically when they’re done on a parent’s phone (they’ll need their password next time).', ac_add:'＋ Someone else signs in',
   ac_needpw:'Password needed', ac_now:'In use', ac_role:{coach:'Coach',athlete:'Athlete',guardian:'Guardian'}, ac_saved:'Accounts on this device', ac_forget:'Remove from this device', ac_switched:'Switched to {n}', ac_tap:'Tap a name to switch',
   pain_none:'No pain or illness', ct_over:'Overview', ct_days:'Daily log', ct_charts:'Charts', ct_qa:'Questions & goals', rg_2w:'2 weeks', rg_4w:'4 weeks', rg_3m:'3 months', rg_all:'All', tap_big:'Tap to enlarge',
@@ -813,7 +858,8 @@ const I18N = {
   seen_btn:'Seen', seen_sent:'Sent “Seen”', seen_pill:'✓ Seen', seen_ath:'✓ Coach has seen this', ev_target:'Target weight ({u})', ev_prompt:'Got your next match? Add it yourself', ev_go:'Add a match', ev_by_a:'Added by you', ev_by_c:'Added by coach', ev_by_a_c:'Added by athlete',
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
   ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
-  s_logged:'Logged today', s_attn:'Need a look', s_unans:'Unanswered',
+  s_logged:'Logged today', s_attn:'Need a look', s_unans:'To reply',
+  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -904,7 +950,7 @@ async function loadAll(){
 async function loadAllOnce(){
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
-  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs,cs,rc,vd]=await Promise.all([
+  const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs,cs,rc,vd,pq]=await Promise.all([
     sb.from('profiles').select('*'),
     sb.from('entries').select('*').gte('day',since),
     sb.from('feedback').select('*'),
@@ -920,8 +966,9 @@ async function loadAllOnce(){
     sb.from('extras').select('*').gte('day',since).order('created_at'),
     sb.from('coach_seen').select('*'),
     sb.from('reactions').select('*'),
-    sb.from('videos').select('*').order('day',{ascending:false}).order('created_at',{ascending:false})]);
-  const profs=must(pr);
+    sb.from('videos').select('*').order('day',{ascending:false}).order('created_at',{ascending:false}),
+    sb.from('pw_requests').select('*')]);
+  const profs=must(pr);ST.pwReq=pq?.error?[]:(pq?.data||[]);   // パスワードを忘れた人（コーチ・その保護者にだけ見える）
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
   ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
@@ -1672,22 +1719,23 @@ function guardianView(){
     ${g?`<div class="card"><h2>${T.goals} · ${monthLabel(curYm(),L)}</h2><ul style="margin:0;padding-left:1.2em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>${g.review?`<p class="muted">${esc(g.review)}</p>`:''}</div>`:''}
     <div class="card"><h2>${T.booklet}</h2><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(S,UI.pYm)}</div></div>`}
-  return header(tabs)+`<main>${pushNag()}${a&&UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(S,L,false)}</div>`:''}${body}</main>`;
+  return header(tabs)+`<main>${pushNag()}${pwReqCard()}${a&&UI.view!=='note'?`<div style="margin-bottom:16px">${goalsBanner(S,L,false)}</div>`:''}${body}</main>`;
 }
 
 /* ---------- コーチの画面 ---------- */
 function coachView(){
-  const L=lang(), un=ST.threads.filter(unanswered).length;
+  const L=lang(), pend=replyTotal();
+  if(UI.view==='q')UI.view='reply';   // 以前の「質問」タブは「返信」にまとめた
   let vSeen=0;try{vSeen=+localStorage.getItem('judo-vseen-'+UI.session)||0}catch(e){}
   const newV=UI.view==='vids'?0:(ST.videos||[]).filter(v=>v.uploaded_by!==UI.session&&tms(v.created_at)>Math.max(vSeen,Date.now()-14*864e5)).length;
-  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],['q',t('t_q'),un],['vids',t('t_videos'),newV],['print',t('t_print')],['members',t('t_members')]];
+  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],...(pend||UI.view==='reply'?[['reply',t('t_reply'),pend]]:[]),['vids',t('t_videos'),newV],['print',t('t_print')],['members',t('t_members')]];
   let body='';
   if(UI.view==='team')body=UI.sel?coachDetail(UI.sel):coachTeam();
-  if(UI.view==='q')body=questions(null,L,true);
+  if(UI.view==='reply')body=replyView();
   if(UI.view==='print')body=coachPrint();
   if(UI.view==='members')body=membersView();
   if(UI.view==='vids'){try{localStorage.setItem('judo-vseen-'+UI.session,String(Date.now()))}catch(e){}body=`<div class="stack"><div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${t('t_videos')}</h1></div>${videosCard(null,L,true)}</div>`}
-  return header(tabs)+`<main>${pushNag()}${body}</main>`;
+  return header(tabs)+`<main>${pushNag()}${pwReqCard()}${body}</main>`;
 }
 /* ---------- コーチの未読：前回その選手の画面を開いてから、選手が書いたもの（コーチだけの記録。選手には何も届かない） ---------- */
 const tms=t=>t?+new Date(t):0;
@@ -1706,13 +1754,13 @@ async function markSeen(aid){if(!aid||acct(UI.session)?.role!=='coach')return;co
 function coachTeam(){
   const L=lang(), T=I18N[L];
   const rows=ATH.map(a=>({a,f:flags(a.id,L)})).sort((x,y)=>sev(y.f)-sev(x.f)||unreadOf(y.a.id)-unreadOf(x.a.id));
-  const logged=ATH.filter(a=>E(a.id,TODAY)).length, attn=rows.filter(r=>sev(r.f)>0).length, un=ST.threads.filter(unanswered).length;
+  const logged=ATH.filter(a=>E(a.id,TODAY)).length, attn=rows.filter(r=>sev(r.f)>0).length, un=replyTotal();
   const d14=[];for(let i=13;i>=0;i--)d14.push(addDays(TODAY,-i));
   return `<div class="stack">
    <div class="hello"><div class="sub">${fd(TODAY,L)}</div><h1>${T.t_team}</h1><div style="margin-top:10px"><button class="btn ghost sm" data-act="student">${T.st_btn}</button></div></div>
    <div class="stats"><div class="card stat"><div class="k">${T.s_logged}</div><div class="v">${logged}<small>/${ATH.length}</small></div></div>
      <div class="card stat"><div class="k">${T.s_attn}</div><div class="v" style="color:var(--bad)">${attn}</div></div>
-     <div class="card stat"><div class="k">${T.s_unans}</div><div class="v" style="color:var(--accent)">${un}</div></div></div>
+     <button class="card stat ovc" data-act="view" data-v="reply"><div class="k">${T.s_unans} ›</div><div class="v" style="color:var(--accent)">${un}</div></button></div>
    ${ATH.length?'':`<div class="card">${T.no_athletes}</div>`}
    <div class="card" ${ATH.length||demoAcct()?'':'hidden'}><div class="roster">
      <div class="rrow rhead"><span>${T.h_ath}</span><span>${T.h_trend}</span><span>${T.h_today}</span><span>${T.h_ramp}</span><span>${T.h_w} ${wToggle()}</span><span></span></div>
@@ -1725,6 +1773,72 @@ function coachTeam(){
         <span class="num c-m">${w?fmtW(w):'—'}${a.limit?`<br><small>≤${fmtW(a.limit)}</small>`:''}</span>
         <span class="flags">${pills(f)||`<span class="pill good">OK</span>`}</span></button>`}).join('')}
    </div></div></div>`;
+}
+/* ---------- 返信ページ（コーチだけ）：返信待ち＝まだ返していない質問＋7日以内の「文章か痛み・頭の印がある」記録で「見たよ」もコメントもないもの ---------- */
+const REPLY_DAYS=7;
+const thLast=th=>th.replies.length?th.replies[th.replies.length-1].date:th.date;
+function pendItems(aid){if(!aid)return [];const out=[];
+  for(let i=0;i<REPLY_DAYS;i++){const d=addDays(TODAY,-i), e=E(aid,d);
+    if(e&&!e.seen&&!e.comment&&(e.note.trim()||e.pain.length||(e.head||[]).length))out.push({k:'e',aid,d,date:d})}
+  ST.threads.filter(th=>th.aid===aid&&unanswered(th)).forEach(th=>out.push({k:'q',aid,id:th.id,date:thLast(th)}));
+  return out.sort((x,y)=>x.date.localeCompare(y.date))}
+const replyKey=it=>it?(it.k==='e'?`e|${it.aid}|${it.d}`:`q|${it.id}`):null;
+const replyTotal=()=>ATH.reduce((n,a)=>n+pendItems(a.id).length,0);
+function replyOrder(){return ATH.map(a=>{const p=pendItems(a.id);return {a,n:p.length,first:p[0]?.date||''}})
+  .sort((x,y)=>(!!y.n-!!x.n)||x.first.localeCompare(y.first)||x.a.name.localeCompare(y.a.name,'ja'))}
+function replySelect(id){if(!id)return;UI.prevSeen[id]=seenOf(id);UI.rsel=id;UI.rtarget=replyKey(pendItems(id)[0]);UI.rdays=30;UI.rscroll=true;markSeen(id)}
+function replyView(){
+  const L=lang(), T=I18N[L], order=replyOrder(), total=order.reduce((n,x)=>n+x.n,0);
+  if(!UI.rsel||!acct(UI.rsel))replySelect((order.find(x=>x.n)||order[0])?.a.id);
+  if(UI.rtarget){const k=UI.rtarget.split('|');const still=k[0]==='e'?!!E(k[1],k[2]):ST.threads.some(th=>th.id===k[1]);
+    if(!still||!pendItems(UI.rsel).some(it=>replyKey(it)===UI.rtarget))UI.rtarget=replyKey(pendItems(UI.rsel)[0])}   // 送ったら、次の返信待ちへ
+  const aid=UI.rsel, a=acct(aid), pane=UI.rpane||'list';
+  const row=x=>`<button class="rp-row ${x.n?'':'rp-ok'}" data-act="rsel" data-id="${x.a.id}" aria-current="${x.a.id===aid}"><span class="rdot ${x.n?'':'none'}"></span><span><b>${esc(x.a.name)}<span class="lang-tag">${prefs(x.a.id).lang.toUpperCase()}</span></b><small>${esc(x.a.cls||'')}</small></span>${x.n?`<span class="cnt">${x.n}</span>`:'<span class="pill good">✓</span>'}</button>`;
+  const pendA=order.filter(x=>x.n), doneA=order.filter(x=>!x.n);
+  const list=`<div class="rcol r-list card"><div class="rp-h"><span>${T.h_ath}</span><span>${total?T.r_pend.replace('{n}',total):''}</span></div>
+    ${total?'':`<div class="small muted" style="padding:4px 8px 8px">${T.r_allok}</div>`}${pendA.map(row).join('')}${doneA.length&&pendA.length?`<div class="rp-sep">${T.r_done}</div>`:''}${doneA.map(row).join('')}</div>`;
+  if(!a)return `<div class="rgrid" data-pane="list">${list}</div>`;
+  const pend=pendItems(aid), pkeys=new Set(pend.map(replyKey));
+  // 調子の要点（今のホームの判定と同じ。文章の要約はしない）
+  const e0=E(aid,TODAY), s0=score(e0), b0=baseline(aid,TODAY), d14=[];for(let i=13;i>=0;i--)d14.push(addDays(TODAY,-i));
+  const fl=flags(aid,L).filter(([,x])=>x!==T.f_q);
+  const cond=`<div class="r-cond"><span class="it"><span class="k">${T.r_trend}</span><span class="c-spark">${spark(d14.map(d=>score(E(aid,d))),96,24)}</span></span>
+    <span class="it"><span class="k">${T.r_today}</span><b class="mono">${s0!=null?`${s0}${T.of25}`:'—'}</b>${s0!=null&&b0!=null?`<span class="small muted">(${s0-b0>=0?'+':''}${(s0-b0).toFixed(1)})</span>`:''}</span>${pills(fl)}</div>`;
+  // ログ：記録（文章・痛み・コメントがある日）と質問を日付順に
+  const days=UI.rdays||30, since=addDays(TODAY,-days+1), items=[];
+  for(let i=0;i<days;i++){const d=addDays(TODAY,-i), e=E(aid,d);if(e&&(e.note.trim()||e.pain.length||(e.head||[]).length||e.comment||pkeys.has(`e|${aid}|${d}`)))items.push({k:'e',d,date:d})}
+  ST.threads.filter(th=>th.aid===aid&&(thLast(th)>=since||unanswered(th))).forEach(th=>items.push({k:'q',th,date:th.date}));
+  items.sort((x,y)=>x.date.localeCompare(y.date));
+  let lastDay='';
+  const feed=items.map(it=>{const day=it.date!==lastDay?`<div class="r-day">${fd(it.date,L)}</div>`:'';lastDay=it.date;
+    if(it.k==='e'){const e=E(aid,it.d), key=`e|${aid}|${it.d}`, p=pkeys.has(key), s=score(e);
+      return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_e}</span>${newTag(aid,e.upd||e.at)}</div>
+        <div class="meta">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}${s!=null?`<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>`:''}${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(q=>`<span class="pill ${q.level>=2?'warn':''}">${esc(ptxt(q,T))}・${T.lv[q.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
+        ${e.note?`<p class="rm-txt">${esc(e.note)}</p>`:''}
+        ${e.comment?cmtBlock(aid,it.d,e,T):e.seen?`<div class="seen">${T.seen_pill}</div>`:''}
+        ${p?`<div class="rm-f"><button class="btn ghost sm" data-act="seen" data-aid="${aid}" data-d="${it.d}">${T.seen_btn}</button><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}
+    const th=it.th, key=`q|${th.id}`, p=pkeys.has(key);
+    return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_q}</span>${th.coachOnly?`<span class="pill">${T.r_conly}</span>`:''}</div>
+      ${bubble({id:th.mid,author:th.author,text:th.text,edited:th.edited},'',`${esc(a.name)} · ${fd(th.date,L)}`,T)}
+      ${th.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T)).join('')}
+      ${p?`<div class="rm-f"><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}).join('');
+  const log=`<div class="rcol r-log stack">
+    <div class="row r-mob" style="justify-content:space-between"><button class="btn ghost sm" data-act="rpane" data-v="list">${T.r_list}</button>${total?`<button class="btn ghost sm" data-act="rnext">${T.r_next}</button>`:''}</div>
+    <div class="r-who"><h1>${esc(a.name)}</h1><span class="small muted">${esc(a.cls||'')} · ${prefs(aid).lang==='en'?'English':'日本語'}${pend.length?' · '+T.r_pend.replace('{n}',pend.length):''}</span></div>
+    ${cond}
+    <div class="r-feed"><div style="text-align:center"><button class="linkish" data-act="rolder">${T.r_older}</button></div>${feed||`<div class="muted small" style="text-align:center">${T.r_none30}</div>`}</div>
+    ${pend.length?`<button class="btn r-fab" data-act="rpane" data-v="write">${T.r_write}（${pend.length}）</button>`:''}</div>`;
+  // 右：返信を書く（今の「コメント」「返信」の欄をそのまま使う＝選手側に届く形は今と同じ）
+  let wr=`<div class="small muted">${pend.length?T.r_choose:T.r_allok}</div>`;
+  const k=(UI.rtarget||'').split('|');
+  if(k[0]==='e'&&E(k[1],k[2])){const e=E(k[1],k[2]);
+    wr=`<div class="r-target"><span>${T.r_to}：${fd(k[2],L)} · ${T.r_k_e}</span></div>${e.note?`<div class="r-ctx">${esc(e.note)}</div>`:''}
+      ${composer({form:'comment',attrs:`data-aid="${k[1]}" data-d="${k[2]}"`,id:`rp-${k[1]}-${k[2]}`,name:'c',ph:T.cmt_ph,send:T.send,extra:`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${k[1]}" data-d="${k[2]}">${T.seen_btn}</button>`})}`}
+  if(k[0]==='q'){const th=ST.threads.find(x=>x.id===k[1]);if(th){const last=th.replies.filter(r=>r.from!=='coach').slice(-1)[0];
+    wr=`<div class="r-target"><span>${T.r_to}：${fd(thLast(th),L)} · ${T.r_k_q}</span></div><div class="r-ctx">${esc(last?last.text:th.text)}</div>
+      ${composer({form:'reply',attrs:`data-id="${th.id}"`,id:`rp-${th.id}`,name:'r',ph:T.reply_ph,send:T.reply})}`}}
+  const write=`<div class="rcol r-write card"><div class="row r-mob" style="margin-bottom:10px"><button class="btn ghost sm" data-act="rpane" data-v="log">${T.r_log}</button></div>${wr}<div class="small muted" style="margin-top:12px">${T.r_lock}</div></div>`;
+  return `<div class="rgrid" data-pane="${pane}">${list}${log}${write}</div>`;
 }
 function rangeBar(key,opts){const cur=UI[key]||opts[1][0];return `<div class="segbar" style="max-width:${opts.length*110}px">${opts.map(([v,l])=>`<button type="button" data-act="range" data-key="${key}" data-v="${v}" aria-pressed="${cur==v}">${l}</button>`).join('')}</div>`}
 function daysTable(aid,L,days){
@@ -2156,6 +2270,13 @@ function settingsView(){
     ${!UI.student?`<div class="opt-group"><label class="lbl" for="remind">${{coach:T.remind_c,guardian:T.remind_g}[acct(UI.session).role]||T.remind}</label><select class="inp" id="remind" data-act="remind">${['off',...Array.from({length:36},(_,i)=>String(6+Math.floor(i/2)).padStart(2,'0')+(i%2?':30':':00'))].map(v=>`<option value="${v}" ${(p.remind||'21:00')===v?'selected':''}>${v==='off'?T.remind_off:v}</option>`).join('')}</select><div class="small muted">${esc(T.tz_note.replace('{z}',(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ''}})()))}</div></div>`:''}
     ${acct(UI.session).role==='athlete'?`<p class="small">🔒 ${T.viewers}${L==='ja'?'：':': '}${T.viewers_list.replace('{g}',guardiansOf(UI.session).map(g=>T.viewers_g.replace('{n}',esc(g.name))).join(''))}</p>`:''}
     <p class="small"><a class="linkish" href="manual.html#${acct(UI.session).role==='coach'?'coach':(acct(UI.session).role==='guardian'?'parent':'athlete')+'-'+L}">📖 ${L==='ja'?'取扱説明書':'Manual'}</a></p>
+    ${me0.role==='guardian'&&!UI.previewAs?`<div class="opt-group"><span class="lbl">${T.g_pw_title}</span><div class="small muted">${T.g_pw_help}</div>
+      ${childrenOf(me0.id).map(k=>`<form class="stack" style="gap:6px" data-form="resetpw" data-aid="${k.id}" data-g="1"><div class="small"><b>${esc(k.name)}</b> <span class="muted">ID <span class="mono">${esc(k.login)}</span></span></div><div class="row"><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}（${esc(k.name)}）"><button class="btn ghost sm" type="submit">${T.reset_pw}</button></div></form>`).join('')}</div>`:''}
+    ${UI.student||UI.previewAs?'':`<form class="opt-group" data-form="mypw"><span class="lbl">${T.mypw_title}</span>
+      <input type="text" name="username" autocomplete="username" value="${esc(me0.login)}" hidden>
+      <div class="field"><label for="mp-cur" class="small muted">${T.mypw_cur}</label><input class="inp" id="mp-cur" name="cur" type="password" autocomplete="current-password"></div>
+      <div class="field"><label for="mp-new" class="small muted">${T.new_pw}</label><input class="inp" id="mp-new" name="pw" type="password" autocomplete="new-password" minlength="8"></div>
+      <div><button class="btn ghost sm" type="submit">${T.mypw_save}</button></div></form>`}
     <p class="small muted">${T.settings_note}</p>
     <div class="row" style="justify-content:space-between"><span class="small muted">${esc(me().name)} · ID <span class="mono">${esc(me().login)}</span></span><button class="btn sm" data-act="closeset">${T.close}</button></div>
   </div></div>`;
@@ -2168,6 +2289,7 @@ function loginView(){
   const T=I18N[UI.loginLang];
   if(UI.auth==='join')return joinView();
   if(UI.auth==='setup')return setupView();
+  if(UI.auth==='forgot')return forgotView();
   return `<div class="login"><form class="card stack" id="login-form" autocomplete="on">
     ${brandBlock()}
     ${regLoad().length?`<div class="field"><span class="lbl">${T.ac_saved}</span><div class="chips">${regLoad().map(r=>`<button type="button" class="acchip ${UI.prefill===r.login?'on':''}" data-act="switchacct" data-login="${esc(r.login)}">${esc(r.name)}${r.pw||r.role==='athlete'?' 🔒':''}</button>`).join('')}</div><div class="small muted">${T.ac_tap}</div></div>`:''}
@@ -2175,9 +2297,33 @@ function loginView(){
     <div class="field"><label for="lg-pw">${T.pw}</label><input class="inp" id="lg-pw" name="pass" type="password" autocomplete="current-password"></div>
     <div class="err" id="lg-err">${esc(UI.err)}</div>
     <button class="btn" type="submit" ${UI.busy?'disabled':''}>${T.signin}</button>
+    <div style="text-align:center"><button type="button" class="linkish" data-act="auth" data-v="forgot">${T.forgot}</button></div>
     <p class="small muted" style="margin:0">🔒 ${T.privacy} <a class="linkish" href="manual.html">${T.howto}</a></p>
     <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost sm" data-act="auth" data-v="join">${T.join}</button><button type="button" class="linkish" data-act="auth" data-v="setup">${T.setup}</button></div>
   </form></div>`;
+}
+function forgotView(){   // 本人かどうか確かめられないので、自分では直さず、コーチ・保護者に知らせる
+  const T=I18N[UI.loginLang];
+  return `<div class="login"><div class="card stack">
+    ${brandBlock()}
+    <h2 style="margin:0">${T.fg_title}</h2>
+    <p class="small" style="margin:0">${T.fg_help}</p>
+    <div class="field"><label for="fg-id">${T.id}</label><input class="inp" id="fg-id" autocapitalize="off" autocomplete="username" autocorrect="off" spellcheck="false" value="${esc(UI.prefill||'')}"></div>
+    <div class="err" id="fg-err">${UI.fgSent?'':esc(UI.err)}</div>
+    ${UI.fgSent?`<div class="pill good" style="white-space:normal">✓ ${T.fg_sent}</div>`:`<button class="btn" type="button" data-act="forgotsend">${T.fg_send}</button>`}
+    <div><button type="button" class="btn ghost sm" data-act="auth" data-v="login">${T.fg_back}</button></div>
+  </div></div>`;
+}
+/* パスワードを忘れた人の知らせ（コーチ：チーム全員分／保護者：自分の子どもの分）。その場で再設定できる */
+function pwReqCard(){
+  const T=I18N[lang()], m=me(); if(!m||UI.previewAs||UI.student)return '';
+  const list=(ST.pwReq||[]).map(r=>({r,a:acct(r.user_id)})).filter(x=>x.a&&x.a.id!==m.id);
+  if(!list.length)return '';
+  const g=m.role==='guardian';
+  return `<div class="card alert noprint" role="status" style="margin-bottom:16px"><h2>${T.pr_title}</h2><p class="small" style="margin:0 0 10px">${g?T.pr_help_g:T.pr_help_c}</p>
+    <div class="stack" style="gap:12px">${list.map(({r,a})=>`<div class="stack" style="gap:6px"><div><b>${esc(a.name)}</b> <span class="small muted">ID <span class="mono">${esc(a.login)}</span> · ${hm(r.created_at)}</span></div>
+      <form class="row" data-form="resetpw" data-aid="${a.id}" ${g?'data-g="1"':''}><input class="inp" name="pw" type="text" autocomplete="off" minlength="8" placeholder="${esc(T.new_pw)}" style="flex:1;min-width:160px" aria-label="${esc(T.new_pw)}"><button class="btn sm" type="submit">${T.reset_pw}</button></form>
+      <div><button type="button" class="linkish" data-act="pwdismiss" data-id="${a.id}">${T.pr_dismiss}</button></div></div>`).join('')}</div></div>`;
 }
 function joinView(){
   const T=I18N[UI.loginLang], j=UI.join||{}, signedIn=!!UI.authUser;
@@ -2302,7 +2448,8 @@ function render(){
   const m=me(), before=ovBefore();
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   ovAfter(before);
-  if(m.role==='coach'&&UI.sel&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
+  if(m.role==='coach'&&(UI.sel||UI.view==='reply')&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
+  if(UI.rscroll){UI.rscroll=false;const tg=app.querySelector('.rm.target')||app.querySelector('.rm.pending');if(tg&&innerWidth>=900)tg.scrollIntoView({block:'center'})}
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
   drawHealth(); railsInit(); document.querySelectorAll('.vnote').forEach(n=>{const b=n.nextElementSibling;if(b)b.hidden=!(n.scrollHeight>n.clientHeight+2)}); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
@@ -2457,7 +2604,11 @@ document.addEventListener('click',ev=>{
   const a=el.dataset.act;
   if(UI.previewAs&&!['view','exitpreview','print','pym','hcr','hcnav','cmore','cnav','entmore','calday','calnav','vnmore','vplay','vdl','closemodal','donehide'].includes(a)){toast(t('pv_blocked'));return}   // 何も起きないと固まったように見えるので、理由を出す   // 読むだけの操作は、閲覧モードでも使える   // 閲覧モードでは何も変えられない
   if(a==='loginlang'){UI.loginLang=el.dataset.l;render()}
-  else if(a==='auth'){UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
+  else if(a==='auth'){if(el.dataset.v==='forgot'){UI.prefill=(document.getElementById('lg-id')?.value||UI.prefill||'').trim();UI.fgSent=false}UI.auth=el.dataset.v==='login'?null:el.dataset.v;UI.err='';render()}
+  else if(a==='forgotsend'){const id=(document.getElementById('fg-id')?.value||'').trim().toLowerCase(), e=document.getElementById('fg-err'), T2=I18N[UI.loginLang];
+    if(!/^[a-z0-9_-]{3,20}$/.test(id)){if(e)e.textContent=T2.fg_noid;return}
+    el.disabled=true;el.textContent=T2.saving||'…';UI.prefill=id;
+    sb.functions.invoke('push',{body:{type:'pwhelp',login:id}}).then(({error})=>{if(error)throw error;UI.fgSent=true;render()}).catch(err=>{el.disabled=false;el.textContent=T2.fg_send;if(e)e.textContent=errText(err)})}
   else if(a==='checkcode'){const c=document.getElementById('jn-code').value.trim().toUpperCase();UI.join={...(UI.join||{}),code:c};
     sb.rpc('check_invite',{invite_code:c}).then(({data,error})=>{const ok=!error&&data;UI.join={...UI.join,team:ok?data.team:null,role:ok?data.role:null,athlete:ok?data.athlete:null};
       const T2=I18N[UI.loginLang], el2=document.getElementById('jn-team'), box=document.getElementById('jn-athlete');   // 入力中の内容を消さないよう、描き直さずに部分だけ更新
@@ -2478,11 +2629,17 @@ document.addEventListener('click',ev=>{
     if(a==='share'&&navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
   else if(a==='open'){const id=el.dataset.id;UI.prevSeen[id]=seenOf(id);UI.ctab='over';UI.sel=id;markSeen(id);render();window.scrollTo(0,0)}
   else if(a==='back'){markSeen(UI.sel);UI.sel=null;render();window.scrollTo(0,0)}   // 見ている間に届いた分も既読に
+  else if(a==='rsel'){replySelect(el.dataset.id);UI.rpane='log';render();window.scrollTo(0,0)}
+  else if(a==='rnext'){const ids=replyOrder().filter(x=>x.n),i=ids.findIndex(x=>x.a.id===UI.rsel),nx=ids[(i+1)%ids.length];if(nx){replySelect(nx.a.id);render();window.scrollTo(0,0)}}
+  else if(a==='rtarget'){UI.rtarget=el.dataset.k;UI.rpane='write';render();if(innerWidth<900)window.scrollTo(0,0)}
+  else if(a==='rpane'){UI.rpane=el.dataset.v;if(el.dataset.v==='write'&&!UI.rtarget)UI.rtarget=replyKey(pendItems(UI.rsel)[0]);render();window.scrollTo(0,0)}
+  else if(a==='rolder'){UI.rdays=(UI.rdays||30)+30;render()}
   else if(a==='settings'){UI.settings=true;UI.pushState=null;render();refreshPushState()}
   else if(a==='pushon'){run(async()=>{await enablePush();UI.pushState='on'},t('n_enabled'))}
   else if(a==='naglater'){try{localStorage.setItem('judo-nag-'+UI.session,String(Date.now()))}catch(e){}render()}
   else if(a==='pushoff'){run(async()=>{await disablePush();UI.pushState='off'})}
   else if(a==='pushtest'){sb.functions.invoke('push',{body:{type:'test'}}).then(({data,error})=>{if(error)throw error;toast(data?.sent?t('n_test_sent'):t('n_sent0'))}).catch(e=>toast(errText(e)))}
+  else if(a==='pwdismiss'){const id=el.dataset.id;run(async()=>{must(await sb.from('pw_requests').delete().eq('user_id',id));ST.pwReq=(ST.pwReq||[]).filter(r=>r.user_id!==id)},null)}
   else if(a==='closeset'){UI.settings=false;render()}
   else if(a==='wunit'){const u=el.dataset.v, old=WU(); if(u===old)return;
     const f=document.getElementById('f-w'), inForm=!!document.getElementById('today-form');
@@ -2679,7 +2836,12 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:t('ch_goal_t'),msg:pick1(t('ch_goal'))}))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:wKg(fdt.get('wlimit'))}).eq('id',aid));await loadAll()},t('saved_cls'))}
-  if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));run(()=>sb.rpc('coach_reset_password',{athlete:f.dataset.aid,new_password:pw}).then(must),t('reset_done_pw'))}
+  if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'', aid=f.dataset.aid, g=!!f.dataset.g;if(pw.length<8)return toast(t('e_pw'));
+    run(async()=>{must(await sb.rpc(g?'guardian_reset_password':'coach_reset_password',{athlete:aid,new_password:pw}));ST.pwReq=(ST.pwReq||[]).filter(r=>r.user_id!==aid)},t(g?'g_reset_done':'reset_done_pw'))}
+  if(f.dataset.form==='mypw'){const cur=fdt.get('cur')||'', pw=fdt.get('pw')||'';if(pw.length<8)return toast(t('e_pw'));   // 今のパスワードで本人か確かめてから変える
+    run(async()=>{const v=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,storageKey:'judo-pwcheck'},global:{fetch:fetchT}});   // 確かめ用（今のログインには触らない）
+      const {error:e1}=await v.auth.signInWithPassword({email:idToEmail(me().login),password:cur});if(e1)throw new Error(/invalid/i.test(e1.message)?'__'+t('mypw_bad'):e1.message);v.auth.signOut({scope:'local'}).catch(()=>{});
+      must(await sb.auth.updateUser({password:pw}));f.reset()},t('mypw_done')).catch(()=>{});return}
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&(UI.settings||UI.modal||UI.acctSheet)){UI.settings=false;UI.modal=null;UI.acctSheet=false;render()}
   if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches?.('.cw-text')){ev.preventDefault();ev.target.click()}
