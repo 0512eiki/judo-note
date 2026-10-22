@@ -1880,8 +1880,8 @@ function replyView(){
   // ログ：記録（文章・痛み・コメントがある日）と質問を日付順に
   const days=UI.rdays||30, since=addDays(TODAY,-days+1), items=[];
   for(let i=0;i<days;i++){const d=addDays(TODAY,-i), e=E(aid,d);if(e&&(e.note.trim()||e.pain.length||(e.head||[]).length||e.comment||pkeys.has(`e|${aid}|${d}`)))items.push({k:'e',d,date:d})}
-  ST.threads.filter(th=>th.aid===aid&&(thLast(th)>=since||unanswered(th))).forEach(th=>items.push({k:'q',th,date:th.date}));
-  items.sort((x,y)=>x.date.localeCompare(y.date));
+  ST.threads.filter(th=>th.aid===aid&&(thLast(th)>=since||unanswered(th))).forEach(th=>items.push({k:'q',th,date:thLast(th)}));
+  items.sort((x,y)=>y.date.localeCompare(x.date)||(x.k==='q'?-1:1));   // 新しいものが一番上（質問は最後にやりとりした日に並ぶ）
   let lastDay='';
   const feed=items.map(it=>{const day=it.date!==lastDay?`<div class="r-day">${fd(it.date,L)}</div>`:'';lastDay=it.date;
     if(it.k==='e'){const e=E(aid,it.d), key=`e|${aid}|${it.d}`, p=pkeys.has(key), s=score(e);
@@ -1900,7 +1900,7 @@ function replyView(){
     <div class="r-who"><h1>${esc(a.name)}</h1><span class="small muted">${esc(a.cls||'')} · ${prefs(aid).lang==='en'?'English':'日本語'}${pend.length?' · '+T.r_pend.replace('{n}',pend.length):''}</span></div>
     ${cond}
     ${prefs(aid).lang==='en'&&ST.karteOk?`<div class="r-trbar" style="margin:0"><button data-act="trall" aria-pressed="${!!UI.trAll}">${T.r_tall}</button></div>`:''}
-    <div class="r-feed"><div style="text-align:center"><button class="linkish" data-act="rolder">${T.r_older}</button></div>${feed||`<div class="muted small" style="text-align:center">${T.r_none30}</div>`}</div>
+    <div class="r-feed">${feed||`<div class="muted small" style="text-align:center">${T.r_none30}</div>`}<div style="text-align:center"><button class="linkish" data-act="rolder">${T.r_older}</button></div></div>
     ${pend.length?`<button class="btn r-fab" data-act="rpane" data-v="write">${T.r_write}（${pend.length}）</button>`:''}</div>`;
   // 右：返信を書く（今の「コメント」「返信」の欄をそのまま使う＝選手側に届く形は今と同じ）
   let wr=`<div class="small muted">${pend.length?T.r_choose:T.r_allok}</div>`;
