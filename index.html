@@ -630,12 +630,12 @@ textarea[data-memo]{cursor:text}
 const I18N = {
  ja:{
   app:'柔道ノート',
-  n_events:'選手が記録を提出・質問したら、すぐ知らせる', n_events_help:'その日の最初の保存と、質問・返信のときに届きます（頭のケガは毎回）。',
+  n_events:'選手が記録を提出・質問したら、すぐ知らせる', n_fb:'コーチからコメント・返信が来たら、すぐ知らせる', n_fb_help:'記録へのコメントと、質問への返信のときに届きます。保護者には届きません。', n_events_help:'その日の最初の保存と、質問・返信のときに届きます（頭のケガは毎回）。',
   n_what_g:'届く通知：お子さんが前日の記録をまだ提出していないときだけ、翌日の{h}に1回。', remind_g:'お知らせの時刻', tz_note:'時刻は、このスマホの時間帯（{z}）で届きます。',
   n_title:'通知', n_on_btn:'🔔 この端末で通知を受け取る', n_on:'✓ この端末で通知を受け取ります', n_test:'テスト通知を送る', n_off:'通知をやめる', n_test_sent:'テスト通知を送りました。数秒で届きます。', n_enabled:'通知をオンにしました',
   n_unsupported:'このブラウザは通知に対応していません。', n_ios:'iPhoneでは、先にSafariの「共有」→「ホーム画面に追加」をして、ホーム画面の「柔」のアイコンから開くと、通知をオンにできます。',
   n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
-  n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回だけ届きます。', n_what_c:'届く通知：毎日{h}にチームのまとめ（午前なら前日の分：記録した人数・まだの人・欠席・痛みやケガ・未返信の質問）。',
+  n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回。コーチからコメント・返信が来たときも届きます（下でオン・オフ）。', n_what_c:'届く通知：毎日{h}にチームのまとめ（午前なら前日の分：記録した人数・まだの人・欠席・痛みやケガ・未返信の質問）。',
   n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
   e_timeout:'通信に時間がかかっています。電波のよい場所で、もう一度お試しください（書いた内容は残っています）。', pv_blocked:'閲覧モードでは変更できません。「閲覧モードを終わる」で戻れます。', boot_slow:'読み込みに時間がかかっています。電波のよい場所で、もう一度読み込んでください。', boot_retry:'もう一度読み込む', v_stall:'動画の変換が止まってしまいました。もう一度お試しください。',
   pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
@@ -773,12 +773,12 @@ const I18N = {
  },
  en:{
   app:'Judo Note',
-  n_events:'Notify me right away when an athlete logs or asks', n_events_help:'Sent for the first save of each day and for questions and replies (head injuries every time).',
+  n_events:'Notify me right away when an athlete logs or asks', n_fb:'Notify me when my coach comments or replies', n_fb_help:'Sent when your coach comments on a log or replies to your question. Parents are not notified.', n_events_help:'Sent for the first save of each day and for questions and replies (head injuries every time).',
   n_what_g:'Once at {h} the next day, only if your child hasn’t logged the day before.', remind_g:'Reminder time', tz_note:'Times follow this phone’s time zone ({z}).',
   n_title:'Notifications', n_on_btn:'🔔 Get notifications on this device', n_on:'✓ This device gets notifications', n_test:'Send a test', n_off:'Turn off', n_test_sent:'Test sent. It should arrive in a few seconds.', n_enabled:'Notifications turned on',
   n_unsupported:'This browser doesn’t support notifications.', n_ios:'On iPhone, first tap Share → “Add to Home Screen” in Safari, then open the app from the Home Screen icon to turn on notifications.',
   n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
-  n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet.', n_what_c:'Daily at {h}: a team summary (in the morning it covers yesterday: logged, not logged, absent, pain/injury, unanswered questions).',
+  n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet. Also when your coach comments or replies (turn on/off below).', n_what_c:'Daily at {h}: a team summary (in the morning it covers yesterday: logged, not logged, absent, pain/injury, unanswered questions).',
   n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
   e_timeout:'This is taking too long. Try again where the signal is better (what you wrote is still here).', pv_blocked:'You can’t change anything in preview. Tap “Exit preview” to go back.', boot_slow:'Loading is taking a long time. Please reload where the signal is better.', boot_retry:'Reload', v_stall:'Video conversion stopped. Please try again.',
   pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
@@ -1010,7 +1010,7 @@ async function loadAllOnce(){
   ACCOUNTS=profs.map(p=>({id:p.id,role:p.role,name:p.display_name,short:[...p.display_name.trim()][0]||'?',cls:p.weight_class||'',
     limit:p.weight_limit==null?null:+p.weight_limit,login:p.login_id,minor:p.is_minor,guardian:p.guardian_name||'',guardianOf:p.guardian_of||null,joined:localDay(p.created_at),demo:!!p.is_demo}));
   ATH=ACCOUNTS.filter(a=>a.role==='athlete'&&!a.demo).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false,tz:p.tz,wunit:p.wunit||'kg'});
+  ST.prefs={};profs.forEach(p=>ST.prefs[p.id]={lang:p.lang,accent:p.accent,custom:p.custom_color,mode:p.mode,remind:p.remind,events:p.notify_events!==false,fb:p.notify_feedback!==false,tz:p.tz,wunit:p.wunit||'kg'});
   const fbBy={};must(fb).forEach(f=>fbBy[f.entry_id]=f);
   ST.entries={};ACCOUNTS.forEach(a=>ST.entries[a.id]={});
   must(en).forEach(r=>{(ST.entries[r.athlete_id]||(ST.entries[r.athlete_id]={}))[r.day]=mapEntry(r,fbBy[r.id])});
@@ -1069,7 +1069,7 @@ async function askQuestion(text,coachOnly){
   ST.threads.push({id:t.id,aid:UI.session,coachOnly:!!coachOnly,date:TODAY,text,mid:m.id,author:UI.session,edited:false,replies:[]});
 }
 async function sendReply(tid,text){
-  const m=must(await sb.from('messages').insert({thread_id:tid,body:text}).select().single()); if(me().role==='athlete')notify('message',{id:m.id});
+  const m=must(await sb.from('messages').insert({thread_id:tid,body:text}).select().single()); notify('message',{id:m.id});   // 選手→コーチ、コーチ→選手（選手がオンのときだけ）
   ST.threads.find(x=>x.id===tid).replies.push({id:m.id,author:UI.session,edited:false,from:me().role==='coach'?'coach':'athlete',date:TODAY,text});
 }
 async function editMessage(id,body){   // 自分が書いた質問・返信を直す
@@ -1084,7 +1084,7 @@ async function sendFeedback(aid,day,comment){
   const e=E(aid,day), now=new Date().toISOString(), row={entry_id:e.id,athlete_id:aid,coach_id:UI.session,seen_at:now};
   if(comment){row.comment=comment;row.commented_at=now}
   must(await sb.from('feedback').upsert(row,{onConflict:'entry_id'}));
-  e.seen=TODAY; if(comment)e.comment={text:comment,at:TODAY};
+  e.seen=TODAY; if(comment){e.comment={text:comment,at:TODAY};notify('feedback',{id:e.id})}   // 選手へ（選手が通知をオンのときだけ・保護者には送らない）
 }
 /* ---------- スマホ通知 ---------- */
 function notify(type,extra){sb.functions.invoke('push',{body:{type,...extra}}).catch(()=>{})}   // 選手の操作をコーチへ。送れなくても保存は成功扱い
@@ -1118,7 +1118,8 @@ function pushBlock(T,p){
     :st==='off'?`<button class="btn sm" data-act="pushon">${T.n_on_btn}</button>`
     :st==='ios'?`<div class="small">${T.n_ios}</div>`:st==='denied'?`<div class="small" style="color:var(--warn)">${T.n_denied}</div><button class="btn ghost sm" data-act="pushon">${T.n_on_btn}</button>`
     :st==='unsupported'?`<div class="small muted">${T.n_unsupported}</div>`:`<div class="small muted">${T.n_checking}</div>`;
-  const ev=role==='coach'?`<label class="consent small" style="margin-top:4px"><input type="checkbox" id="n-events" ${p.events!==false?'checked':''}> <span><b>${T.n_events}</b><br><span class="muted">${T.n_events_help}</span></span></label>`:'';
+  const ev=role==='coach'?`<label class="consent small" style="margin-top:4px"><input type="checkbox" id="n-events" ${p.events!==false?'checked':''}> <span><b>${T.n_events}</b><br><span class="muted">${T.n_events_help}</span></span></label>`
+    :role==='athlete'?`<label class="consent small" style="margin-top:4px"><input type="checkbox" id="n-fb" ${p.fb!==false?'checked':''}> <span><b>${T.n_fb}</b><br><span class="muted">${T.n_fb_help}</span></span></label>`:'';
   return `<div class="opt-group"><span class="lbl">${T.n_title}</span>${ctl}<div class="small muted">${what}</div>${ev}</div>`;
 }
 async function refreshPushState(){try{UI.pushState=await pushState()}catch(e){UI.pushState='unsupported'}if(UI.settings)render()}
@@ -1194,7 +1195,7 @@ async function saveGoals(ym,items,review){
 }
 async function savePrefs(p,quiet){
   ST.prefs[UI.session]=p; if(!quiet)render();
-  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00',wunit:p.wunit==='lb'?'lb':'kg',...(acct(UI.session)?.role==='coach'?{notify_events:p.events!==false}:{})}).eq('id',UI.session));
+  must(await sb.from('profiles').update({lang:p.lang,accent:p.accent,custom_color:p.custom||null,mode:p.mode,remind:p.remind||'21:00',wunit:p.wunit==='lb'?'lb':'kg',...(acct(UI.session)?.role==='coach'?{notify_events:p.events!==false}:{}),...(acct(UI.session)?.role==='athlete'?{notify_feedback:p.fb!==false}:{})}).eq('id',UI.session));
 }
 
 /* ---------- 計算 ---------- */
@@ -2880,6 +2881,7 @@ document.addEventListener('change',ev=>{
   else if(el.dataset.act==='paid'){UI.pAid=el.value;render()}
   else if(el.dataset.act==='pkind'){UI.pKind=el.value;render()}
   else if(el.dataset.act==='remind'){savePrefs({...prefs(UI.session),remind:el.value}).catch(e=>toast(errText(e)))}
+  else if(el.id==='n-fb'){savePrefs({...prefs(UI.session),fb:el.checked}).then(()=>toast(t('ed_done'))).catch(e=>toast(errText(e)))}
   else if(el.id==='n-events'){savePrefs({...prefs(UI.session),events:el.checked}).then(()=>toast(t('ed_done'))).catch(e=>toast(errText(e)))}
   else if(el.id==='custom-color'){const p={...prefs(UI.session),accent:'custom',custom:el.value};ST.prefs[UI.session]=p;applyTheme();document.querySelectorAll('.swatches .sw').forEach(b=>b.setAttribute('aria-pressed',b.contains(el)));savePrefs(p,true).catch(e=>toast(errText(e)))}   // 描き直すと色選びが閉じてしまうので、画面は作り直さない
   else if(el.id==='jn-minor'){document.getElementById('jn-guard').hidden=!el.checked;UI.join={...(UI.join||{}),minor:el.checked}}
