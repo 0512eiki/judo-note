@@ -550,6 +550,22 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 html.memo-open,html.memo-open body{overflow:hidden;overscroll-behavior:none;height:100%}html.memo-open body{position:fixed;left:0;right:0;width:100%}
 html.ov-open,html.ov-open body{overflow:hidden;overscroll-behavior:none}   /* シートを開いている間は後ろの画面を動かさない（位置はそのまま） */
 .memo,.memo-ta{overscroll-behavior:contain}
+.memo-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 18px 0}
+.micbox{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mic-st{font-size:calc(12*var(--u));font-weight:700;color:var(--bad);display:inline-flex;align-items:center;gap:5px}.mic-st i{width:8px;height:8px;border-radius:50%;background:var(--bad);animation:micp 1.4s ease-in-out infinite}.mic-st.p{color:var(--dim)}.mic-st.p i{background:var(--faint);animation:none}
+.mic-lang{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden}.mic-lang button{border:0;background:none;font:inherit;font-size:calc(12*var(--u));font-weight:700;padding:3px 10px;color:var(--dim);cursor:pointer}.mic-lang button[aria-pressed="true"]{background:var(--tint);color:var(--accent)}
+/* iPad など横に広い画面：左に選手の文、右に自分の文 */
+@media (min-width:820px){
+  .memo.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);grid-template-rows:auto auto minmax(0,1fr) auto}
+  .memo.split .memo-bar{grid-column:1/-1}
+  .memo.split .memo-ctx{grid-column:1;grid-row:2/5;max-height:none;border-bottom:0;border-right:1px solid var(--line);min-height:0}
+  .memo.split .memo-ctx .mc-body{flex:1;padding:16px 20px;align-content:start;gap:12px}
+  .memo.split .mc-text{font-size:calc(17*var(--u));line-height:1.7}
+  .memo.split .mc-toggle{display:none}
+  .memo.split .memo-tools{grid-column:2;grid-row:2}
+  .memo.split .memo-ta{grid-column:2;grid-row:3;min-height:0}
+  .memo.split .memo-count{grid-column:2;grid-row:4}
+}
 textarea[data-memo]{cursor:text}
 .fab-close{position:fixed;z-index:15;top:calc(env(safe-area-inset-top,0px) + var(--hdr,110px) + 12px);right:max(16px,calc((100vw - 1100px)/2 + 16px));width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-bd);
   background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 6px 20px rgba(20,24,40,.18),var(--hi);color:var(--text);font-size:calc(18*var(--u));font-weight:700;display:grid;place-items:center;cursor:pointer}
@@ -738,7 +754,7 @@ const I18N = {
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
   ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'返信待ち',
-  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ', r_toen:'🌐 英語にする', mic:'声で入力', mic_stop:'⏹ 止める', mic_err:'声の入力が使えませんでした。キーボードのマイクを使ってください', cf_title:'送信前の確認', cf_en:'選手に届く英語', cf_ja:'日本語訳（確認用・AI）', cf_wait:'AIが訳しています…', cf_fail:'訳を出せませんでした（送信はできます）', cf_back:'戻って直す', cf_send:'送信する', r_tredo:'訳し直す', ai_working:'AIが考え中…', ai_tag:'AI（Claude）', ai_busy:'AIが混み合っています。少し待ってもう一度', ai_refused:'AIが答えられない内容でした', ai_err:'AIにつながりませんでした', ai_tab:'🤖 AIに聞く', r_tab:'✏️ 返信', ai_help:'この選手の最近の記録・やりとり・試合をもとに答えます（名前は送りません）。', ai_ph:'例：最近の調子は？ 減量は順調？ どう声をかけたらいい？', ai_send:'聞く', ai_clear:'消す', r_ja:'日本語で書く', r_en:'英語（選手に届く文・直せる）', r_back:'日本語に戻すと（意味のずれの確認）', r_tshow:'日本語訳', r_tall:'日本語訳を全部表示', r_tg:'訳', r_tstale:'元の文が書き直されています',
+  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ', r_toen:'🌐 英語にする', mic:'声で入力', mic_stop:'⏹ 止める', mic_pause:'⏸ 一時停止', mic_resume:'▶ 再開', mic_end:'⏹ 終わる', mic_on:'聞き取り中', mic_paused:'一時停止中', mic_err:'声の入力が使えませんでした。キーボードのマイクを使ってください', cf_title:'送信前の確認', cf_en:'選手に届く英語', cf_ja:'日本語訳（確認用・AI）', cf_wait:'AIが訳しています…', cf_fail:'訳を出せませんでした（送信はできます）', cf_back:'戻って直す', cf_send:'送信する', r_tredo:'訳し直す', ai_working:'AIが考え中…', ai_tag:'AI（Claude）', ai_busy:'AIが混み合っています。少し待ってもう一度', ai_refused:'AIが答えられない内容でした', ai_err:'AIにつながりませんでした', ai_tab:'🤖 AIに聞く', r_tab:'✏️ 返信', ai_help:'この選手の最近の記録・やりとり・試合をもとに答えます（名前は送りません）。', ai_ph:'例：最近の調子は？ 減量は順調？ どう声をかけたらいい？', ai_send:'聞く', ai_clear:'消す', r_ja:'日本語で書く', r_en:'英語（選手に届く文・直せる）', r_back:'日本語に戻すと（意味のずれの確認）', r_tshow:'日本語訳', r_tall:'日本語訳を全部表示', r_tg:'訳', r_tstale:'元の文が書き直されています',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -881,7 +897,7 @@ const I18N = {
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
   ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'To reply',
-  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only', r_toen:'🌐 Translate to English', mic:'Voice input', mic_stop:'⏹ Stop', mic_err:'Voice input isn’t available here. Use the keyboard’s microphone', cf_title:'Check before sending', cf_en:'English the athlete will get', cf_ja:'Japanese (for checking, by AI)', cf_wait:'AI is translating…', cf_fail:'Couldn’t translate (you can still send)', cf_back:'Go back and edit', cf_send:'Send', r_tredo:'Re-translate', ai_working:'AI is thinking…', ai_tag:'AI (Claude)', ai_busy:'AI is busy. Try again in a moment', ai_refused:'AI couldn’t answer that', ai_err:'Couldn’t reach the AI', ai_tab:'🤖 Ask AI', r_tab:'✏️ Reply', ai_help:'Answers from this athlete’s recent logs, conversations and matches (the name is not sent).', ai_ph:'e.g. How has their condition been? Is the weight cut on track? How should I talk to them?', ai_send:'Ask', ai_clear:'Clear', r_ja:'Write in Japanese', r_en:'English (sent to the athlete, editable)', r_back:'Back-translated (check the meaning)', r_tshow:'Translation', r_tall:'Show all translations', r_tg:'Tr.', r_tstale:'The original was edited',
+  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only', r_toen:'🌐 Translate to English', mic:'Voice input', mic_stop:'⏹ Stop', mic_pause:'⏸ Pause', mic_resume:'▶ Resume', mic_end:'⏹ Done', mic_on:'Listening', mic_paused:'Paused', mic_err:'Voice input isn’t available here. Use the keyboard’s microphone', cf_title:'Check before sending', cf_en:'English the athlete will get', cf_ja:'Japanese (for checking, by AI)', cf_wait:'AI is translating…', cf_fail:'Couldn’t translate (you can still send)', cf_back:'Go back and edit', cf_send:'Send', r_tredo:'Re-translate', ai_working:'AI is thinking…', ai_tag:'AI (Claude)', ai_busy:'AI is busy. Try again in a moment', ai_refused:'AI couldn’t answer that', ai_err:'Couldn’t reach the AI', ai_tab:'🤖 Ask AI', r_tab:'✏️ Reply', ai_help:'Answers from this athlete’s recent logs, conversations and matches (the name is not sent).', ai_ph:'e.g. How has their condition been? Is the weight cut on track? How should I talk to them?', ai_send:'Ask', ai_clear:'Clear', r_ja:'Write in Japanese', r_en:'English (sent to the athlete, editable)', r_back:'Back-translated (check the meaning)', r_tshow:'Translation', r_tall:'Show all translations', r_tg:'Tr.', r_tstale:'The original was edited',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -1645,10 +1661,11 @@ function memoContext(ta){   // コーチが書くとき：上に選手が書い�
 function memoLabel(ta){const id=ta.id, lb=id&&document.querySelector(`label[for="${id}"]`);return (lb?.textContent||ta.placeholder||'').trim().slice(0,40)}
 function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
   const el=document.createElement('div');el.className='memo';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');
-  const ctx=memoContext(ta);
+  const ctx=memoContext(ta), ml=micLangOf(ta);if(ctx)el.classList.add('split');
   el.innerHTML=`<div class="memo-bar"><button type="button" class="memo-x" data-act="memo-cancel">${T.memo_cancel}</button><b>${esc(memoLabel(ta))}</b><button type="button" class="btn sm" data-act="memo-done">${T.memo_done}</button></div>
     ${ctx?`<div class="memo-ctx"><div class="mc-body">${ctx}</div><button type="button" class="linkish mc-toggle" data-act="memo-ctx">${T.mc_hide}</button></div>`:''}
-    <textarea class="memo-ta" ${ta.maxLength>0?`maxlength="${ta.maxLength}"`:''} placeholder="${esc(ta.placeholder||'')}"></textarea><div class="memo-count"></div>`;
+    ${SR?`<div class="memo-tools">${micBtn('memo-ta',ml)}<span class="mic-lang"><button type="button" data-act="miclang" data-l="ja-JP" aria-pressed="${ml==='ja-JP'}">日本語</button><button type="button" data-act="miclang" data-l="en-US" aria-pressed="${ml==='en-US'}">EN</button></span></div>`:''}
+    <textarea class="memo-ta" id="memo-ta" ${ta.maxLength>0?`maxlength="${ta.maxLength}"`:''} placeholder="${esc(ta.placeholder||'')}"></textarea><div class="memo-count"></div>`;
   document.body.appendChild(el);const mt=el.querySelector('.memo-ta');mt.value=ta.value;
   const y=scrollY;MEMO={el,ta,orig:ta.value,y};document.documentElement.classList.add('memo-open');document.body.style.top=(-y)+'px';   // 後ろのページを固定（iPhoneは overflow:hidden だけでは動いてしまう）
   let ly=0, sc=null;   // 欄のスクロールが端まで行ったら、その先の動きを画面全体に伝えない（iPhoneで画面が揺れるのを防ぐ）
@@ -1663,7 +1680,7 @@ function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
   mt.addEventListener('input',()=>{ta.value=mt.value;ta.dispatchEvent(new Event('input',{bubbles:true}));cnt()});
   mt.focus();const n=mt.value.length;try{mt.setSelectionRange(n,n)}catch(e){}
 }
-function memoClose(ok){if(!MEMO)return;const {el,ta:ta0,orig,fit,y}=MEMO, text=el.querySelector('.memo-ta').value;MEMO=null;
+function memoClose(ok){if(!MEMO)return;if(MIC?.id==='memo-ta')micEnd();const {el,ta:ta0,orig,fit,y}=MEMO, text=el.querySelector('.memo-ta').value;MEMO=null;
   const ta=ta0.isConnected?ta0:(ta0.id&&document.getElementById(ta0.id))||ta0;   // 途中で画面が作り直されていても、今ある欄に入れる
   const want=ok?text:orig;if(ta.value!==want){ta.value=want;ta.dispatchEvent(new Event('input',{bubbles:true}))}
   window.visualViewport?.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('scroll',fit);
@@ -1818,20 +1835,30 @@ function replyOrder(){return ATH.map(a=>{const p=pendItems(a.id);return {a,n:p.l
 function replySelect(id){if(!id)return;UI.prevSeen[id]=seenOf(id);UI.rsel=id;UI.rtarget=replyKey(pendItems(id)[0]);UI.rdays=30;UI.rscroll=true;markSeen(id)}
 /* ---------- AI（翻訳・その選手について聞く）：Supabase の関数 assist が Claude を呼ぶ。名前は送らない・送信はコーチが押す ---------- */
 const hashS=s=>{let h=5381;for(const c of String(s))h=((h<<5)+h+c.codePointAt(0))|0;return (h>>>0).toString(36)+'-'+String(s).length};
-/* 声で入力（ブラウザの音声認識。使えない端末ではボタンを出さない） */
+/* 声で入力（ブラウザの音声認識。使えない端末ではボタンを出さない）。一時停止・再開・終わる */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let MIC=null;
-const micBtn=(id,lng)=>SR?`<button type="button" class="btn ghost sm mic ${MIC?.id===id?'on':''}" data-act="mic" data-t="${id}" data-l="${lng}">${MIC?.id===id?t('mic_stop'):'🎤 '+t('mic')}</button>`:'';
-function micSync(){document.querySelectorAll('[data-act=mic]').forEach(b=>{const on=MIC?.id===b.dataset.t;b.classList.toggle('on',on);b.textContent=on?t('mic_stop'):'🎤 '+t('mic')})}
-function micStop(){if(MIC){try{MIC.rec.stop()}catch(_){}MIC=null;micSync()}}
-function micStart(id,lng){micStop();const ta=document.getElementById(id);if(!ta||!SR)return;
+let MIC=null;   // {id, lng, rec, paused}
+function micInner(id,lng){const T=I18N[lang()];
+  if(MIC?.id!==id)return `<button type="button" class="btn ghost sm mic" data-act="mic" data-t="${id}" data-l="${lng}">🎤 ${T.mic}</button>`;
+  return `${MIC.paused?`<span class="mic-st p"><i></i>${T.mic_paused}</span><button type="button" class="btn sm mic" data-act="micresume">${T.mic_resume}</button>`
+    :`<span class="mic-st"><i></i>${T.mic_on}</span><button type="button" class="btn ghost sm mic on" data-act="micpause">${T.mic_pause}</button>`}<button type="button" class="btn ghost sm" data-act="micend">${T.mic_end}</button>`}
+const micBtn=(id,lng)=>SR?`<span class="micbox" data-t="${id}" data-l="${lng}">${micInner(id,lng)}</span>`:'';
+function micSync(){document.querySelectorAll('.micbox').forEach(b=>b.innerHTML=micInner(b.dataset.t,b.dataset.l))}
+function micRec(id,lng){const ta=document.getElementById(id);if(!ta||!SR)return null;
   const rec=new SR();rec.lang=lng;rec.continuous=true;rec.interimResults=true;
   const v=ta.value, base=v&&!/\s$/.test(v)?v+(lng.startsWith('ja')?'':' '):v;
   rec.onresult=e=>{let txt='';for(let i=0;i<e.results.length;i++)txt+=e.results[i][0].transcript;
     const el=document.getElementById(id);if(!el)return;el.value=base+txt;el.dispatchEvent(new Event('input',{bubbles:true}))};
-  rec.onerror=e=>{if(e.error!=='no-speech'&&e.error!=='aborted')toast(t('mic_err'))};
-  rec.onend=()=>{if(MIC?.rec===rec){MIC=null;micSync()}};
-  try{rec.start();MIC={rec,id};micSync()}catch(e){toast(t('mic_err'))}}
+  rec.onerror=e=>{if(e.error!=='no-speech'&&e.error!=='aborted'){toast(t('mic_err'));micEnd()}};
+  rec.onend=()=>{if(MIC?.rec===rec){MIC.rec=null;MIC.paused=true;micSync()}};   // 黙っていて止まったときは「一時停止」として、再開できるようにする
+  try{rec.start();return rec}catch(e){toast(t('mic_err'));return null}}
+function micStart(id,lng){micEnd();const rec=micRec(id,lng);if(rec){MIC={id,lng,rec,paused:false};micSync()}}
+function micPause(){if(!MIC?.rec)return;const r=MIC.rec;MIC.rec=null;MIC.paused=true;try{r.stop()}catch(_){}micSync()}
+function micResume(){if(!MIC)return;const rec=micRec(MIC.id,MIC.lng);if(rec){MIC.rec=rec;MIC.paused=false;micSync()}}
+function micEnd(){if(MIC){const r=MIC.rec;MIC=null;try{r&&r.stop()}catch(_){}micSync()}}
+const micStop=micEnd;
+function micLangOf(ta){if(ta.dataset.rja)return 'ja-JP';const f=ta.closest('form');if(!f)return 'ja-JP';   // 書く欄に合わせて聞き取る言葉を選ぶ
+  const aid=f.dataset.aid||ST.threads.find(x=>x.id===f.dataset.id)?.aid;return aid&&prefs(aid).lang==='en'&&(f.dataset.form==='comment'||f.dataset.form==='reply')?'en-US':(lang()==='en'?'en-US':'ja-JP')}
 async function ai(body){const {data,error}=await sb.functions.invoke('assist',{body});
   if(error){let m='';try{m=(await error.context.json()).error}catch(_){}throw new Error(t(m==='busy'?'ai_busy':m==='refused'?'ai_refused':'ai_err'))}
   return data}
@@ -2734,7 +2761,11 @@ document.addEventListener('click',ev=>{
   else if(a==='rtr'){const k=el.dataset.k, ja=(document.getElementById(rjaId(k))?.value||'').trim();if(!ja)return toast(t('r_ja'));const x=targetText(k);
     aiRun('out:'+k,async()=>{const r=await ai({mode:'tr_out',aid:x?.aid||UI.rsel,ja,ctx:x?.text||''});(UI.cw||(UI.cw={}))[cwIdOf(k)]={v:r.en,prev:false};(UI.rback||(UI.rback={}))[k]={ja:r.ja,note:r.note,en:r.en}})}
   else if(a==='tai'){const {src,id,aid}=el.dataset;aiRun('in:'+src+':'+id,()=>trIn(aid,src,id))}
-  else if(a==='mic'){const id=el.dataset.t;if(MIC?.id===id)micStop();else micStart(id,el.dataset.l)}
+  else if(a==='mic'){micStart(el.dataset.t,el.dataset.l)}
+  else if(a==='micpause'){micPause()}
+  else if(a==='micresume'){micResume()}
+  else if(a==='micend'){micEnd()}
+  else if(a==='miclang'){const box=document.querySelector('.memo .micbox');if(box){box.dataset.l=el.dataset.l;document.querySelectorAll('.memo .mic-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===el.dataset.l));if(MIC){MIC.lng=el.dataset.l;if(MIC.rec){micPause();micResume()}}else micSync()}}
   else if(a==='rtab'){UI.rtab=el.dataset.v;renderKeep()}
   else if(a==='aiclear'){if(UI.aichat)delete UI.aichat[el.dataset.aid];renderKeep()}
   else if(a==='ttoggle'){const k=el.dataset.k;(UI.trOpen||(UI.trOpen={}))[k]=!(UI.trAll||UI.trOpen[k]);if(UI.trAll&&!UI.trOpen[k])UI.trAll=false;renderKeep()}
