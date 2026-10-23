@@ -1847,9 +1847,12 @@ const micBtn=(id,lng)=>SR?`<span class="micbox" data-t="${id}" data-l="${lng}">$
 function micSync(){document.querySelectorAll('.micbox').forEach(b=>b.innerHTML=micInner(b.dataset.t,b.dataset.l))}
 function micRec(id,lng){const ta=document.getElementById(id);if(!ta||!SR)return null;
   const rec=new SR();rec.lang=lng;rec.continuous=true;rec.interimResults=true;
-  const v=ta.value, base=v&&!/\s$/.test(v)?v+(lng.startsWith('ja')?'':' '):v;
+  // カーソルのある所に入れる（文の途中でも）。前後の文はそのまま
+  const v=ta.value, s0=ta.selectionStart??v.length, s1=ta.selectionEnd??v.length, en=!lng.startsWith('ja');
+  const pre=v.slice(0,s0), post=v.slice(s1), before=pre&&en&&!/\s$/.test(pre)?pre+' ':pre;
   rec.onresult=e=>{if(MIC?.rec!==rec)return;let txt='';for(let i=0;i<e.results.length;i++)txt+=e.results[i][0].transcript;
-    const el=document.getElementById(id);if(!el)return;el.value=base+txt;el.dispatchEvent(new Event('input',{bubbles:true}))};
+    const el=document.getElementById(id);if(!el)return;const mid=txt+(post&&en&&txt&&!/^[\s.,!?]/.test(post)?' ':'');
+    el.value=before+mid+post;const c=(before+mid).length;try{el.setSelectionRange(c,c)}catch(_){}el.dispatchEvent(new Event('input',{bubbles:true}))};
   rec.onerror=e=>{if(e.error==='no-speech'||e.error==='aborted')return;logErr('mic',e.error+' '+lng);
     if(e.error==='not-allowed'||e.error==='service-not-allowed'||e.error==='audio-capture'){MIC_OFF=true;toast(t('mic_off'))}else toast(t('mic_err'));micEnd()};
   rec.onend=()=>{if(MIC?.rec===rec){MIC.rec=null;MIC.paused=true;micSync()}};   // 黙っていて止まったときは「一時停止」として、再開できるようにする
@@ -1863,6 +1866,7 @@ function micAct(el){const a=el.dataset.act;
   if(a==='mic')micStart(el.dataset.t,el.dataset.l);else if(a==='micpause')micPause();else if(a==='micresume')micResume();else if(a==='micend')micEnd();
   else if(a==='miclang'){const box=el.closest('.memo')?.querySelector('.micbox');if(!box)return;box.dataset.l=el.dataset.l;el.closest('.mic-lang').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===el.dataset.l));if(MIC){MIC.lng=el.dataset.l;if(MIC.rec){micPause();micResume()}}else micSync()}}
 const MICACTS=['mic','micpause','micresume','micend','miclang'];
+document.addEventListener('pointerup',ev=>{if(MIC?.rec&&ev.target.id===MIC.id)setTimeout(()=>{if(MIC?.rec){micPause();micResume()}},60)});   // 聞き取り中に文の別の所を押したら、そこから続ける
 document.addEventListener('pointerdown',ev=>{const el=ev.target.closest('[data-act]');if(!el||!MICACTS.includes(el.dataset.act))return;ev.preventDefault();MIC_PD=Date.now();micAct(el)});
 const micStop=micEnd;
 function micLangOf(ta){if(ta.dataset.rja)return 'ja-JP';const f=ta.closest('form');if(!f)return 'ja-JP';   // 書く欄に合わせて聞き取る言葉を選ぶ
