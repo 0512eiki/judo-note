@@ -1854,11 +1854,11 @@ function micRec(id,lng,retry){const ta=document.getElementById(id);if(!ta||!SR)r
   rec.onresult=e=>{if(MIC?.rec!==rec)return;let txt='';for(let i=0;i<e.results.length;i++)txt+=e.results[i][0].transcript;
     const el=document.getElementById(id);if(!el)return;const mid=txt+(post&&en&&txt&&!/^[\s.,!?]/.test(post)?' ':'');
     el.value=before+mid+post;const c=(before+mid).length;try{el.setSelectionRange(c,c)}catch(_){}el.dispatchEvent(new Event('input',{bubbles:true}))};
-  rec.onerror=e=>{if(e.error==='no-speech'||e.error==='aborted')return;logErr('mic',e.error+(retry?' retry ':' ')+lng);
+  rec.onerror=e=>{if(e.error==='no-speech'||e.error==='aborted')return;const kb=document.activeElement?.id===id;logErr('mic',e.error+(retry?' retry'+retry:'')+(kb?' kb':'')+' '+lng);
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){MIC_OFF=true;toast(t('mic_off'));micEnd();return}
-    // マイクがすぐにつながらない（前の聞き取りが止まりきっていない・電波など）：一度だけ自動でやり直し、だめなら一時停止にして「再開」で続きから話せるようにする
+    // マイクがすぐにつながらない（前の聞き取りが止まりきっていない・キーボードが出ている・電波など）：2回まで自動でやり直し（2回目はキーボードを閉じてから）、だめなら一時停止にして「再開」で続きから話せるようにする
     if(MIC?.rec!==rec)return;MIC.rec=null;MIC.paused=true;MIC_PREV=rec;micSync();
-    if(retry)toast(t('mic_busy'));else{const m=MIC;setTimeout(()=>{if(MIC===m&&m.paused&&!m.rec)micResume(true)},500)}};
+    if(retry>=2){toast(t('mic_busy'));return}const m=MIC,n=(retry||0)+1;if(n===2&&kb)document.activeElement.blur();setTimeout(()=>{if(MIC===m&&m.paused&&!m.rec)micResume(n)},n===1?500:1200)};
   rec.onend=()=>{rec.done=true;rec.wake?.();if(MIC?.rec===rec){MIC.rec=null;MIC.paused=true;micSync()}};   // 黙っていて止まったときは「一時停止」として、再開できるようにする
   try{rec.start();return rec}catch(e){logErr('mic','start '+String(e?.message||e));toast(t('mic_err'));return null}}
 const micGone=r=>new Promise(res=>{if(!r||r.done)return res();r.wake=res;setTimeout(res,700)});   // 前の聞き取りが止まりきるまで待つ（すぐに始めると iPad でマイクがつながらないことがある）
