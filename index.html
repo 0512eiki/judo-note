@@ -692,7 +692,7 @@ const I18N = {
   x_date:'日付', x_ex:'種目', x_amt:'回数・時間', x_ex_ph:'例：腕立て伏せ', x_amt_ph:'例：3セット×15回', x_addrow:'＋ 種目を追加', x_rmrow:'この行を消す',
   x_pick:'よく使う種目（タップで入ります）', x_quick:['腕立て伏せ','腹筋','背筋','スクワット','懸垂','プランク','縄跳び','ダッシュ','ランニング','ストレッチ','ウェイト','打ち込み','チューブ'],
   x_min:'かかった時間（分・なくてもOK）', x_note:'メモ（なくてもOK）', x_save:'記録する', x_update:'直して保存', x_hist:'これまでのエクストラ',
-  x_none:'まだありません。練習以外にやったトレーニングを入れてみよう。', x_none_ro:'まだエクストラの記録はありません。', x_edit:'直す', x_del:'消す', x_del_q:'このエクストラの記録を消しますか？', x_deleted:'消しました',
+  x_none:'まだありません。練習以外にやったトレーニングを入れてみよう。', x_none_ro:'まだエクストラの記録はありません。', x_edit:'直す', x_del:'消す', x_del_q:'このエクストラの記録を消しますか？', ev_del_q:'この試合を削除しますか？試合の振り返りとコーチのメモも一緒に消えます。', x_deleted:'消しました',
   x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   t_today:'今日', t_log:'記録', t_q:'質問', t_note:'ノート', t_team:'選手一覧', t_print:'印刷ノート',
@@ -835,7 +835,7 @@ const I18N = {
   x_date:'Date', x_ex:'Exercise', x_amt:'Reps / time', x_ex_ph:'e.g. Push-ups', x_amt_ph:'e.g. 3 × 15', x_addrow:'+ Add exercise', x_rmrow:'Remove this row',
   x_pick:'Quick picks (tap to add)', x_quick:['Push-ups','Sit-ups','Back extensions','Squats','Pull-ups','Plank','Jump rope','Sprints','Running','Stretching','Weights','Uchikomi','Bands'],
   x_min:'Time (minutes, optional)', x_note:'Note (optional)', x_save:'Save', x_update:'Save changes', x_hist:'Your extra training',
-  x_none:'Nothing yet. Add the training you did outside practice.', x_none_ro:'No extra training yet.', x_edit:'Edit', x_del:'Delete', x_del_q:'Delete this extra training record?', x_deleted:'Deleted',
+  x_none:'Nothing yet. Add the training you did outside practice.', x_none_ro:'No extra training yet.', x_edit:'Edit', x_del:'Delete', x_del_q:'Delete this extra training record?', ev_del_q:'Delete this match? Its review and the coach’s notes will be deleted too.', x_deleted:'Deleted',
   x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   t_today:'Today', t_log:'History', t_q:'Questions', t_note:'Notebook', t_team:'Team', t_print:'Print',
@@ -986,15 +986,16 @@ async function loadAll(){
     catch(e){if(i<4&&/issued at future|JWT/i.test(String(e?.message||e))){await new Promise(r=>setTimeout(r,1200*(i+1)));continue}throw e}
   }
 }
+async function pages(mk){let out=[];for(let from=0;;from+=1000){const r=await mk().range(from,from+999);if(r.error)return r;out=out.concat(r.data||[]);if((r.data||[]).length<1000)return {data:out,error:null}}}   // 1回で返るのは1000件まで：続きがあれば読む
 async function loadAllOnce(){
   DAYS=[];for(let i=LOAD_DAYS;i>=0;i--)DAYS.push(addDays(TODAY,-i));   // 読み込み中に画面を描いても壊れないよう、最初に用意する
   const since=addDays(TODAY,-LOAD_DAYS);
   const [pr,en,fb,th,ms,ev,go,tm,rn,mn,cn,gl,xs,cs,rc,vd,pq]=await Promise.all([
     sb.from('profiles').select('*'),
-    sb.from('entries').select('*').gte('day',since),
-    sb.from('feedback').select('*'),
-    sb.from('threads').select('*'),
-    sb.from('messages').select('*').order('created_at'),
+    pages(()=>sb.from('entries').select('*').gte('day',since).order('id')),
+    pages(()=>sb.from('feedback').select('*').order('entry_id')),
+    pages(()=>sb.from('threads').select('*').order('id')),
+    pages(()=>sb.from('messages').select('*').order('created_at').order('id')),
     sb.from('events').select('*'),
     sb.from('goals').select('*'),
     sb.from('teams').select('*'),
@@ -1002,9 +1003,9 @@ async function loadAllOnce(){
     sb.from('match_notes').select('*'),
     sb.from('coach_notes').select('*'),
     sb.from('guardian_links').select('*'),
-    sb.from('extras').select('*').gte('day',since).order('created_at'),
+    pages(()=>sb.from('extras').select('*').gte('day',since).order('created_at').order('id')),
     sb.from('coach_seen').select('*'),
-    sb.from('reactions').select('*'),
+    pages(()=>sb.from('reactions').select('*').order('id')),
     sb.from('videos').select('*').order('day',{ascending:false}).order('created_at',{ascending:false}),
     sb.from('pw_requests').select('*')]);
   const profs=must(pr);ST.pwReq=pq?.error?[]:(pq?.data||[]);   // パスワードを忘れた人（コーチ・その保護者にだけ見える）
@@ -1051,7 +1052,7 @@ function formToEntry(fdt){
     note:fdt.get('note')||'',ask:(fdt.get('ask')||'').trim(),askPrivate:!!fdt.get('askPrivate')};
 }
 const draftKey=()=>`judo-draft-${UI.session}-${UI.eday||TODAY}`;
-function saveDraft(d){try{localStorage.setItem(draftKey(),JSON.stringify(d))}catch(e){}}
+function saveDraft(d,k=draftKey()){try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}}
 function loadDraft(){try{return JSON.parse(localStorage.getItem(draftKey())||'null')}catch(e){return null}}
 function clearDraft(){try{localStorage.removeItem(draftKey())}catch(e){}}
 
@@ -1717,14 +1718,16 @@ document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-t
 const wKey=()=>'judo-w-'+UI.session;
 const wLoad=()=>{try{return JSON.parse(localStorage.getItem(wKey())||'{}')||{}}catch(e){return {}}};
 const wPut=o=>{try{localStorage.setItem(wKey(),JSON.stringify(o))}catch(e){}};
+const wId=ta=>ta.closest('#today-form')?ta.id+'@'+(UI.eday||TODAY):ta.id;   // 今日の記録の欄は日ごとに分ける（昨日の欄に今日の文が入らないように）
 const wSkip=ta=>!ta.id||ta.id==='memo-ta'||ta.disabled||(ta.readOnly&&!ta.dataset.memo)||!ta.closest('#app form')||!!UI.previewAs;
 function wKeep(ta){if(!UI.session||wSkip(ta))return;const o=wLoad(), b=ta.defaultValue;   // b=元の文（保存ずみの文）。元のままなら残さない
-  if(ta.value===b||!ta.value.trim())delete o[ta.id];else o[ta.id]={v:ta.value,b,t:Date.now()};wPut(o)}
+  const id=wId(ta);if(ta.value===b||!ta.value.trim())delete o[id];else o[id]={v:ta.value,b,t:Date.now()};wPut(o)}
 function wDrop(ids){if(!ids?.length||!UI.session)return;const o=wLoad();ids.forEach(id=>delete o[id]);wPut(o)}
 function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Date.now();let n=0, ch=false;
   for(const id in o)if(!o[id]||now-o[id].t>14*864e5){delete o[id];ch=true}   // 2週間たった書きかけは消す
-  document.querySelectorAll('#app form textarea[id]').forEach(ta=>{const w=o[ta.id];if(!w||wSkip(ta)||ta.value===w.v)return;
-    if(ta.defaultValue===w.v){delete o[ta.id];ch=true;return}   // もう保存されている
+  ['f-note','f-ask'].forEach(id=>{if(o[id]){const k=id+'@'+localDay(new Date(o[id].t));if(!o[k])o[k]=o[id];delete o[id];ch=true}});   // 11/10 の版で日ごとに分けずに残した書きかけは、書いた日の分に移す
+  document.querySelectorAll('#app form textarea[id]').forEach(ta=>{const id=wId(ta), w=o[id];if(!w||wSkip(ta)||ta.value===w.v)return;
+    if(ta.defaultValue===w.v){delete o[id];ch=true;return}   // もう保存されている
     if(ta.defaultValue!==w.b)return;   // ほかの端末で書きかえられている：上書きしない
     ta.value=w.v;n++;
     if(ta.classList.contains('cw-ta')){ta.classList.add('has');(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:w.v,prev:false}}});
@@ -2753,7 +2756,8 @@ function renderKeep(){
   for(const id in hid){const act=id==='f-att'?'att':id==='f-level'?'lvl':null, b=act&&document.querySelector(`#today-form [data-act=${act}][data-v="${hid[id]}"]`);if(b)b.click();else{const el=document.getElementById(id);if(el)el.value=hid[id]}}   // 出欠・痛みの程度のボタンも元どおりに
 }
 async function refreshData(){if(!me()||UI.vup||Date.now()-(UI.loadedAt||0)<30000)return;try{await loadAll();if(!document.querySelector('form:focus-within'))renderKeep()}catch(e){}}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
+function dayCheck(){const d=localDay(new Date());if(d===TODAY)return false;TODAY=d;UI.eday=null;UI.calYm=null;UI.gYm=null;UI.draft=null;UI.loadedAt=0;return true}   // 前の日のまま保存しないように
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')return;if(dayCheck()&&me()){loadAll().then(()=>renderKeep()).catch(()=>renderKeep())}else refreshData()});
 
 /* ---------- 操作 ---------- */
 /* 押したボタンを「保存中…」にして、終わったら ✓ とひとことを出す（保存できたかが必ずわかるように） */
@@ -2770,8 +2774,8 @@ function celebrate(d){
 }
 async function run(fn,done,btn){
   const o=pressBusy(btn||UI.pressed); UI.pressed=null;
-  try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;wDrop(UI.wSending);UI.wSending=null;render();celebrate(typeof done==='function'?done(r):done)}
-  catch(e){UI.busy=false;UI.cwSending=null;UI.wSending=null;pressDone(o);console.error(e);if(!String(e?.message||'').startsWith('__'))logErr('action',String(e?.message||e));toast(errText(e));renderKeep()}   // 失敗しても、書いた内容は消さない
+  try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;wDrop(UI.wSending);UI.wSending=null;render();if(done)celebrate(typeof done==='function'?done(r):done);return {ok:true}}
+  catch(e){UI.busy=false;UI.cwSending=null;UI.wSending=null;pressDone(o);console.error(e);if(!String(e?.message||'').startsWith('__'))logErr('action',String(e?.message||e));toast(errText(e));renderKeep();return {ok:false,err:e}}   // 失敗しても、書いた内容は消さない
 }
 document.addEventListener('click',ev=>{
   unstick();
@@ -2837,7 +2841,7 @@ document.addEventListener('click',ev=>{
     if(inForm){if(f&&f.value)f.value=wIn(wKg(f.value,old),u).toFixed(1);f.min=u==='lb'?22:10;f.max=u==='lb'?550:250;document.getElementById('f-wu').value=u;document.getElementById('f-wu-l').textContent=u;
       document.querySelectorAll('[data-act=wunit]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===u));stashDraft()}}
   else if(a==='pref'){const p={...prefs(UI.session)};p[el.dataset.k]=el.dataset.v;savePrefs(p).catch(e=>toast(errText(e)))}
-  else if(a==='evdel'){run(()=>deleteEvent(el.dataset.id))}
+  else if(a==='evdel'){const btn=UI.pressed, id=el.dataset.id;UI.pressed=null;askBox(t('ev_del_q'),t('x_del')).then(ok=>{if(ok)run(()=>deleteEvent(id),null,btn)})}   // 振り返り・コーチのメモも一緒に消えるので、必ず確かめる
   else if(a==='seen'){run(()=>sendFeedback(el.dataset.aid,el.dataset.d,null),()=>({title:t('ch_seen_t'),msg:pick1(t('ch_seen'))}))}
   else if(a==='student'){toast(t('st_preparing'));run(enterStudentMode)}
   else if(a==='exitstudent'){run(exitStudentMode)}
@@ -2927,13 +2931,14 @@ document.addEventListener('change',ev=>{
 });
 document.addEventListener('input',ev=>{if(ev.target.id==='custom-color'){ST.prefs[UI.session]={...prefs(UI.session),accent:'custom',custom:ev.target.value};applyTheme();return}if(ev.target.closest('#today-form'))stashDraft();if(ev.target.closest('#x-form'))stashX()});
 function stashX(){const f=document.getElementById('x-form');if(!f||f.dataset.id)return;const d=xFormData(f);UI.xDay=d.day;UI.xDraft={...d,items:[...new FormData(f).getAll('xn')].map((n,i)=>({n,a:new FormData(f).getAll('xa')[i]||''}))}}
-function stashDraft(){const f=document.getElementById('today-form');if(!f)return;clearTimeout(stashDraft.t);stashDraft.t=setTimeout(()=>saveDraft(formToEntry(new FormData(f))),400)}
+function stashDraft(){const f=document.getElementById('today-form');if(!f)return;const k=draftKey();clearTimeout(stashDraft.t);stashDraft.t=setTimeout(()=>{saveDraft(formToEntry(new FormData(f)),k)},400)}   // 今日/昨日をすぐ切りかえても、別の日に入らない
 
 document.addEventListener('submit',ev=>{
   ev.preventDefault();
   if(UI.previewAs)return;
   UI.pressed=ev.submitter||ev.target.querySelector('button[type=submit],button:not([type])');
   const f=ev.target, fid=f.getAttribute('id'), fdt=new FormData(f);
+  if(UI.busy&&['login-form','join-form','link-form','setup-form'].includes(fid))return;   // 二度押しで2回送らない
   const LL=UI.loginLang, TT=I18N[LL], showErr=(id,msg)=>{UI.err=msg;const e=document.getElementById(id);if(e)e.textContent=msg};
   if(fid==='login-form'){
     const id=(fdt.get('uid')||'').trim().toLowerCase(), pw=fdt.get('pass')||'';
@@ -2992,21 +2997,21 @@ document.addEventListener('submit',ev=>{
   }
   if(fid==='today-form'){
     if(fdt.get('att')==='present'&&fdt.get('rpe')==null){UI.pressed=null;toast(t('rpe_need'));const r=f.querySelector('.seg.rpe');r?.scrollIntoView({block:'center',behavior:'smooth'});r?.classList.add('need');setTimeout(()=>r?.classList.remove('need'),2400);return}   // 練習に出た日は、きつさを必ず選ぶ（選ばないと 0 になっていた）
-    const d=formToEntry(fdt); saveDraft(d); UI.wSending=[...f.querySelectorAll('textarea[id]')].map(x=>x.id);
+    const d=formToEntry(fdt); saveDraft(d); UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);
     const day=UI.eday||TODAY, isY=day!==TODAY;
     run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=day;window.scrollTo(0,0)},()=>{
       const T=I18N[lang()], e=E(UI.session,day), n=streak(UI.session), sc=score(e);
       return {big:true,title:T.done_saved_t,msg:d.head.length?T.ch_head:pick1(isY?T.ch_entry_y:T.ch_entry),
         sub:[sc!=null&&e.min?T.ch_stats.replace('{s}',sc).replace('{m}',e.min):'',n>1?T.ch_streak.replace('{n}',n):''].filter(Boolean).join('　'),
         actions:[[T.done_log,'donego','log']]}})
-      .then(()=>{if(loadDraft())toast(t('offline_saved'))});
+      .then(r=>{if(r&&!r.ok&&(!navigator.onLine||/Failed to fetch|NetworkError|network|Load failed|timeout|aborted/i.test(String(r.err?.message||r.err||''))))toast(t('offline_saved'))});   // 電波のせいのときだけ「電波が弱くて」と出す（ほかの理由はそのまま見せる）
     return;
   }
   if((f.dataset.form==='comment'||f.dataset.form==='reply')&&acct(UI.session)?.role==='coach'&&!f.dataset.ok){   // 英語の選手に送る前は、英語と日本語訳を並べて確認
     const aid=f.dataset.form==='comment'?f.dataset.aid:ST.threads.find(x=>x.id===f.dataset.id)?.aid, v=(fdt.get(f.dataset.form==='comment'?'c':'r')||'').trim();
     if(v&&aid&&prefs(aid).lang==='en'&&ST.trOk){micStop();sendConfirm(aid,v).then(ok=>{if(!ok||!f.isConnected)return;f.dataset.ok='1';f.requestSubmit();delete f.dataset.ok});return}}
   micStop();
-  UI.cwSending=f.dataset.cw||null; UI.wSending=[...f.querySelectorAll('textarea[id]')].map(x=>x.id);   // 送れたら、この欄の書きかけも消す
+  UI.cwSending=f.dataset.cw||null; UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);   // 送れたら、この欄の書きかけも消す
     // 送れたときだけ下書きを消す（電波が悪くて失敗しても文章は残る）
   if(f.dataset.form==='aiask'){const aid=f.dataset.aid, q=(fdt.get('q')||'').trim();if(!q)return;const log=((UI.aichat||(UI.aichat={}))[aid]||(UI.aichat[aid]=[]));log.push({role:'user',content:q});if(UI.aiq)delete UI.aiq[aid];wDrop(UI.wSending);f.querySelector('textarea').value='';
     aiRun('ask:'+aid,async()=>{try{const r=await ai({mode:'ask',aid,today:TODAY,messages:log});log.push({role:'assistant',content:r.answer})}catch(e){log.pop();(UI.aiq||(UI.aiq={}))[aid]=q;throw e}});return}
