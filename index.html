@@ -659,7 +659,7 @@ const I18N = {
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
   cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cal_title:'カレンダー', cal_help:'日にちを押すと、その日の記録が見られます。', cal_prev:'前の月', cal_next:'次の月', cal_none:'この日の記録はありません。', cal_run:'🏃 ランニング {t}', cal_match:'🥋 試合：{n}', cal_lg:{good:'よい',mid:'ふつう',low:'低め',abs:'欠席・休み'}, cal_marks:['💪 エクストラ','🏃 ランニング','🥋 試合','💬 コメント'],
-  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'キャンセル', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
+  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'閉じる', w_restored:'書きかけの文を戻しました', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
   prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
   v_note:'コメント（なくてもOK）', v_note_ph:'例：1回戦です。組み手の入り方を見てください', v_edit:'直す', v_save:'保存', v_saved:'保存しました',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
@@ -802,7 +802,7 @@ const I18N = {
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
   cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cal_title:'Calendar', cal_help:'Tap a day to see what you logged.', cal_prev:'Previous month', cal_next:'Next month', cal_none:'Nothing logged on this day.', cal_run:'🏃 Run {t}', cal_match:'🥋 Match: {n}', cal_lg:{good:'Good',mid:'OK',low:'Low',abs:'Absent / off'}, cal_marks:['💪 Extra','🏃 Run','🥋 Match','💬 Comment'],
-  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Cancel', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
+  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Close', w_restored:'Restored what you were writing', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
   prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
   v_note:'Comment (optional)', v_note_ph:'e.g. Round 1 — please look at how I grip', v_edit:'Edit', v_save:'Save', v_saved:'Saved',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
@@ -1547,7 +1547,7 @@ addEventListener('resize',()=>document.querySelectorAll('.crail').forEach(r=>rai
 function athToday(){
   const L=lang(), T=I18N[L], m=me(), Y=addDays(TODAY,-1), day=UI.eday===Y?Y:TODAY, isY=day===Y;
   const needY=!isY&&!E(m.id,Y)&&(m.joined||TODAY)<=Y;   // 昨日の分がまだ（次の練習までに書けばよい）
-  const e=E(m.id,day)||UI.draft||{sleep:0,energy:0,soreness:0,stress:0,mood:0,min:120,rpe:-1,types:[],weight:'',pain:[],note:''};
+  const e=E(m.id,day)||(UI.previewAs?null:loadDraft())||UI.draft||{sleep:0,energy:0,soreness:0,stress:0,mood:0,min:120,rpe:-1,types:[],weight:'',pain:[],note:''};
   const seg=(k)=>`<div class="crow"><div class="nm">${T[k]}</div><div class="seg" role="radiogroup" aria-label="${T[k]}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="${k}" value="${v}" ${e[k]===v?'checked':''} required><span>${v}</span></label>`).join('')}</div><div class="ends"><span>1 ${T[k+'_lo']}</span><span>${T[k+'_hi']} 5</span></div></div>`;
   const lvl=e.pain[0]?.level||1, att=E(m.id,day)?attOf(e):'present';
   return `<div class="stack">
@@ -1681,9 +1681,10 @@ function memoOpen(ta){if(MEMO)return;const T=I18N[lang()];
   mt.addEventListener('input',()=>{ta.value=mt.value;ta.dispatchEvent(new Event('input',{bubbles:true}));cnt()});
   mt.focus();const n=mt.value.length;try{mt.setSelectionRange(n,n)}catch(e){}
 }
-function memoClose(ok){if(!MEMO)return;if(MIC?.id==='memo-ta')micEnd();const {el,ta:ta0,orig,fit,y}=MEMO, text=el.querySelector('.memo-ta').value;MEMO=null;
+function memoClose(ok){   // ok=「完了」。「閉じる」でも書いた文は残す（前は「キャンセル」で全部元に戻っていた）
+if(!MEMO)return;if(MIC?.id==='memo-ta')micEnd();const {el,ta:ta0,orig,fit,y}=MEMO, text=el.querySelector('.memo-ta').value;MEMO=null;
   const ta=ta0.isConnected?ta0:(ta0.id&&document.getElementById(ta0.id))||ta0;   // 途中で画面が作り直されていても、今ある欄に入れる
-  const want=ok?text:orig;if(ta.value!==want){ta.value=want;ta.dispatchEvent(new Event('input',{bubbles:true}))}
+  const want=text;if(ta.value!==want){ta.value=want;ta.dispatchEvent(new Event('input',{bubbles:true}))}
   window.visualViewport?.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('scroll',fit);
   el.remove();document.documentElement.classList.remove('memo-open');document.body.style.top='';window.scrollTo(0,y);
   if(ok&&ta.classList.contains('cw-ta')&&ta.closest('form')?.querySelector('.cw-edit')){const f=ta.closest('form');if(ta.value.trim())cwMode(f,true);else cwGrow(ta)}   // コメント・返信は、そのまま「送る前に確認」へ
@@ -1711,6 +1712,24 @@ document.addEventListener('input',ev=>{const j=ev.target.closest?.('[data-rja]')
 document.addEventListener('input',ev=>{const ta=ev.target.closest?.('.cw-ta');if(!ta)return;ta.classList.toggle('has',!!ta.value);cwGrow(ta);(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:ta.value,prev:false}});
 document.addEventListener('focusin',ev=>{if(ev.target.classList?.contains('cw-ta'))cwGrow(ev.target)});
 document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-ta'))setTimeout(()=>cwGrow(ev.target),0)});
+/* ---------- 書きかけの文は端末に残す：閉じる・画面を変える・アプリが落ちる・ログインが切れても、開き直すと戻る（送れたら消す） ---------- */
+const wKey=()=>'judo-w-'+UI.session;
+const wLoad=()=>{try{return JSON.parse(localStorage.getItem(wKey())||'{}')||{}}catch(e){return {}}};
+const wPut=o=>{try{localStorage.setItem(wKey(),JSON.stringify(o))}catch(e){}};
+const wSkip=ta=>!ta.id||ta.id==='memo-ta'||ta.disabled||(ta.readOnly&&!ta.dataset.memo)||!ta.closest('#app form')||!!UI.previewAs;
+function wKeep(ta){if(!UI.session||wSkip(ta))return;const o=wLoad(), b=ta.defaultValue;   // b=元の文（保存ずみの文）。元のままなら残さない
+  if(ta.value===b||!ta.value.trim())delete o[ta.id];else o[ta.id]={v:ta.value,b,t:Date.now()};wPut(o)}
+function wDrop(ids){if(!ids?.length||!UI.session)return;const o=wLoad();ids.forEach(id=>delete o[id]);wPut(o)}
+function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Date.now();let n=0, ch=false;
+  for(const id in o)if(!o[id]||now-o[id].t>14*864e5){delete o[id];ch=true}   // 2週間たった書きかけは消す
+  document.querySelectorAll('#app form textarea[id]').forEach(ta=>{const w=o[ta.id];if(!w||wSkip(ta)||ta.value===w.v)return;
+    if(ta.defaultValue===w.v){delete o[ta.id];ch=true;return}   // もう保存されている
+    if(ta.defaultValue!==w.b)return;   // ほかの端末で書きかえられている：上書きしない
+    ta.value=w.v;n++;
+    if(ta.classList.contains('cw-ta')){ta.classList.add('has');(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:w.v,prev:false}}});
+  if(ch)wPut(o);
+  if(n&&!UI.wTold){UI.wTold=true;setTimeout(()=>toast(t('w_restored')),300)}}
+document.addEventListener('input',ev=>{if(ev.target.tagName==='TEXTAREA')wKeep(ev.target)});
 function bubble(m,cls,by,T,ro){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
   if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="20000">${esc(m.text)}</textarea><div class="row cw-bar"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm cw-far" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
@@ -2598,7 +2617,7 @@ function render(){
   if(UI.rscroll){UI.rscroll=false;const tg=app.querySelector('.rm.target')||app.querySelector('.rm.pending');if(tg&&innerWidth>=900)tg.scrollIntoView({block:'center'})}
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
-  drawHealth(); railsInit(); document.querySelectorAll('.vnote').forEach(n=>{const b=n.nextElementSibling;if(b)b.hidden=!(n.scrollHeight>n.clientHeight+2)}); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
+  drawHealth(); railsInit(); document.querySelectorAll('.vnote').forEach(n=>{const b=n.nextElementSibling;if(b)b.hidden=!(n.scrollHeight>n.clientHeight+2)}); wRestore(); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
 }
 /* シート・ポップアップ：開いたままの描き直しでは動かさない。閉じたものは、その要素だけを薄れさせてから取り除く（すぐ別の画面を開いても消されない） */
@@ -2701,7 +2720,7 @@ async function switchTo(login){
   UI.acctSheet=false;UI.session=null;UI.auth=null;UI.prefill=login;UI.err='';render();document.getElementById('lg-pw')?.focus();   // パスワードが必要
 }
 async function afterSignIn(user){
-  UI.authUser=user; UI.session=user.id;
+  UI.authUser=user; UI.session=user.id; UI.draft=null; UI.eday=null; UI.cw={}; UI.wTold=false;   // 前の人（家族で同じ端末）の書きかけを次の人に出さない
   await loadAll();
   if(!me()){UI.auth='join';UI.session=user.id;render();return}   // アカウントはあるがチームに未参加
   UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
@@ -2711,7 +2730,7 @@ async function afterSignIn(user){
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
-  const key=curKey(); await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
+  const key=curKey(); try{localStorage.removeItem(wKey())}catch(e){} await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
   const reg=regLoad().filter(r=>r.key!==key); regSave(reg);
   Object.assign(UI,{session:null,authUser:null,settings:false,auth:null,acctSheet:false}); ACCOUNTS=[]; ATH=[];
   for(const r of reg){const c=clientFor(r.key),{data}=await c.auth.getSession();if(data.session&&r.role!=='athlete'){await activate(r.key,data.session.user);return}}
@@ -2750,8 +2769,8 @@ function celebrate(d){
 }
 async function run(fn,done,btn){
   const o=pressBusy(btn||UI.pressed); UI.pressed=null;
-  try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;render();celebrate(typeof done==='function'?done(r):done)}
-  catch(e){UI.busy=false;UI.cwSending=null;pressDone(o);console.error(e);if(!String(e?.message||'').startsWith('__'))logErr('action',String(e?.message||e));toast(errText(e));renderKeep()}   // 失敗しても、書いた内容は消さない
+  try{UI.busy=true;const r=await fn();UI.busy=false;if(UI.cwSending&&UI.cw)delete UI.cw[UI.cwSending];UI.cwSending=null;wDrop(UI.wSending);UI.wSending=null;render();celebrate(typeof done==='function'?done(r):done)}
+  catch(e){UI.busy=false;UI.cwSending=null;UI.wSending=null;pressDone(o);console.error(e);if(!String(e?.message||'').startsWith('__'))logErr('action',String(e?.message||e));toast(errText(e));renderKeep()}   // 失敗しても、書いた内容は消さない
 }
 document.addEventListener('click',ev=>{
   unstick();
@@ -2970,7 +2989,7 @@ document.addEventListener('submit',ev=>{
     return;
   }
   if(fid==='today-form'){
-    const d=formToEntry(fdt); saveDraft(d);
+    const d=formToEntry(fdt); saveDraft(d); UI.wSending=[...f.querySelectorAll('textarea[id]')].map(x=>x.id);
     const day=UI.eday||TODAY, isY=day!==TODAY;
     run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=day;window.scrollTo(0,0)},()=>{
       const T=I18N[lang()], e=E(UI.session,day), n=streak(UI.session), sc=score(e);
@@ -2984,8 +3003,9 @@ document.addEventListener('submit',ev=>{
     const aid=f.dataset.form==='comment'?f.dataset.aid:ST.threads.find(x=>x.id===f.dataset.id)?.aid, v=(fdt.get(f.dataset.form==='comment'?'c':'r')||'').trim();
     if(v&&aid&&prefs(aid).lang==='en'&&ST.trOk){micStop();sendConfirm(aid,v).then(ok=>{if(!ok||!f.isConnected)return;f.dataset.ok='1';f.requestSubmit();delete f.dataset.ok});return}}
   micStop();
-  UI.cwSending=f.dataset.cw||null;   // 送れたときだけ下書きを消す（電波が悪くて失敗しても文章は残る）
-  if(f.dataset.form==='aiask'){const aid=f.dataset.aid, q=(fdt.get('q')||'').trim();if(!q)return;const log=((UI.aichat||(UI.aichat={}))[aid]||(UI.aichat[aid]=[]));log.push({role:'user',content:q});if(UI.aiq)delete UI.aiq[aid];f.querySelector('textarea').value='';
+  UI.cwSending=f.dataset.cw||null; UI.wSending=[...f.querySelectorAll('textarea[id]')].map(x=>x.id);   // 送れたら、この欄の書きかけも消す
+    // 送れたときだけ下書きを消す（電波が悪くて失敗しても文章は残る）
+  if(f.dataset.form==='aiask'){const aid=f.dataset.aid, q=(fdt.get('q')||'').trim();if(!q)return;const log=((UI.aichat||(UI.aichat={}))[aid]||(UI.aichat[aid]=[]));log.push({role:'user',content:q});if(UI.aiq)delete UI.aiq[aid];wDrop(UI.wSending);f.querySelector('textarea').value='';
     aiRun('ask:'+aid,async()=>{try{const r=await ai({mode:'ask',aid,today:TODAY,messages:log});log.push({role:'assistant',content:r.answer})}catch(e){log.pop();(UI.aiq||(UI.aiq={}))[aid]=q;throw e}});return}
   if(f.dataset.form==='habit'){const id=f.dataset.id, rule=(fdt.get('rule')||'').trim(), example=(fdt.get('example')||'').trim();if(!rule)return;
     sb.from('tr_habits').update({rule,example,updated_at:new Date().toISOString()}).eq('id',id).then(({error})=>{if(error)return toast(errText(error));const h=(UI.habits||[]).find(x=>x.id===id);if(h)Object.assign(h,{rule,example});UI.habEdit=null;renderKeep()});return}
