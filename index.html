@@ -547,6 +547,7 @@ textarea.inp{min-height:84px;resize:vertical;line-height:1.55}
 .mc-facts{display:flex;flex-wrap:wrap;gap:4px}
 .mc-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:calc(15*var(--u));line-height:1.6}
 .mc-msg{padding:6px 10px;border-radius:10px;background:var(--panel)}.mc-msg.me{background:transparent;border:1px dashed var(--line2)}
+@keyframes needblink{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px #e5484d}}.seg.rpe.need{animation:needblink .6s 3;border-radius:12px}
 html.memo-open,html.memo-open body{overflow:hidden;overscroll-behavior:none;height:100%}html.memo-open body{position:fixed;left:0;right:0;width:100%}
 html.ov-open,html.ov-open body{overflow:hidden;overscroll-behavior:none}   /* シートを開いている間は後ろの画面を動かさない（位置はそのまま） */
 .memo,.memo-ta{overscroll-behavior:contain}
@@ -637,7 +638,7 @@ const I18N = {
   n_denied:'通知が許可されていません。iPhoneの「設定」→「通知」→「柔道ノート」でオンにしてから、もう一度押してください。', n_checking:'確認中…',
   n_what_a:'届く通知：毎日{h}に、その日の記録がまだならお知らせが1回。コーチからコメント・返信が来たときも届きます（下でオン・オフ）。', n_what_c:'届く通知：毎日{h}にチームのまとめ（午前なら前日の分：記録した人数・まだの人・欠席・痛みやケガ・未返信の質問）。',
   n_what_off:'（毎日のお知らせは「なし」になっています）', remind_c:'毎日のまとめの時刻', n_sent0:'この端末はまだ通知の受け取り先として登録されていません。',
-  e_timeout:'通信に時間がかかっています。電波のよい場所で、もう一度お試しください（書いた内容は残っています）。', pv_blocked:'閲覧モードでは変更できません。「閲覧モードを終わる」で戻れます。', boot_slow:'読み込みに時間がかかっています。電波のよい場所で、もう一度読み込んでください。', boot_retry:'もう一度読み込む', v_stall:'動画の変換が止まってしまいました。もう一度お試しください。',
+  e_timeout:'通信に時間がかかっています。電波のよい場所で、もう一度お試しください（書いた内容は残っています）。', pv_blocked:'閲覧モードでは変更できません。「閲覧モードを終わる」で戻れます。', boot_slow:'読み込みに時間がかかっています。電波のよい場所で、もう一度読み込んでください。', boot_retry:'もう一度読み込む', boot_off:'電波が弱くて読み込めませんでした。ログインはそのままです。電波のよい場所で、もう一度読み込んでください。', rpe_need:'きつさ（0〜10）を選んでください', g_this:'今月', g_last:'先月', g_last_h:'先月の目標と振り返り', g_last_saved:'先月の目標と振り返りを保存しました！', v_stall:'動画の変換が止まってしまいました。もう一度お試しください。',
   pv_btn:'👀 選手の画面で見る', pv_banner:'{n}さんの画面を見ています（閲覧モード・書き込みはできません）', pv_exit:'閲覧モードを終わる',
   inv_steps_t:'招待のしかた', inv_s1:'「誰に渡すか」に選手の名前を書いて「発行する」を押す（メモなので選手には見えません）', inv_s2:'できあがった招待メッセージを「送る」で、メッセージアプリなどから選手に送る（日本語・英語を選べます）',
   inv_s3:'選手がリンクを開き、自分でIDとパスワードを決めて登録する → 下の「選手」に名前が出たら完了', inv_s4:'保護者は、選手の登録が終わってから、その選手の欄の「＋ 保護者用コード」で同じように送る',
@@ -780,7 +781,7 @@ const I18N = {
   n_denied:'Notifications are blocked. Turn them on in iPhone Settings → Notifications → Judo Note, then tap again.', n_checking:'Checking…',
   n_what_a:'Once a day at {h}: a reminder, only if you haven’t logged yet. Also when your coach comments or replies (turn on/off below).', n_what_c:'Daily at {h}: a team summary (in the morning it covers yesterday: logged, not logged, absent, pain/injury, unanswered questions).',
   n_what_off:'(daily notification is set to Off)', remind_c:'Daily summary time', n_sent0:'This device isn’t registered for notifications yet.',
-  e_timeout:'This is taking too long. Try again where the signal is better (what you wrote is still here).', pv_blocked:'You can’t change anything in preview. Tap “Exit preview” to go back.', boot_slow:'Loading is taking a long time. Please reload where the signal is better.', boot_retry:'Reload', v_stall:'Video conversion stopped. Please try again.',
+  e_timeout:'This is taking too long. Try again where the signal is better (what you wrote is still here).', pv_blocked:'You can’t change anything in preview. Tap “Exit preview” to go back.', boot_slow:'Loading is taking a long time. Please reload where the signal is better.', boot_retry:'Reload', boot_off:'Could not load because the signal is weak. You are still logged in. Please reload where the signal is better.', rpe_need:'Please choose how hard practice was (0–10)', g_this:'This month', g_last:'Last month', g_last_h:'Last month: goals & review', g_last_saved:'Saved last month’s goals & review!', v_stall:'Video conversion stopped. Please try again.',
   pv_btn:'👀 View as athlete', pv_banner:'Viewing {n}’s screen (preview — nothing can be changed)', pv_exit:'Exit preview',
   inv_steps_t:'How to invite', inv_s1:'Type the athlete’s name under “Who is it for” and tap Create (the memo is only for you)', inv_s2:'Tap Send to share the ready-made invite message via Messages or another app (Japanese or English)',
   inv_s3:'The athlete opens the link and picks their own ID and password → when their name appears under “Athletes”, you’re done', inv_s4:'For a parent/guardian: after the athlete has joined, tap “＋ Guardian code” in that athlete’s row and send it the same way',
@@ -1752,13 +1753,13 @@ function questions(aid,L,coach,ro){
   return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
 }
 function athNote(){
-  const L=lang(), T=I18N[L], m=me(), ym=curYm(), g=ST.goals[m.id+'|'+ym]||{items:['','',''],review:''};
+  const L=lang(), T=I18N[L], m=me(), last=ymShift(curYm(),-1), canLast=TODAY.slice(8)==='01', ym=canLast&&UI.gYm===last?last:curYm(), g=ST.goals[m.id+'|'+ym]||{items:['','',''],review:''};   // 1日は先月の分も書ける
   return `<div class="stack">
     ${viewersNote(m.id,L)}
     ${eventsCard(m.id,L)}
-    <div class="card"><h2>${T.goals} · ${monthLabel(ym,L)}</h2><form data-form="goals" class="stack">
-      ${[0,1,2].map(i=>`<input class="inp" id="g-${i}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
-      <div class="field"><label for="g-review">${T.review}</label><textarea class="inp" id="g-review" name="review" maxlength="20000" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
+    <div class="card"><h2>${ym===curYm()?T.goals:T.g_last_h} · ${monthLabel(ym,L)}</h2>${canLast?`<div class="segbar" style="max-width:320px;margin-bottom:10px">${[[curYm(),T.g_this],[last,T.g_last]].map(([v,l])=>`<button type="button" data-act="gym" data-v="${v}" aria-pressed="${ym===v}">${l}</button>`).join('')}</div>`:''}<form data-form="goals" data-ym="${ym}" class="stack">
+      ${[0,1,2].map(i=>`<input class="inp" id="g-${i}-${ym}" name="g" value="${esc(g.items[i]||'')}" placeholder="${esc(T.goals_ph.replace('{n}',i+1))}">`).join('')}
+      <div class="field"><label for="g-review-${ym}">${T.review}</label><textarea class="inp" id="g-review-${ym}" name="review" maxlength="20000" placeholder="${esc(T.review_ph)}">${esc(g.review||'')}</textarea></div>
       <div><button class="btn ghost" type="submit">${T.goals_save}</button></div></form></div>
     <div class="card"><h2>${T.booklet}</h2><p class="small muted" style="margin-top:0">${T.my_note_hint}</p><div class="row" style="align-items:end">${monthPicker()}<button class="btn sm" data-act="print">${T.print_btn}</button></div></div>
     <div class="sheets">${booklet(m.id,UI.pYm)}</div></div>`;
@@ -2857,6 +2858,7 @@ document.addEventListener('click',ev=>{
   else if(a==='entmore'){const open=UI.entOpen!==el.dataset.aid;if(open)UI.entY=scrollY;UI.entOpen=open?el.dataset.aid:null;render();if(!open&&UI.entY!=null)window.scrollTo({top:UI.entY,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
   else if(a==='cmore'){const sl=el.closest('.cslide'),c=sl.querySelector('.cs-txt'),open=c.classList.toggle('clamp')===false;el.textContent=t(open?'cc_less':'cc_more');
     if(open)sl.dataset.y=scrollY;railFit(el.closest('.crail'),true);if(!open&&sl.dataset.y!=null)window.scrollTo({top:+sl.dataset.y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}   // 閉じたら、開く前の場所へ
+  else if(a==='gym'){UI.gYm=el.dataset.v;renderKeep()}
   else if(a==='memo-done'){memoClose(true)}
   else if(a==='memo-cancel'){memoClose(false)}
   else if(a==='memo-ctx'){const c=el.closest('.memo-ctx'),hid=c.classList.toggle('hide');el.textContent=t(hid?'mc_show':'mc_hide');document.querySelector('.memo-ta')?.focus()}
@@ -2989,6 +2991,7 @@ document.addEventListener('submit',ev=>{
     return;
   }
   if(fid==='today-form'){
+    if(fdt.get('att')==='present'&&fdt.get('rpe')==null){UI.pressed=null;toast(t('rpe_need'));const r=f.querySelector('.seg.rpe');r?.scrollIntoView({block:'center',behavior:'smooth'});r?.classList.add('need');setTimeout(()=>r?.classList.remove('need'),2400);return}   // 練習に出た日は、きつさを必ず選ぶ（選ばないと 0 になっていた）
     const d=formToEntry(fdt); saveDraft(d); UI.wSending=[...f.querySelectorAll('textarea[id]')].map(x=>x.id);
     const day=UI.eday||TODAY, isY=day!==TODAY;
     run(async()=>{await saveEntry(d,day);clearDraft();UI.draft=null;UI.eday=day;window.scrollTo(0,0)},()=>{
@@ -3032,7 +3035,7 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
   if(f.dataset.form==='editcmt'){const v=(fdt.get('c')||'').trim();if(!v)return;run(async()=>{await editComment(f.dataset.aid,f.dataset.d,v);UI.cmtEdit=null},t('ed_done'))}
-  if(f.dataset.form==='goals'){run(()=>saveGoals(curYm(),fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:t('ch_goal_t'),msg:pick1(t('ch_goal'))}))}
+  if(f.dataset.form==='goals'){const gym=f.dataset.ym||curYm();run(()=>saveGoals(gym,fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:gym===curYm()?t('ch_goal_t'):t('g_last_saved'),msg:pick1(t('ch_goal'))}))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:wKg(fdt.get('wlimit'))}).eq('id',aid));await loadAll()},t('saved_cls'))}
   if(f.dataset.form==='resetpw'){const pw=fdt.get('pw')||'', aid=f.dataset.aid, g=!!f.dataset.g;if(pw.length<8)return toast(t('e_pw'));
@@ -3058,7 +3061,8 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
     UI.booting=false;
     if(data.session&&!m){await afterSignIn(data.session.user);clearTimeout(slow);rememberCurrent(curKey());return}
     if(m)UI.authUser=null;
-  }catch(e){UI.booting=false;UI.err=errText(e);logErr('boot',String(e?.message||e))}
+  }catch(e){UI.booting=false;UI.err=errText(e);logErr('boot',String(e?.message||e));
+    if(UI.session&&!me()){clearTimeout(slow);const T=I18N[UI.loginLang];app.innerHTML=`<div class="login"><div class="card stack" style="max-width:360px"><div>${T.boot_off}</div><button class="btn" onclick="location.reload()">${T.boot_retry}</button></div></div>`;addEventListener('online',()=>location.reload(),{once:true});return}}   // ログインしたまま電波が弱いだけ：ログイン画面を出さない。電波が戻ったら自動で読み込む
   clearTimeout(slow);render();
   if(UI.join?.code)document.querySelector('[data-act=checkcode]')?.click();
 })();
