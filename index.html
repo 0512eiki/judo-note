@@ -130,6 +130,7 @@ main.wide{max-width:1320px}
 .r-warn{margin-top:6px;font-size:calc(12*var(--u));color:var(--warn);background:var(--warn-s);border-radius:10px;padding:6px 9px;white-space:pre-wrap}
 .r-tr{margin-top:8px;padding:9px 11px;border-radius:12px;background:var(--panel2);border:1px dashed color-mix(in srgb,var(--acc-2) 45%,transparent);font-size:calc(13*var(--u));white-space:pre-wrap;overflow-wrap:anywhere}
 .r-tr .tg{font-size:calc(10*var(--u));font-weight:800;color:var(--acc-2);background:color-mix(in srgb,var(--acc-2) 15%,transparent);border-radius:6px;padding:1px 6px;margin-right:6px}
+.sent-at{margin-top:4px;font-size:calc(11*var(--u));color:var(--dim);text-align:right}
 .r-trbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:6px}
 .r-trbar button{font:inherit;font-size:calc(11*var(--u));font-weight:700;color:var(--accent);background:var(--panel2);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:2px 10px;cursor:pointer}
 .r-trbar button[aria-pressed="true"]{background:var(--grad);color:#fff;border-color:transparent}
@@ -755,7 +756,7 @@ const I18N = {
   events:'試合の予定', ev_name:'大会名', ev_date:'試合日', ev_weigh:'計量日', ev_add:'予定を追加', ev_added:'予定を追加しました', ev_until:'{n}まで', ev_days:'あと{d}日', ev_today:'今日は{n}',
   ev_weigh_s:'計量 {d}', ev_to_go:'目標（{l}）まで あと{w}', ev_ok:'階級内（{l}以下）', f_ev:'試合まで{d}日', f_ev0:'今日 試合', ev_none:'予定はまだありません', ev_del:'削除',
   s_logged:'本日の入力', s_attn:'要チェック', s_unans:'返信待ち',
-  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ', r_toen:'🌐 英語にする', mic:'声で入力', mic_stop:'⏹ 止める', mic_pause:'⏸ 一時停止', mic_resume:'▶ 再開', mic_end:'⏹ 終わる', mic_on:'聞き取り中', mic_paused:'一時停止中', mic_err:'声の入力が使えませんでした。キーボードのマイクを使ってください', mic_busy:'マイクがつながりませんでした。少し待って「▶ 再開」を押してください', mic_off:'この画面ではアプリの声の入力が使えません。キーボードのマイク（🎤）を使ってください', cf_title:'送信前の確認', cf_en:'選手に届く英語', cf_ja:'日本語訳（確認用・AI）', cf_wait:'AIが訳しています…', cf_fail:'訳を出せませんでした（送信はできます）', cf_back:'戻って直す', cf_send:'送信する', r_tredo:'訳し直す', ai_working:'AIが考え中…', ai_tag:'AI（Claude）', ai_busy:'AIが混み合っています。少し待ってもう一度', ai_refused:'AIが答えられない内容でした', ai_err:'AIにつながりませんでした', ai_tab:'🤖 AIに聞く', hb_tab:'📚 くせ', hb_help:'送るときに英語を直すと、AI がその直し方を「くせ」として覚え、次の「英語にする」で使います。名前などは入れません。違うと思ったら直すか消してください。', hb_none:'まだありません。「英語にする」の訳を直して送ると、ここにたまります。', hb_k:{phrase:'言い回し',term:'柔道用語',tone:'口調',avoid:'使わない',other:'その他'}, hb_hits:'{n}回', hb_edit:'直す', hb_del:'消す', hb_delq:'このくせを消しますか？', hb_save:'保存', hb_rule:'くせ', hb_ex:'例', hb_learned:'📚 訳し方のくせを覚えました（{n}）', r_tab:'✏️ 返信', ai_help:'この選手の最近の記録・やりとり・試合をもとに答えます（名前は送りません）。', ai_ph:'例：最近の調子は？ 減量は順調？ どう声をかけたらいい？', ai_send:'聞く', ai_clear:'消す', r_ja:'日本語で書く', r_en:'英語（選手に届く文・直せる）', r_back:'日本語に戻すと（意味のずれの確認）', r_tshow:'日本語訳', r_tall:'日本語訳を全部表示', r_tg:'訳', r_tstale:'元の文が書き直されています',
+  t_reply:'返信', r_lock:'🔒 このページはコーチだけ', r_pend:'返信待ち {n}件', r_done:'返信済み', r_allok:'返信待ちはありません。全部返しました 🎉', r_pick:'左の一覧から選手を選んでください', r_to:'返信先', r_this:'↩ これに返信', r_wait:'⏳ 返信待ち', r_k_e:'記録', r_k_q:'質問', r_write:'✏️ 返信を書く', r_list:'← 一覧', r_log:'← ログ', r_next:'次へ →', r_choose:'真ん中の「これに返信」を押すと、ここに書く欄が出ます', r_older:'もっと前を見る', r_trend:'調子14日', r_today:'今日', r_none30:'この期間の記録・質問はありません', r_conly:'🔒 コーチだけ', r_toen:'🌐 英語にする', mic:'声で入力', mic_stop:'⏹ 止める', mic_pause:'⏸ 一時停止', mic_resume:'▶ 再開', mic_end:'⏹ 終わる', mic_on:'聞き取り中', mic_paused:'一時停止中', mic_err:'声の入力が使えませんでした。キーボードのマイクを使ってください', mic_busy:'マイクがつながりませんでした。少し待って「▶ 再開」を押してください', mic_off:'この画面ではアプリの声の入力が使えません。キーボードのマイク（🎤）を使ってください', cf_title:'送信前の確認', cf_en:'選手に届く英語', cf_ja:'日本語訳（確認用・AI）', cf_wait:'AIが訳しています…', cf_fail:'訳を出せませんでした（送信はできます）', cf_back:'戻って直す', cf_send:'送信する', r_tredo:'訳し直す', ai_working:'AIが考え中…', ai_tag:'AI（Claude）', ai_busy:'AIが混み合っています。少し待ってもう一度', ai_refused:'AIが答えられない内容でした', ai_err:'AIにつながりませんでした', ai_tab:'🤖 AIに聞く', hb_tab:'📚 くせ', hb_help:'送るときに英語を直すと、AI がその直し方を「くせ」として覚え、次の「英語にする」で使います。名前などは入れません。違うと思ったら直すか消してください。', hb_none:'まだありません。「英語にする」の訳を直して送ると、ここにたまります。', hb_k:{phrase:'言い回し',term:'柔道用語',tone:'口調',avoid:'使わない',other:'その他'}, hb_hits:'{n}回', hb_edit:'直す', hb_del:'消す', hb_delq:'このくせを消しますか？', hb_save:'保存', hb_rule:'くせ', hb_ex:'例', hb_learned:'📚 訳し方のくせを覚えました（{n}）', r_tab:'✏️ 返信', ai_help:'この選手の最近の記録・やりとり・試合をもとに答えます（名前は送りません）。', ai_ph:'例：最近の調子は？ 減量は順調？ どう声をかけたらいい？', ai_send:'聞く', ai_clear:'消す', r_ja:'日本語で書く', r_en:'英語（選手に届く文・直せる）', r_back:'日本語に戻すと（意味のずれの確認）', r_tshow:'日本語訳', r_tall:'日本語訳を全部表示', r_tg:'訳', r_tstale:'元の文が書き直されています', st_sent:'送信', st_fixed:'直した',
   h_ath:'選手', h_trend:'調子（14日）', h_today:'今日', h_ramp:'負荷比', h_w:'体重',
   cw_done:'完了', cw_edit:'直す', cw_check:'送る前に確認', cw_empty:'文章を入れてから「完了」を押してください', cw_tap:'文章を押しても直せます',
   cmt_ph:'コメントを書く', send:'送信', reply:'返信', reply_ph:'返信を書く', new_q:'新しい質問', ask_btn:'質問する',
@@ -898,7 +899,7 @@ const I18N = {
   events:'Competitions', ev_name:'Event', ev_date:'Match day', ev_weigh:'Weigh-in', ev_add:'Add event', ev_added:'Event added', ev_until:'to {n}', ev_days:'{d} days', ev_today:'{n} is today',
   ev_weigh_s:'Weigh-in {d}', ev_to_go:'{w} to make {l}', ev_ok:'On weight (≤{l})', f_ev:'Match in {d} d', f_ev0:'Match today', ev_none:'No events yet', ev_del:'Delete',
   s_logged:'Logged today', s_attn:'Need a look', s_unans:'To reply',
-  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only', r_toen:'🌐 Translate to English', mic:'Voice input', mic_stop:'⏹ Stop', mic_pause:'⏸ Pause', mic_resume:'▶ Resume', mic_end:'⏹ Done', mic_on:'Listening', mic_paused:'Paused', mic_err:'Voice input isn’t available here. Use the keyboard’s microphone', mic_busy:'Couldn’t reach the microphone. Wait a moment and tap “▶ Resume”', mic_off:'Voice input isn’t available in this app view. Use the keyboard’s microphone (🎤)', cf_title:'Check before sending', cf_en:'English the athlete will get', cf_ja:'Japanese (for checking, by AI)', cf_wait:'AI is translating…', cf_fail:'Couldn’t translate (you can still send)', cf_back:'Go back and edit', cf_send:'Send', r_tredo:'Re-translate', ai_working:'AI is thinking…', ai_tag:'AI (Claude)', ai_busy:'AI is busy. Try again in a moment', ai_refused:'AI couldn’t answer that', ai_err:'Couldn’t reach the AI', ai_tab:'🤖 Ask AI', hb_tab:'📚 Habits', hb_help:'When you edit the English before sending, the AI learns how you like things translated and uses it next time you press Translate. No names are kept. Edit or delete anything that looks wrong.', hb_none:'Nothing yet. Edit an AI translation and send it, and your habits will appear here.', hb_k:{phrase:'Wording',term:'Judo term',tone:'Tone',avoid:'Avoid',other:'Other'}, hb_hits:'×{n}', hb_edit:'Edit', hb_del:'Delete', hb_delq:'Delete this habit?', hb_save:'Save', hb_rule:'Habit', hb_ex:'Example', hb_learned:'📚 Learned how you translate ({n})', r_tab:'✏️ Reply', ai_help:'Answers from this athlete’s recent logs, conversations and matches (the name is not sent).', ai_ph:'e.g. How has their condition been? Is the weight cut on track? How should I talk to them?', ai_send:'Ask', ai_clear:'Clear', r_ja:'Write in Japanese', r_en:'English (sent to the athlete, editable)', r_back:'Back-translated (check the meaning)', r_tshow:'Translation', r_tall:'Show all translations', r_tg:'Tr.', r_tstale:'The original was edited',
+  t_reply:'Reply', r_lock:'🔒 Coach only', r_pend:'{n} to reply', r_done:'Replied', r_allok:'Nothing to reply to. All caught up 🎉', r_pick:'Pick an athlete from the list', r_to:'Replying to', r_this:'↩ Reply to this', r_wait:'⏳ To reply', r_k_e:'Log', r_k_q:'Question', r_write:'✏️ Write a reply', r_list:'← List', r_log:'← Log', r_next:'Next →', r_choose:'Tap “Reply to this” in the middle to write here', r_older:'Show older', r_trend:'Condition (14 d)', r_today:'Today', r_none30:'No logs or questions in this period', r_conly:'🔒 Coach only', r_toen:'🌐 Translate to English', mic:'Voice input', mic_stop:'⏹ Stop', mic_pause:'⏸ Pause', mic_resume:'▶ Resume', mic_end:'⏹ Done', mic_on:'Listening', mic_paused:'Paused', mic_err:'Voice input isn’t available here. Use the keyboard’s microphone', mic_busy:'Couldn’t reach the microphone. Wait a moment and tap “▶ Resume”', mic_off:'Voice input isn’t available in this app view. Use the keyboard’s microphone (🎤)', cf_title:'Check before sending', cf_en:'English the athlete will get', cf_ja:'Japanese (for checking, by AI)', cf_wait:'AI is translating…', cf_fail:'Couldn’t translate (you can still send)', cf_back:'Go back and edit', cf_send:'Send', r_tredo:'Re-translate', ai_working:'AI is thinking…', ai_tag:'AI (Claude)', ai_busy:'AI is busy. Try again in a moment', ai_refused:'AI couldn’t answer that', ai_err:'Couldn’t reach the AI', ai_tab:'🤖 Ask AI', hb_tab:'📚 Habits', hb_help:'When you edit the English before sending, the AI learns how you like things translated and uses it next time you press Translate. No names are kept. Edit or delete anything that looks wrong.', hb_none:'Nothing yet. Edit an AI translation and send it, and your habits will appear here.', hb_k:{phrase:'Wording',term:'Judo term',tone:'Tone',avoid:'Avoid',other:'Other'}, hb_hits:'×{n}', hb_edit:'Edit', hb_del:'Delete', hb_delq:'Delete this habit?', hb_save:'Save', hb_rule:'Habit', hb_ex:'Example', hb_learned:'📚 Learned how you translate ({n})', r_tab:'✏️ Reply', ai_help:'Answers from this athlete’s recent logs, conversations and matches (the name is not sent).', ai_ph:'e.g. How has their condition been? Is the weight cut on track? How should I talk to them?', ai_send:'Ask', ai_clear:'Clear', r_ja:'Write in Japanese', r_en:'English (sent to the athlete, editable)', r_back:'Back-translated (check the meaning)', r_tshow:'Translation', r_tall:'Show all translations', r_tg:'Tr.', r_tstale:'The original was edited', st_sent:'sent', st_fixed:'edited',
   h_ath:'Athlete', h_trend:'Condition (14 d)', h_today:'Today', h_ramp:'Ramp', h_w:'Weight',
   cw_done:'Done', cw_edit:'Edit', cw_check:'Check before sending', cw_empty:'Type something first, then tap Done', cw_tap:'Tap the text to edit it',
   cmt_ph:'Write a comment', send:'Send', reply:'Reply', reply_ph:'Write a reply', new_q:'New question', ask_btn:'Ask',
@@ -975,7 +976,7 @@ const LOAD_DAYS=150;   // 何日前までの記録を読み込むか（冊子と
 function mapEntry(r,fb){
   return {id:r.id,att:r.att,absReason:r.abs_reason||undefined,sleep:r.sleep,energy:r.energy,soreness:r.soreness,stress:r.stress,mood:r.mood,
     min:r.minutes,rpe:r.rpe,types:r.types||[],weight:r.weight==null?null:+r.weight,at:r.created_at,upd:r.updated_at,pain:r.pain||[],head:r.head||[],note:r.note||'',
-    comment:fb&&fb.comment?{text:fb.comment,at:localDay(fb.commented_at||fb.seen_at),edited:!!fb.edited_at}:null,seen:fb?localDay(fb.seen_at):null};
+    comment:fb&&fb.comment?{text:fb.comment,at:localDay(fb.commented_at||fb.seen_at),edited:!!fb.edited_at,ts:fb.commented_at||fb.seen_at,ets:fb.edited_at||null}:null,seen:fb?localDay(fb.seen_at):null};
 }
 function must(res){if(res.error)throw res.error;return res.data}
 
@@ -1020,7 +1021,7 @@ async function loadAllOnce(){
   must(ms).forEach(m=>(byThread[m.thread_id]||(byThread[m.thread_id]=[])).push(m));
   ST.threads=must(th).map(t=>{const list=byThread[t.id]||[];const first=list[0];
     return first?{id:t.id,aid:t.athlete_id,coachOnly:!!t.coach_only,date:localDay(first.created_at),text:first.body,mid:first.id,author:first.author_id,edited:!!first.edited_at,
-      replies:list.slice(1).map(m=>({id:m.id,author:m.author_id,edited:!!m.edited_at,from:m.author_id===t.athlete_id?'athlete':'coach',date:localDay(m.created_at),text:m.body}))}:null}).filter(Boolean);
+      replies:list.slice(1).map(m=>({id:m.id,author:m.author_id,edited:!!m.edited_at,ts:m.created_at,ets:m.edited_at||null,from:m.author_id===t.athlete_id?'athlete':'coach',date:localDay(m.created_at),text:m.body}))}:null}).filter(Boolean);
   ST.events=must(ev).map(e=>({id:e.id,name:e.name,date:e.match_day,weigh:e.weigh_in||'',target:e.target_weight==null?null:+e.target_weight,by:e.created_by===e.athlete_id?'athlete':'coach',aids:[e.athlete_id]}));
   ST.goals={};must(go).forEach(g=>ST.goals[g.athlete_id+'|'+g.month]={items:g.items||[],review:g.review||''});
   ST.team=must(tm)[0]||null;
@@ -1072,21 +1073,22 @@ async function askQuestion(text,coachOnly){
 }
 async function sendReply(tid,text){
   const m=must(await sb.from('messages').insert({thread_id:tid,body:text}).select().single()); notify('message',{id:m.id});   // 選手→コーチ、コーチ→選手（選手がオンのときだけ）
-  ST.threads.find(x=>x.id===tid).replies.push({id:m.id,author:UI.session,edited:false,from:me().role==='coach'?'coach':'athlete',date:TODAY,text});
+  ST.threads.find(x=>x.id===tid).replies.push({id:m.id,author:UI.session,edited:false,ts:m.created_at,ets:null,from:me().role==='coach'?'coach':'athlete',date:TODAY,text});
+  return m;
 }
 async function editMessage(id,body){   // 自分が書いた質問・返信を直す
-  must(await sb.from('messages').update({body,edited_at:new Date().toISOString()}).eq('id',id));
-  for(const th of ST.threads){if(th.mid===id){th.text=body;th.edited=true}th.replies.forEach(r=>{if(r.id===id){r.text=body;r.edited=true}})}
+  const now=new Date().toISOString();must(await sb.from('messages').update({body,edited_at:now}).eq('id',id));
+  for(const th of ST.threads){if(th.mid===id){th.text=body;th.edited=true}th.replies.forEach(r=>{if(r.id===id){r.text=body;r.edited=true;r.ets=now}})}
 }
 async function editComment(aid,day,comment){   // コーチのコメントを直す
-  const e=E(aid,day); must(await sb.from('feedback').update({comment,edited_at:new Date().toISOString()}).eq('entry_id',e.id));
-  e.comment={...e.comment,text:comment,edited:true};
+  const e=E(aid,day), now=new Date().toISOString(); must(await sb.from('feedback').update({comment,edited_at:now}).eq('entry_id',e.id));
+  e.comment={...e.comment,text:comment,edited:true,ets:now};
 }
 async function sendFeedback(aid,day,comment){
   const e=E(aid,day), now=new Date().toISOString(), row={entry_id:e.id,athlete_id:aid,coach_id:UI.session,seen_at:now};
   if(comment){row.comment=comment;row.commented_at=now}
   must(await sb.from('feedback').upsert(row,{onConflict:'entry_id'}));
-  e.seen=TODAY; if(comment){e.comment={text:comment,at:TODAY};notify('feedback',{id:e.id})}   // 選手へ（選手が通知をオンのときだけ・保護者には送らない）
+  e.seen=TODAY; if(comment){e.comment={text:comment,at:TODAY,ts:now,ets:null};notify('feedback',{id:e.id})}   // 選手へ（選手が通知をオンのときだけ・保護者には送らない）
 }
 /* ---------- スマホ通知 ---------- */
 function notify(type,extra){sb.functions.invoke('push',{body:{type,...extra}}).catch(()=>{})}   // 選手の操作をコーチへ。送れなくても保存は成功扱い
@@ -1734,15 +1736,30 @@ function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Dat
   if(ch)wPut(o);
   if(n&&!UI.wTold){UI.wTold=true;setTimeout(()=>toast(t('w_restored')),300)}}
 document.addEventListener('input',ev=>{if(ev.target.tagName==='TEXTAREA')wKeep(ev.target)});
-function bubble(m,cls,by,T,ro){
+function bubble(m,cls,by,T,ro,extra=''){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
   if(mine&&UI.msgEdit===m.id)return `<form class="bubble ${cls} stack" data-form="editmsg" data-id="${m.id}" style="gap:6px"><textarea class="inp cw-ta has" name="body" id="em-${m.id}" maxlength="20000">${esc(m.text)}</textarea><div class="row cw-bar"><button class="btn sm" type="submit">${T.ed_save}</button><button class="btn ghost sm cw-far" type="button" data-act="msgedit" data-id="">${T.cancel}</button></div></form>`;
-  return `<div class="bubble ${cls}"><div class="by edh"><span>${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}</span>${mine?`<button class="cw-editbtn" data-act="msgedit" data-id="${m.id}">✏️ ${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div></div>`;
+  return `<div class="bubble ${cls}"><div class="by edh"><span>${by}${m.edited?` <span class="muted">${T.ed_mark}</span>`:''}</span>${mine?`<button class="cw-editbtn" data-act="msgedit" data-id="${m.id}">✏️ ${T.ed_edit}</button>`:''}</div><div class="txt">${esc(m.text)}</div>${extra}</div>`;
 }
+/* コーチが送ったもの：コーチの画面だけに「送った日時」と、英語の選手なら日本語訳（たたんでおく）。選手・保護者・閲覧モードには出さない */
+function coachSent(aid,src,id,m,T){if(acct(UI.session)?.role!=='coach'||UI.previewAs||!m?.ts)return '';
+  const L=lang(), at=ts=>`${fd(localDay(ts),L)} ${hm(ts).split(' ')[1]}`;
+  const line=`<div class="sent-at">🕒 ${at(m.ts)} ${T.st_sent}${m.ets?` · ${at(m.ets)} ${T.st_fixed}`:''}</div>`;
+  if(prefs(aid).lang!=='en'||!ST.trOk||!id||!m.text)return line;
+  const k=src+':'+id, tr=ST.trans?.[k], open=tr&&(UI.trAll||UI.trOpen?.[k]), busy=aiBusy('sent:'+k), stale=tr&&tr.src_hash!==hashS(m.text), go=`data-act="tsent" data-src="${src}" data-id="${id}" data-aid="${aid}"`;
+  return line+`<div class="r-trbar">${busy?`<span class="small muted">${T.ai_working}</span>`:tr?`<button data-act="ttoggle" data-k="${k}" aria-pressed="${!!open}">${T.r_tshow} ${open?'▴':'▾'}</button>${stale?`<button ${go}>${T.r_tredo}</button>`:''}`:`<button ${go}>${T.r_tshow}</button>`}</div>
+    ${open?`<div class="r-tr"><span class="tg">${T.r_tg}</span>${stale?`<span class="pill warn">${T.r_tstale}</span> `:''}${esc(tr.body)}</div>`:''}`}
+// 送った英語の日本語訳を残す（コーチだけの translations 表。src は feedback＝記録へのコメント / message＝返信）
+async function trSave(aid,src,id,en,ja){const row={athlete_id:aid,src,src_id:id,src_hash:hashS(en),body:String(ja).slice(0,20000)};
+  const r=must(await sb.from('translations').upsert(row,{onConflict:'src,src_id'}).select().single());(ST.trans||(ST.trans={}))[src+':'+id]=r;return r}
+function sentText(src,id){if(src==='feedback'){for(const a in ST.entries)for(const d in ST.entries[a]){const e=ST.entries[a][d];if(e.id===id)return e.comment?.text||''}return ''}
+  for(const th of ST.threads){const r=th.replies.find(x=>x.id===id);if(r)return r.text}return ''}
+function keepJa(aid,src,id,en){const c=UI.cfJa;UI.cfJa=null;if(!c||c.en!==en||!id||!ST.trOk)return;trSave(aid,src,id,en,c.ja).catch(e=>console.warn('keepJa',e))}   // 失敗しても送信には関係ない
+async function trSent(aid,src,id){const en=sentText(src,id);if(!en)return;const r=await ai({mode:'back',aid,en});await trSave(aid,src,id,en,r.ja);(UI.trOpen||(UI.trOpen={}))[src+':'+id]=true}
 function cmtBlock(aid,d,e,T){   // コーチのコメント（コーチは直せる）
   const canEdit=acct(UI.session)?.role==='coach'&&!UI.previewAs, key=aid+'|'+d;
   if(canEdit&&UI.cmtEdit===key)return composer({form:'editcmt',attrs:`data-aid="${aid}" data-d="${d}"`,id:`ec-${aid}-${d}`,name:'c',value:e.comment.text,send:T.ed_save,cancel:`<button class="btn ghost sm" type="button" data-act="cmtedit" data-k="">${T.cancel}</button>`});
-  return `<div class="cmt"><b class="cmt-h"><span>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}</span>${canEdit?`<button class="cw-editbtn" data-act="cmtedit" data-k="${key}">✏️ ${T.ed_edit}</button>`:''}</b><div class="txt">${esc(e.comment.text)}</div></div>`;
+  return `<div class="cmt"><b class="cmt-h"><span>${T.from_coach}${e.comment.edited?` <span class="muted" style="font-weight:500">${T.ed_mark}</span>`:''}</span>${canEdit?`<button class="cw-editbtn" data-act="cmtedit" data-k="${key}">✏️ ${T.ed_edit}</button>`:''}</b><div class="txt">${esc(e.comment.text)}</div>${coachSent(aid,'feedback',e.id,e.comment,T)}</div>`;
 }
 function questions(aid,L,coach,ro){
   const T=I18N[L];
@@ -1750,7 +1767,7 @@ function questions(aid,L,coach,ro){
   const th=list.map(q=>{const a=acct(q.aid), un=unanswered(q);
     return `<div class="thread"><div class="thead">${coach?`<b>${esc(a.name)}</b>`:''}<span class="muted mono">${fd(q.date,L)}</span><span class="pill ${un?(coach?'bad':'warn'):'good'}">${un?T.waiting:T.answered}</span></div>
       ${bubble({id:q.mid,author:q.author,text:q.text,edited:q.edited},'',esc(a.name),T,ro)}
-      ${q.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,ro)).join('')}
+      ${q.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,ro,r.from==='coach'?coachSent(q.aid,'message',r.id,r,T):'')).join('')}
       ${ro?'':composer({form:'reply',attrs:`data-id="${q.id}"`,id:`r-${q.id}`,name:'r',ph:T.reply_ph,send:T.reply})}</div>`}).join('');
   const ask=coach||ro?'':`<div class="card"><h2>${T.new_q}</h2><form data-form="ask" class="stack"><textarea class="inp" id="q-new" name="q" maxlength="20000" placeholder="${esc(T.ask_ph)}"></textarea><div><button class="btn" type="submit">${T.ask_btn}</button></div></form></div>`;
   return `<div class="stack">${ask}<div class="card"><h2>${T.t_q}</h2>${th||`<div class="muted">${T.none}</div>`}</div></div>`;
@@ -1984,7 +2001,7 @@ function replyView(){
     const th=it.th, key=`q|${th.id}`, p=pkeys.has(key);
     return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_q}</span>${th.coachOnly?`<span class="pill">${T.r_conly}</span>`:''}</div>
       ${bubble({id:th.mid,author:th.author,text:th.text,edited:th.edited},'',`${esc(a.name)} · ${fd(th.date,L)}`,T)}${trBlock(aid,'message',th.mid,th.text,T)}
-      ${th.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T)+(r.from==='coach'?'':trBlock(aid,'message',r.id,r.text,T))).join('')}
+      ${th.replies.map(r=>bubble(r,r.from==='coach'?'coach':'',`${r.from==='coach'?T.coach:esc(a.name)} · ${fd(r.date,L)}`,T,false,r.from==='coach'?coachSent(aid,'message',r.id,r,T):'')+(r.from==='coach'?'':trBlock(aid,'message',r.id,r.text,T))).join('')}
       ${p?`<div class="rm-f"><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}).join('');
   const log=`<div class="rcol r-log stack">
     <div class="row r-mob" style="justify-content:space-between"><button class="btn ghost sm" data-act="rpane" data-v="list">${T.r_list}</button>${total?`<button class="btn ghost sm" data-act="rnext">${T.r_next}</button>`:''}</div>
@@ -2658,12 +2675,13 @@ function askBox(msg,okLabel){return new Promise(res=>{const T=I18N[lang()], ly=d
   document.addEventListener('keydown',key,true);ly.append(ov);ovSync()})}
 /* 英語の選手に送る前：英語と日本語訳を並べて最後に確認（日本語訳は「英語にする」で作ったものを使い、英語を直していたら AI が訳し直す） */
 function sendConfirm(aid,en){return new Promise(res=>{const T=I18N[lang()], ly=document.getElementById('ovlayer'), ov=document.createElement('div');
-  const hit=Object.values(UI.rback||{}).find(b=>b.en===en&&b.ja)||(UI.backCache?.[en]?{ja:UI.backCache[en]}:null);
+  const hit=Object.values(UI.rback||{}).find(b=>b.en===en&&b.ja)||(UI.backCache?.[en]?{ja:UI.backCache[en]}:null);UI.cfJa=null;
   ov.className='scrim ask noprint';ov.innerHTML=`<div class="sheet-ui dialog cf" role="alertdialog" aria-modal="true"><h3>${T.cf_title}</h3>
     <div class="r-lbl">${T.cf_en}</div><div class="cf-box en">${esc(en)}</div>
     <div class="r-lbl">${T.cf_ja}</div><div class="cf-box" id="cf-ja">${hit?esc(hit.ja):`<span class="muted">${T.cf_wait}</span>`}</div>
     <div class="row" style="justify-content:space-between;gap:8px;margin-top:4px"><button class="btn ghost sm" type="button" data-k="0">${T.cf_back}</button><button class="btn" type="button" data-k="1">${T.cf_send} ➤</button></div></div>`;
-  const done=ok=>{document.removeEventListener('keydown',key,true);if(noMotion())ov.remove();else{ov.classList.add('closing');setTimeout(()=>ov.remove(),280)}ovSync();res(ok)};
+  const done=ok=>{document.removeEventListener('keydown',key,true);if(noMotion())ov.remove();else{ov.classList.add('closing');setTimeout(()=>ov.remove(),280)}ovSync();
+    const ja=hit?.ja||UI.backCache?.[en];if(ok&&ja)UI.cfJa={en,ja};res(ok)};   // 見せた日本語訳は、送れたら一緒に残す（コーチの画面だけで見られる）
   const key=e=>{if(e.key==='Escape'){e.stopPropagation();done(false)}};
   ov.addEventListener('click',e=>{e.stopPropagation();if(ov.classList.contains('closing'))return;const b=e.target.closest('[data-k]');if(b)done(b.dataset.k==='1');else if(!e.target.closest('.dialog'))done(false)});
   document.addEventListener('keydown',key,true);ly.append(ov);ovSync();
@@ -2819,6 +2837,7 @@ document.addEventListener('click',ev=>{
   else if(a==='rolder'){UI.rdays=(UI.rdays||30)+30;render()}
   else if(a==='rtr'){const k=el.dataset.k, ja=(document.getElementById(rjaId(k))?.value||'').trim();if(!ja)return toast(t('r_ja'));const x=targetText(k);
     aiRun('out:'+k,async()=>{const r=await ai({mode:'tr_out',aid:x?.aid||UI.rsel,ja,ctx:x?.text||''});(UI.cw||(UI.cw={}))[cwIdOf(k)]={v:r.en,prev:false};(UI.rback||(UI.rback={}))[k]={ja:r.ja,note:r.note,en:r.en,src:ja}})}
+  else if(a==='tsent'){const {src,id,aid}=el.dataset;aiRun('sent:'+src+':'+id,()=>trSent(aid,src,id))}
   else if(a==='tai'){const {src,id,aid}=el.dataset;aiRun('in:'+src+':'+id,()=>trIn(aid,src,id))}
   else if(MICACTS.includes(a)){if(Date.now()-MIC_PD>800)micAct(el)}   // 指で押したときは pointerdown ですでに動いている
   else if(a==='rtab'){UI.rtab=el.dataset.v;if(el.dataset.v==='habit')UI.habits=null;renderKeep()}
@@ -3017,8 +3036,8 @@ document.addEventListener('submit',ev=>{
     aiRun('ask:'+aid,async()=>{try{const r=await ai({mode:'ask',aid,today:TODAY,messages:log});log.push({role:'assistant',content:r.answer})}catch(e){log.pop();(UI.aiq||(UI.aiq={}))[aid]=q;throw e}});return}
   if(f.dataset.form==='habit'){const id=f.dataset.id, rule=(fdt.get('rule')||'').trim(), example=(fdt.get('example')||'').trim();if(!rule)return;
     sb.from('tr_habits').update({rule,example,updated_at:new Date().toISOString()}).eq('id',id).then(({error})=>{if(error)return toast(errText(error));const h=(UI.habits||[]).find(x=>x.id===id);if(h)Object.assign(h,{rule,example});UI.habEdit=null;renderKeep()});return}
-  if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;const aid=f.dataset.aid,d=f.dataset.d;run(async()=>{await sendFeedback(aid,d,v);if(me().role==='coach')habitsLearn(`e|${aid}|${d}`,aid,v)},()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
-  if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;const tid=f.dataset.id;run(async()=>{await sendReply(tid,v);if(me().role==='coach'){const th=ST.threads.find(x=>x.id===tid);if(th)habitsLearn(`q|${tid}`,th.aid,v)}},()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
+  if(f.dataset.form==='comment'){const v=(fdt.get('c')||'').trim();if(!v)return;const aid=f.dataset.aid,d=f.dataset.d;run(async()=>{await sendFeedback(aid,d,v);if(me().role==='coach'){keepJa(aid,'feedback',E(aid,d)?.id,v);habitsLearn(`e|${aid}|${d}`,aid,v)}},()=>({title:t('ch_cmt_t'),msg:pick1(t('ch_cmt'))}))}
+  if(f.dataset.form==='reply'){const v=(fdt.get('r')||'').trim();if(!v)return;const tid=f.dataset.id;run(async()=>{const m=await sendReply(tid,v);if(me().role==='coach'){const th=ST.threads.find(x=>x.id===tid);if(th){keepJa(th.aid,'message',m.id,v);habitsLearn(`q|${tid}`,th.aid,v)}}},()=>({title:t('ch_reply_t'),msg:pick1(me().role==='coach'?t('ch_reply_c'):t('ch_reply_a'))}))}
   if(f.dataset.form==='ask'){const v=(fdt.get('q')||'').trim();if(!v)return;run(()=>askQuestion(v,false),()=>({title:t('ch_ask_t'),msg:pick1(t('ch_ask'))}))}
   if(f.dataset.form==='event'){const name=(fdt.get('name')||'').trim(),date=fdt.get('date');if(!name||!date)return;run(()=>addEvent(f.dataset.aid,name,date,fdt.get('weigh')||'',wKg(fdt.get('target'))),()=>({title:t('ch_ev_t'),msg:pick1(t('ch_ev'))}))}
   if(f.dataset.form==='run'){const sec=(+fdt.get('min')||0)*60+(+fdt.get('sec')||0);if(!sec)return;const prev=(ST.runs[UI.session]||[]).map(r=>r.sec), pb=prev.length&&sec<Math.min(...prev);
