@@ -1720,7 +1720,7 @@ document.addEventListener('focusout',ev=>{if(ev.target.classList?.contains('cw-t
 const wKey=()=>'judo-w-'+UI.session;
 const wLoad=()=>{try{return JSON.parse(localStorage.getItem(wKey())||'{}')||{}}catch(e){return {}}};
 const wPut=o=>{try{localStorage.setItem(wKey(),JSON.stringify(o))}catch(e){}};
-const wId=ta=>ta.closest('#today-form')?ta.id+'@'+(UI.eday||TODAY):ta.id;   // 今日の記録の欄は日ごとに分ける（昨日の欄に今日の文が入らないように）
+const wId=ta=>ta.closest('#today-form')?ta.id+'@'+(UI.eday||TODAY):ta.form?.dataset.form==='video'&&ta.form.dataset.aid?ta.id+'@'+ta.form.dataset.aid:ta.id;   // 今日の記録の欄は日ごとに、動画のコメントは子どもごとに分ける（ほかの日・ほかの子の欄に入らないように）
 const wSkip=ta=>!ta.id||ta.id==='memo-ta'||ta.disabled||(ta.readOnly&&!ta.dataset.memo)||!ta.closest('#app')||(!ta.closest('#app form')&&!ta.dataset.rja)||!!UI.previewAs;
 const wBase=ta=>ta.dataset.b??ta.defaultValue;   // 元の文（保存ずみの文）。書きかけで画面を作り直しても変わらない
 function wKeep(ta){if(!UI.session||wSkip(ta))return;const o=wLoad(), id=wId(ta), b=o[id]?o[id].b:wBase(ta);   // 書きはじめたときの「元」を持ち続ける
@@ -1739,8 +1739,9 @@ function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Dat
   if(ch)wPut(o);
   if(n&&!UI.wTold){UI.wTold=true;setTimeout(()=>toast(t('w_restored')),300)}}
 /* ---------- 開いていた画面も端末に残す：iPhone が裏でページを捨てて読み込み直しても、同じ選手・同じ記録・同じ返信ページに戻る ---------- */
-const NAV_ROLES=['coach'];   // 今はコーチだけ（選手・保護者にも入れるなら、ここに足す）
-const NAV_KEYS=['view','sel','ctab','rsel','rtarget','rpane','rtab','mtab','modal','cmtEdit','msgEdit','mEdit','entOpen','rdays','pAid','calYm','calDay'];
+const NAV_ROLES=['coach','athlete','guardian'];   // コーチ・選手・保護者（11/22 本人が選んだ）
+const NAV_VIEWS={coach:['team','reply','vids','print','members'],athlete:['today','log','x','q','v','note'],guardian:['log','q','v','note']};
+const NAV_KEYS=['view','sel','ctab','rsel','rtarget','rpane','rtab','mtab','modal','cmtEdit','msgEdit','mEdit','entOpen','rdays','pAid','calYm','calDay','child','eday','xEdit','runEdit','vEdit','cIdx'];
 const navKey=()=>'judo-nav-'+UI.session;
 function navSave(){if(!UI.session||UI.previewAs||UI.booting||!NAV_ROLES.includes(me()?.role))return;
   const o={t:Date.now(),day:TODAY,y:Math.round(MEMO?MEMO.y:scrollY)};NAV_KEYS.forEach(k=>{if(UI[k]!=null)o[k]=UI[k]});
@@ -1748,13 +1749,18 @@ function navSave(){if(!UI.session||UI.previewAs||UI.booting||!NAV_ROLES.includes
 function navRestore(){   // 起動のときだけ。3時間以内か同じ日なら、前の画面に戻す（いない選手・消えた記録は戻さない）
   let o=null;try{o=JSON.parse(localStorage.getItem(navKey())||'null')}catch(e){}
   if(!o||!NAV_ROLES.includes(me()?.role)||(o.day!==TODAY&&Date.now()-o.t>3*36e5))return null;
-  const ok=id=>!!id&&acct(id)?.role==='athlete';
-  if(!['team','reply','vids','print','members'].includes(o.view))return null;
+  const role=me().role, kids=role==='guardian'?childrenOf(me().id).map(k=>k.id):[];
+  if(!NAV_VIEWS[role].includes(o.view))return null;
+  if(role==='guardian'&&!kids.includes(o.child))o.child=null;
+  const ok=id=>!!id&&(role==='coach'?acct(id)?.role==='athlete':role==='athlete'?id===UI.session:id===(o.child||kids[0]));   // 選手は自分だけ、保護者は自分の子どもだけ
   if(o.sel&&!ok(o.sel))o.sel=null;
   if(o.rsel&&!ok(o.rsel)){o.rsel=null;o.rtarget=null}
   if(o.modal&&!ok(o.modal.aid))o.modal=null;
-  if(o.pAid&&!acct(o.pAid))o.pAid=null;
+  if(role!=='coach')delete o.pAid;   // 選手・保護者の「誰の記録か」は、いつもログインした人から決める
+  else if(o.pAid&&!acct(o.pAid))o.pAid=null;
+  if(o.eday&&(o.day!==TODAY||![TODAY,addDays(TODAY,-1)].includes(o.eday)))delete o.eday;   // 今日／昨日の切りかえは同じ日のときだけ
   NAV_KEYS.forEach(k=>{if(k in o)UI[k]=o[k]});
+  if(role==='guardian')UI.pAid=subject();
   return o.y||0}
 function wFlush(){const a=document.activeElement;if(a?.tagName==='TEXTAREA'){if(a.id==='memo-ta'&&MEMO){const ta=MEMO.ta.isConnected?MEMO.ta:document.getElementById(MEMO.ta.id);if(ta){ta.value=a.value;wKeep(ta)}}else wKeep(a)}navSave()}   // 裏に回る・閉じる前に、もう一度残す
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')wFlush()});
