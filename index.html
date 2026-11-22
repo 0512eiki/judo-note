@@ -661,7 +661,7 @@ const I18N = {
   v_soon:'🗑 まもなく削除', v_soon_help:'保存容量がいっぱいに近いため、次に動画が送られたときに古い順に削除されます。残したい場合はダウンロードしてください。', v_near:'保存容量が残りわずかです。いっぱいになると、古い動画から自動で削除されます。',  v_freed:'容量を空けるため、古い動画 {n}本を削除しました。', v_auto:'チームの保存容量（約1GB）がいっぱいになると、古い動画から自動で削除されます。残したい動画はダウンロードしておいてください。',
   v_all:'全員', v_for:'誰の動画か', v_pick:'選手を選ぶ', v_team_help:'チーム全員の動画です（新しい順）。選手ごとの画面の「動画」タブでも見られます。',
   cc_title:'コーチからのコメント', cc_mine:'自分の感想', cc_prev:'前の日', cc_next:'次の日', cc_swipe:'左右にスワイプで前後の日', cal_title:'カレンダー', cal_help:'日にちを押すと、その日の記録が見られます。', cal_prev:'前の月', cal_next:'次の月', cal_none:'この日の記録はありません。', cal_run:'🏃 ランニング {t}', cal_match:'🥋 試合：{n}', cal_lg:{good:'よい',mid:'ふつう',low:'低め',abs:'欠席・休み'}, cal_marks:['💪 エクストラ','🏃 ランニング','🥋 試合','💬 コメント'],
-  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'閉じる', w_restored:'書きかけの文を戻しました', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
+  cc_more:'続きを読む ▾', cc_less:'閉じる ▴', ent_more:'もっと見る（あと{n}日） ▾', memo_done:'完了', memo_cancel:'閉じる', w_restored:'✏️ 書きかけを戻しました', mc_note:'{n}さんの感想・{d}', mc_q:'{n}さんとのやりとり', mc_none:'感想は書かれていません。', mc_hide:'隠す ▴', mc_show:'表示 ▾', memo_chars:'{n}文字',
   prof_title:'プロフィール', prof_name:'名前（表示名）', prof_save:'プロフィールを保存', prof_saved:'プロフィールを保存しました', prof_need:'名前を入れてください', prof_help:'階級を変えると、コーチの画面や減量の目印にもすぐ反映されます。',
   v_note:'コメント（なくてもOK）', v_note_ph:'例：1回戦です。組み手の入り方を見てください', v_edit:'直す', v_save:'保存', v_saved:'保存しました',
   t_videos:'動画', v_title:'動画', v_add:'動画を追加', v_file:'動画を選ぶ', v_day:'撮った日', v_name:'タイトル（例：秋季大会 1回戦）', v_upload:'アップロード', v_none:'まだ動画はありません。練習や試合の動画を送ってみよう。', v_none_ro:'まだ動画はありません。保護者やコーチがアップロードすると、ここでいつでも見られます。',
@@ -804,7 +804,7 @@ const I18N = {
   v_soon:'🗑 Will be deleted soon', v_soon_help:'Storage is almost full, so the oldest videos are deleted when the next one is uploaded. Download it if you want to keep it.', v_near:'Video storage is almost full. When it’s full, the oldest videos are deleted automatically.', v_freed:'{n} older video(s) were deleted to make room.', v_auto:'When the team’s storage (about 1 GB) is full, the oldest videos are deleted automatically. Download any you want to keep.',
   v_all:'All', v_for:'Whose video', v_pick:'Choose an athlete', v_team_help:'All of the team’s videos, newest first. You can also find them in each athlete’s Videos tab.',
   cc_title:'From your coach', cc_mine:'Your reflection', cc_prev:'Previous day', cc_next:'Next day', cc_swipe:'Swipe for other days', cal_title:'Calendar', cal_help:'Tap a day to see what you logged.', cal_prev:'Previous month', cal_next:'Next month', cal_none:'Nothing logged on this day.', cal_run:'🏃 Run {t}', cal_match:'🥋 Match: {n}', cal_lg:{good:'Good',mid:'OK',low:'Low',abs:'Absent / off'}, cal_marks:['💪 Extra','🏃 Run','🥋 Match','💬 Comment'],
-  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Close', w_restored:'Restored what you were writing', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
+  cc_more:'Read more ▾', cc_less:'Show less ▴', ent_more:'Show more ({n} more days) ▾', memo_done:'Done', memo_cancel:'Close', w_restored:'✏️ Restored what you were writing', mc_note:'{n}’s reflection · {d}', mc_q:'Conversation with {n}', mc_none:'No reflection written.', mc_hide:'Hide ▴', mc_show:'Show ▾', memo_chars:'{n} characters',
   prof_title:'Profile', prof_name:'Name (shown to others)', prof_save:'Save profile', prof_saved:'Profile saved', prof_need:'Please enter your name', prof_help:'Changing your weight class also updates your coach’s screen and weight reminders.',
   v_note:'Comment (optional)', v_note_ph:'e.g. Round 1 — please look at how I grip', v_edit:'Edit', v_save:'Save', v_saved:'Saved',
   t_videos:'Videos', v_title:'Videos', v_add:'Add a video', v_file:'Choose a video', v_day:'Date filmed', v_name:'Title (e.g. Fall Open, round 1)', v_upload:'Upload', v_none:'No videos yet.', v_none_ro:'No videos yet. When a parent or the coach uploads one, you can watch it here anytime.',
@@ -1700,7 +1700,7 @@ if(!MEMO)return;if(MIC?.id==='memo-ta')micEnd();const {el,ta:ta0,orig,fit,y}=MEM
 function composer({form,attrs,id,name,ph,value,send,extra,cancel}){
   const T=I18N[lang()], st=(UI.cw||(UI.cw={}))[id], v=st?st.v:(value||''), prev=!!st?.prev;
   return `<form class="compose" data-form="${form}" ${attrs} data-cw="${id}">
-    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" name="${name}" rows="1" maxlength="20000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
+    <div class="cw-edit" ${prev?'hidden':''}><textarea class="inp cw-ta ${v?'has':''}" id="${id}" data-b="${esc(value||'')}" name="${name}" rows="1" maxlength="20000" placeholder="${esc(ph||'')}">${esc(v)}</textarea>
       <div class="row cw-bar"><button type="button" class="btn sm" data-act="cwdone">${T.cw_done}</button>${extra||cancel?`<span class="cw-far">${extra||''}${cancel||''}</span>`:''}</div></div>
     <div class="cw-prev" ${prev?'':'hidden'}><div class="cw-lbl"><span>${T.cw_check}<small>${T.cw_tap}</small></span><button type="button" class="cw-editbtn" data-act="cwedit">✏️ ${T.cw_edit}</button></div><div class="cw-text" data-act="cwedit" role="button" tabindex="0">${esc(v)}</div>
       <div class="row cw-bar"><button class="btn sm" type="submit">${send} ➤</button>${cancel?`<span class="cw-far">${cancel}</span>`:''}</div></div></form>`;   // 「直す」は文章の右上に離して置く（送信・見たよ と押し間違えないように）
@@ -1721,20 +1721,44 @@ const wKey=()=>'judo-w-'+UI.session;
 const wLoad=()=>{try{return JSON.parse(localStorage.getItem(wKey())||'{}')||{}}catch(e){return {}}};
 const wPut=o=>{try{localStorage.setItem(wKey(),JSON.stringify(o))}catch(e){}};
 const wId=ta=>ta.closest('#today-form')?ta.id+'@'+(UI.eday||TODAY):ta.id;   // 今日の記録の欄は日ごとに分ける（昨日の欄に今日の文が入らないように）
-const wSkip=ta=>!ta.id||ta.id==='memo-ta'||ta.disabled||(ta.readOnly&&!ta.dataset.memo)||!ta.closest('#app form')||!!UI.previewAs;
-function wKeep(ta){if(!UI.session||wSkip(ta))return;const o=wLoad(), b=ta.defaultValue;   // b=元の文（保存ずみの文）。元のままなら残さない
-  const id=wId(ta);if(ta.value===b||!ta.value.trim())delete o[id];else o[id]={v:ta.value,b,t:Date.now()};wPut(o)}
+const wSkip=ta=>!ta.id||ta.id==='memo-ta'||ta.disabled||(ta.readOnly&&!ta.dataset.memo)||!ta.closest('#app')||(!ta.closest('#app form')&&!ta.dataset.rja)||!!UI.previewAs;
+const wBase=ta=>ta.dataset.b??ta.defaultValue;   // 元の文（保存ずみの文）。書きかけで画面を作り直しても変わらない
+function wKeep(ta){if(!UI.session||wSkip(ta))return;const o=wLoad(), id=wId(ta), b=o[id]?o[id].b:wBase(ta);   // 書きはじめたときの「元」を持ち続ける
+  if(ta.value===b||!ta.value.trim())delete o[id];else o[id]={v:ta.value,b,t:Date.now()};wPut(o)}
+function wSet(id,v,b=''){if(!UI.session||UI.previewAs)return;const o=wLoad();if(!v.trim()||v===b)delete o[id];else o[id]={v,b:o[id]?o[id].b:b,t:Date.now()};wPut(o)}   // 打たずに入った文（AI の英訳など）も残す
 function wDrop(ids){if(!ids?.length||!UI.session)return;const o=wLoad();ids.forEach(id=>delete o[id]);wPut(o)}
 function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Date.now();let n=0, ch=false;
-  for(const id in o)if(!o[id]||now-o[id].t>14*864e5){delete o[id];ch=true}   // 2週間たった書きかけは消す
+  for(const id in o)if(!o[id]||now-o[id].t>7*864e5){delete o[id];ch=true}   // 1週間たった書きかけは消す
   ['f-note','f-ask'].forEach(id=>{if(o[id]){const k=id+'@'+localDay(new Date(o[id].t));if(!o[k])o[k]=o[id];delete o[id];ch=true}});   // 11/10 の版で日ごとに分けずに残した書きかけは、書いた日の分に移す
-  document.querySelectorAll('#app form textarea[id]').forEach(ta=>{const id=wId(ta), w=o[id];if(!w||wSkip(ta)||ta.value===w.v)return;
-    if(ta.defaultValue===w.v){delete o[id];ch=true;return}   // もう保存されている
-    if(ta.defaultValue!==w.b)return;   // ほかの端末で書きかえられている：上書きしない
-    ta.value=w.v;n++;
+  document.querySelectorAll('#app form textarea[id], #app textarea[data-rja]').forEach(ta=>{const id=wId(ta), w=o[id];if(!w||wSkip(ta)||ta.value===w.v)return;
+    if(wBase(ta)===w.v){delete o[id];ch=true;return}   // もう保存されている
+    if(wBase(ta)!==w.b)return;   // ほかの端末で書きかえられている：上書きしない
+    ta.value=w.v;n++;if(!UI.wFirst)UI.wFirst=ta;
+    if(ta.dataset.rja)(UI.rja||(UI.rja={}))[ta.dataset.rja]=w.v;
     if(ta.classList.contains('cw-ta')){ta.classList.add('has');(UI.cw||(UI.cw={}))[ta.form.dataset.cw]={v:w.v,prev:false}}});
   if(ch)wPut(o);
   if(n&&!UI.wTold){UI.wTold=true;setTimeout(()=>toast(t('w_restored')),300)}}
+/* ---------- 開いていた画面も端末に残す：iPhone が裏でページを捨てて読み込み直しても、同じ選手・同じ記録・同じ返信ページに戻る ---------- */
+const NAV_ROLES=['coach'];   // 今はコーチだけ（選手・保護者にも入れるなら、ここに足す）
+const NAV_KEYS=['view','sel','ctab','rsel','rtarget','rpane','rtab','mtab','modal','cmtEdit','msgEdit','mEdit','entOpen','rdays','pAid','calYm','calDay'];
+const navKey=()=>'judo-nav-'+UI.session;
+function navSave(){if(!UI.session||UI.previewAs||UI.booting||!NAV_ROLES.includes(me()?.role))return;
+  const o={t:Date.now(),day:TODAY,y:Math.round(MEMO?MEMO.y:scrollY)};NAV_KEYS.forEach(k=>{if(UI[k]!=null)o[k]=UI[k]});
+  try{localStorage.setItem(navKey(),JSON.stringify(o))}catch(e){}}
+function navRestore(){   // 起動のときだけ。3時間以内か同じ日なら、前の画面に戻す（いない選手・消えた記録は戻さない）
+  let o=null;try{o=JSON.parse(localStorage.getItem(navKey())||'null')}catch(e){}
+  if(!o||!NAV_ROLES.includes(me()?.role)||(o.day!==TODAY&&Date.now()-o.t>3*36e5))return null;
+  const ok=id=>!!id&&acct(id)?.role==='athlete';
+  if(!['team','reply','vids','print','members'].includes(o.view))return null;
+  if(o.sel&&!ok(o.sel))o.sel=null;
+  if(o.rsel&&!ok(o.rsel)){o.rsel=null;o.rtarget=null}
+  if(o.modal&&!ok(o.modal.aid))o.modal=null;
+  if(o.pAid&&!acct(o.pAid))o.pAid=null;
+  NAV_KEYS.forEach(k=>{if(k in o)UI[k]=o[k]});
+  return o.y||0}
+function wFlush(){const a=document.activeElement;if(a?.tagName==='TEXTAREA'){if(a.id==='memo-ta'&&MEMO){const ta=MEMO.ta.isConnected?MEMO.ta:document.getElementById(MEMO.ta.id);if(ta){ta.value=a.value;wKeep(ta)}}else wKeep(a)}navSave()}   // 裏に回る・閉じる前に、もう一度残す
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')wFlush()});
+addEventListener('pagehide',wFlush);
 document.addEventListener('input',ev=>{if(ev.target.tagName==='TEXTAREA')wKeep(ev.target)});
 function bubble(m,cls,by,T,ro,extra=''){
   const mine=m.id&&m.author===UI.session&&!ro&&!UI.previewAs;
@@ -2640,6 +2664,7 @@ function render(){
   const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
   drawHealth(); railsInit(); document.querySelectorAll('.vnote').forEach(n=>{const b=n.nextElementSibling;if(b)b.hidden=!(n.scrollHeight>n.clientHeight+2)}); wRestore(); memoPrep(); document.querySelectorAll('.cw-ta').forEach(cwGrow); hydrateVideos().catch(()=>{});
   if(m.role==='athlete'&&UI.view==='today'&&UI.draftRestored){toast(t('draft_restored'));UI.draftRestored=false}
+  navSave();
 }
 /* シート・ポップアップ：開いたままの描き直しでは動かさない。閉じたものは、その要素だけを薄れさせてから取り除く（すぐ別の画面を開いても消されない） */
 const noMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2748,11 +2773,13 @@ async function afterSignIn(user){
   UI.auth=null;UI.err='';UI.sel=null;UI.view=me().role==='coach'?'team':me().role==='guardian'?'log':'today';
   if(me().role==='guardian')UI.pAid=subject();
   if(me().role==='athlete'){UI.pAid=me().id;const d=!E(me().id,TODAY)&&loadDraft();if(d){UI.draft=d;UI.draftRestored=true}}
-  UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); setTimeout(errFlush,3000); window.scrollTo(0,0); refreshPushState().then(()=>renderKeep());
+  const y=UI.navBoot?navRestore():null; UI.navBoot=false;   // 裏で読み込み直されたときは、開いていた画面に戻す
+  UI.wFirst=null; UI.loginLang=prefs(UI.session).lang; UI.pushState=null; render(); setTimeout(errFlush,3000); window.scrollTo(0,y||0);
+  const wf=y!=null&&UI.wFirst; UI.wFirst=null; requestAnimationFrame(()=>{if(wf?.isConnected)wf.scrollIntoView({block:'center'});else if(y)window.scrollTo(0,y)});   // 戻した書きかけの欄が見える所まで動かす refreshPushState().then(()=>renderKeep());
   try{const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;if(tz&&prefs(UI.session).tz!==tz){ST.prefs[UI.session].tz=tz;sb.from('profiles').update({tz}).eq('id',UI.session).then(()=>{})}}catch(e){}   // 通知の時刻は、この時間帯で計算する
 }
 async function signOut(){   // 今のアカウントだけをこの端末から外す。ほかの家族のアカウントは残る
-  const key=curKey(); try{localStorage.removeItem(wKey())}catch(e){} await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
+  const key=curKey(); try{localStorage.removeItem(wKey());localStorage.removeItem(navKey())}catch(e){} await disablePush().catch(()=>{}); await sb.auth.signOut({scope:'local'}).catch(()=>{});
   const reg=regLoad().filter(r=>r.key!==key); regSave(reg);
   Object.assign(UI,{session:null,authUser:null,settings:false,auth:null,acctSheet:false}); ACCOUNTS=[]; ATH=[];
   for(const r of reg){const c=clientFor(r.key),{data}=await c.auth.getSession();if(data.session&&r.role!=='athlete'){await activate(r.key,data.session.user);return}}
@@ -2836,7 +2863,7 @@ document.addEventListener('click',ev=>{
   else if(a==='rpane'){UI.rpane=el.dataset.v;if(el.dataset.v==='write'&&!UI.rtarget)UI.rtarget=replyKey(pendItems(UI.rsel)[0]);render();window.scrollTo(0,0)}
   else if(a==='rolder'){UI.rdays=(UI.rdays||30)+30;render()}
   else if(a==='rtr'){const k=el.dataset.k, ja=(document.getElementById(rjaId(k))?.value||'').trim();if(!ja)return toast(t('r_ja'));const x=targetText(k);
-    aiRun('out:'+k,async()=>{const r=await ai({mode:'tr_out',aid:x?.aid||UI.rsel,ja,ctx:x?.text||''});(UI.cw||(UI.cw={}))[cwIdOf(k)]={v:r.en,prev:false};(UI.rback||(UI.rback={}))[k]={ja:r.ja,note:r.note,en:r.en,src:ja}})}
+    aiRun('out:'+k,async()=>{const r=await ai({mode:'tr_out',aid:x?.aid||UI.rsel,ja,ctx:x?.text||''});(UI.cw||(UI.cw={}))[cwIdOf(k)]={v:r.en,prev:false};wSet(cwIdOf(k),r.en);(UI.rback||(UI.rback={}))[k]={ja:r.ja,note:r.note,en:r.en,src:ja}})}
   else if(a==='tsent'){const {src,id,aid}=el.dataset;aiRun('sent:'+src+':'+id,()=>trSent(aid,src,id))}
   else if(a==='tai'){const {src,id,aid}=el.dataset;aiRun('in:'+src+':'+id,()=>trIn(aid,src,id))}
   else if(MICACTS.includes(a)){if(Date.now()-MIC_PD>800)micAct(el)}   // 指で押したときは pointerdown ですでに動いている
@@ -3083,7 +3110,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(
   try{
     const {data}=await sb.auth.getSession();
     UI.booting=false;
-    if(data.session&&!m){await afterSignIn(data.session.user);clearTimeout(slow);rememberCurrent(curKey());return}
+    if(data.session&&!m){UI.navBoot=true;await afterSignIn(data.session.user);clearTimeout(slow);rememberCurrent(curKey());return}
     if(m)UI.authUser=null;
   }catch(e){UI.booting=false;UI.err=errText(e);logErr('boot',String(e?.message||e));
     if(UI.session&&!me()){clearTimeout(slow);const T=I18N[UI.loginLang];app.innerHTML=`<div class="login"><div class="card stack" style="max-width:360px"><div>${T.boot_off}</div><button class="btn" onclick="location.reload()">${T.boot_retry}</button></div></div>`;addEventListener('online',()=>location.reload(),{once:true});return}}   // ログインしたまま電波が弱いだけ：ログイン画面を出さない。電波が戻ったら自動で読み込む
