@@ -2201,6 +2201,7 @@ async function shrinkVideo(file,onProg,factor=1){
       else{mux.addAudioChunkRaw(x.data,'key',ts,d>0?d:1,aFirst?{decoderConfig:{codec:'mp4a.40.2',numberOfChannels:at.audio.channel_count,sampleRate:at.audio.sample_rate,description:aacASC(at.audio.sample_rate,at.audio.channel_count)}}:undefined);aFirst=false}}
     mp4.releaseUsedSamples(id,samples[samples.length-1].number+1)}catch(e){err=err||e}};
   mp4.setExtractionOptions(vt.id,null,{nbSamples:60}); if(at)mp4.setExtractionOptions(at.id,null,{nbSamples:200});
+  const gd=mp4.getTrackDuration.bind(mp4); mp4.getTrackDuration=tr=>tr.samples?.length?gd(tr):-1;   // iPhone の .mov にある中身が空のトラックで seek が落ちるので、そのトラックは飛ばす
   mp4.start(); const sk=mp4.seek(0,true); off=sk&&typeof sk.offset==='number'?sk.offset:0;
   let lastDone=-1, lastMove=Date.now();   // 30秒進まなければ止める（固まったままにしない）
   while(off<file.size&&!err){await feed();while((dec.decodeQueueSize>12||enc.encodeQueueSize>12)&&!err){await new Promise(r=>setTimeout(r,8));if(done!==lastDone){lastDone=done;lastMove=Date.now()}else if(Date.now()-lastMove>30000){logErr('video','stall '+Math.round(done)+'s');throw new Error('__'+t('v_stall'))}}}
