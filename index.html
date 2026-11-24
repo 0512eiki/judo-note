@@ -269,6 +269,14 @@ mark.kp-hl{background:var(--warn-s);color:inherit;border-radius:3px;padding:0 1p
 .kp-todo.done .kp-b>div:first-child{color:var(--faint);text-decoration:line-through}
 .kp-x{border:0;background:none;color:var(--faint);font-size:15px;cursor:pointer;padding:2px 4px;flex:none}
 .kp-add{display:flex;gap:8px;margin-top:10px}.kp-add .inp{flex:1;min-width:0}
+.kp-list{position:relative}.kp-todo{position:relative;background:transparent;transition:transform .18s ease}.kp-list.dragging .kp-todo{user-select:none;-webkit-user-select:none}
+.kp-todo.drag{transition:none;z-index:2;background:var(--panel-solid);border-radius:12px;box-shadow:var(--shadow)}
+.kp-grip{flex:none;width:26px;margin:-4px 0 0 -6px;padding:4px 0;text-align:center;font-size:20px;line-height:1.2;color:var(--faint);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.kp-no{flex:none;width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--dim);font-size:calc(12.5*var(--u));font-weight:800;display:grid;place-items:center;margin-top:1px}
+.kp-todo.top .kp-no{background:var(--grad);color:#fff}
+.kp-todo.top .kp-b>div:nth-child(2){font-weight:700;font-size:calc(16*var(--u))}
+.kp-toptag{font-size:calc(11.5*var(--u));font-weight:800;color:var(--accent);letter-spacing:.02em}
+.kp-hint{margin-top:6px}
 .kp-donebox{margin-top:10px}.kp-donebox summary{cursor:pointer;font-size:calc(13*var(--u));color:var(--dim);font-weight:600;padding:4px 0}
 .cform{display:flex;gap:8px;margin-top:8px}
 .compose{display:grid;gap:8px;margin-top:8px;width:100%;min-width:0}
@@ -713,6 +721,7 @@ const I18N = {
   x_none:'まだありません。練習以外にやったトレーニングを入れてみよう。', x_none_ro:'まだエクストラの記録はありません。', x_edit:'直す', x_del:'消す', x_del_q:'このエクストラの記録を消しますか？', ev_del_q:'この試合を削除しますか？試合の振り返りとコーチのメモも一緒に消えます。', x_deleted:'消しました',
   x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
+  kp_top:'いちばん練習したい', kp_drag:'≡ をつかんで上下に動かすと、順番を変えられます。一番上が「いちばん練習したいこと」。', kp_moved:'順番を変えました',
   t_key:'⭐ 大事', kp_todo:'🎯 これから練習したいこと', kp_coach:'⭐ コーチからの大事なこと', kp_add_ph:'＋ 1行で書く…', kp_add:'足す', kp_done_n:'✓ できた {n}こ',
   kp_pin:'⭐ 大事に入れる', kp_pin_sel:'⭐ 選んだ所を入れる', kp_pin_self:'🎯 練習したいことに入れる', kp_pin_self_sel:'🎯 選んだ所を練習したいことに', kp_in:'⭐ 入っています', kp_saved:'⭐ 大事ノートに入れました', kp_saved_self:'🎯 練習したいことに入れました',
   kp_open:'記録を見る ›', kp_open_q:'質問を見る ›', kp_del:'消す', kp_del_q:'大事ノートから消しますか？（元の記録は消えません）', kp_undo:'まだ', kp_done:'できた！', kp_none_todo:'まだありません。下の欄に1行で書くか、記録の振り返りから入れられます。', kp_none_coach:'まだありません。「記録」や「今日」のコーチのコメントで「⭐ 大事に入れる」を押すと、ここにたまります。文を指でなぞって選ぶと、その部分だけ入ります。', kp_ro:'見るだけ（足す・消すは選手本人だけ）', kp_long:'長いので最初の1000文字だけ入れました',
@@ -859,6 +868,7 @@ const I18N = {
   x_none:'Nothing yet. Add the training you did outside practice.', x_none_ro:'No extra training yet.', x_edit:'Edit', x_del:'Delete', x_del_q:'Delete this extra training record?', ev_del_q:'Delete this match? Its review and the coach’s notes will be deleted too.', x_deleted:'Deleted',
   x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
+  kp_top:'Top priority', kp_drag:'Hold ≡ and drag up or down to change the order. The top one is what you want to work on most.', kp_moved:'Order changed',
   t_key:'⭐ Key Points', kp_todo:'🎯 Things I want to work on', kp_coach:'⭐ Key points from Coach', kp_add_ph:'+ Write one line…', kp_add:'Add', kp_done_n:'✓ Done {n}',
   kp_pin:'⭐ Save as key point', kp_pin_sel:'⭐ Save the selected part', kp_pin_self:'🎯 Add to things to work on', kp_pin_self_sel:'🎯 Add the selected part', kp_in:'⭐ Saved', kp_saved:'⭐ Saved to Key Points', kp_saved_self:'🎯 Added to things to work on',
   kp_open:'Open the log ›', kp_open_q:'Open the question ›', kp_del:'Remove', kp_del_q:'Remove this from Key Points? (The original log stays.)', kp_undo:'Not yet', kp_done:'Got it!', kp_none_todo:'Nothing yet. Write one line below, or add it from your log.', kp_none_coach:'Nothing yet. Tap "⭐ Save as key point" under Coach\'s comment in History or Today. Select part of the text with your finger to save only that part.', kp_ro:'View only (only the athlete can add or remove)', kp_long:'It was long, so only the first 1000 characters were saved',
@@ -1840,20 +1850,42 @@ document.addEventListener('selectionchange',()=>{if(!ST.kpOk)return;const s=getS
   const box=n=>(n?.nodeType===1?n:n?.parentElement)?.closest?.('[data-kp]')||null, a=txt?box(s.anchorNode):null;
   if(a&&a===box(s.focusNode))UI.kpSel={k:a.dataset.kp,text:txt};else if(UI.kpSel&&!UI.kpSel.lost){UI.kpSel.lost=Date.now();setTimeout(kpLabels,1600)}
   kpLabels()});
+// 練習したいことの順番：pos が小さいほど上（一番上＝いちばん練習したいこと）。新しく足したものは一番上に入る
+const kpTodo=aid=>kpOf(aid).filter(k=>k.kind==='self'&&!k.done_at).sort((a,b)=>(a.pos??-1e9)-(b.pos??-1e9)||b.created_at.localeCompare(a.created_at));
+function kpTopPos(){const ps=kpTodo(UI.session).map(k=>k.pos).filter(p=>p!=null);return ps.length?Math.min(...ps)-1:0}
+/* ≡ をつかんで上下に動かす（指でもマウスでも。iPhone はふつうのドラッグ&ドロップが効かないので、自分で動かす） */
+let KPD=null;
+document.addEventListener('pointerdown',ev=>{const g=ev.target.closest?.('.kp-grip');if(!g||KPD)return;const row=g.closest('.kp-todo'), list=row?.parentElement;if(!list)return;
+  ev.preventDefault();try{g.setPointerCapture(ev.pointerId)}catch(e){}
+  const rows=[...list.querySelectorAll('.kp-todo[data-id]')], rects=rows.map(r=>r.getBoundingClientRect()), idx=rows.indexOf(row);
+  KPD={g,row,rows,mids:rects.map(r=>r.top+r.height/2),h:rects[idx].height,idx,to:idx,y0:ev.clientY,pid:ev.pointerId};row.classList.add('drag');list.classList.add('dragging')});
+document.addEventListener('pointermove',ev=>{if(!KPD||ev.pointerId!==KPD.pid)return;ev.preventDefault();const d=KPD, dy=ev.clientY-d.y0, c=d.mids[d.idx]+dy;
+  d.row.style.transform=`translateY(${dy}px)`;d.to=d.mids.filter((m,j)=>j!==d.idx&&m<c).length;
+  d.rows.forEach((r,j)=>{if(j===d.idx)return;const s=d.idx<j&&j<=d.to?-d.h:d.to<=j&&j<d.idx?d.h:0;r.style.transform=s?`translateY(${s}px)`:''})},{passive:false});
+function kpDrop(ev){if(!KPD||(ev&&ev.pointerId!==KPD.pid))return;const d=KPD;KPD=null;
+  d.rows.forEach(r=>r.style.transform='');d.row.classList.remove('drag');d.row.parentElement?.classList.remove('dragging');
+  if(ev?.type==='pointercancel'||d.to===d.idx)return;
+  const ids=d.rows.map(r=>r.dataset.id), [id]=ids.splice(d.idx,1);ids.splice(d.to,0,id);
+  const P=x=>(ST.kp||[]).find(k=>k.id===x)?.pos, a=ids[d.to-1], b=ids[d.to+1];
+  let pa=a?P(a):null, pb=b?P(b):null;if(a&&pa==null)pa=0;if(b&&pb==null)pb=(pa??0)+1;
+  const pos=a&&b?(pa+pb)/2:a?pa+1:b?pb-1:0;
+  const x=(ST.kp||[]).find(k=>k.id===id), old=x?.pos;if(x)x.pos=pos;render();   // 先に画面を変えて、そのあと保存（失敗したら元に戻す）
+  kpSet(id,{pos}).then(()=>toast(t('kp_moved'))).catch(e=>{if(x)x.pos=old;render();toast(errText(e))})}
+document.addEventListener('pointerup',kpDrop);document.addEventListener('pointercancel',kpDrop);
 async function kpAdd(row){const r=must(await sb.from('key_points').insert({athlete_id:UI.session,...row}).select().single());ST.kp=[r,...(ST.kp||[])]}
 async function kpSet(id,patch){const r=must(await sb.from('key_points').update(patch).eq('id',id).select().single());const x=(ST.kp||[]).find(k=>k.id===id);if(x)Object.assign(x,r)}
 async function kpDel(id){must(await sb.from('key_points').delete().eq('id',id));ST.kp=(ST.kp||[]).filter(k=>k.id!==id)}
 function keyView(aid,L,canEdit){   // 「⭐ 大事」タブ（選手・保護者・コーチの選手ページで同じ形。新しいものが上）
   const T=I18N[L], mine=canEdit&&kpMine(aid), all=kpOf(aid).sort((a,b)=>b.created_at.localeCompare(a.created_at));
-  const todo=all.filter(k=>k.kind==='self'&&!k.done_at), done=all.filter(k=>k.kind==='self'&&k.done_at).sort((a,b)=>b.done_at.localeCompare(a.done_at)), co=all.filter(k=>k.kind==='coach');
+  const todo=kpTodo(aid), done=all.filter(k=>k.kind==='self'&&k.done_at).sort((a,b)=>b.done_at.localeCompare(a.done_at)), co=all.filter(k=>k.kind==='coach');
   const del=k=>mine?`<button type="button" class="kp-x" data-act="kpdel" data-id="${k.id}" aria-label="${T.kp_del}" title="${T.kp_del}">✕</button>`:'';
   const link=k=>!k.src||!k.day?'':k.src==='message'?`<button type="button" class="linkish" data-act="kpgo" data-src="message" data-aid="${aid}">${T.kp_open_q}</button>`:k.day>=DAYS[0]?`<button type="button" class="linkish" data-act="kpgo" data-src="${k.src}" data-d="${k.day}" data-aid="${aid}">${T.kp_open}</button>`:'';
   const meta=k=>k.day?`<div class="kp-meta"><span>${fd(k.day,L)}</span>${link(k)}</div>`:'';
-  const todoRow=k=>`<div class="kp-todo">${mine?`<button type="button" class="kp-box" data-act="kpdone" data-id="${k.id}" aria-label="${T.kp_done}"></button>`:'<span class="kp-box ro"></span>'}<div class="kp-b"><div>${esc(k.body)}</div>${meta(k)}</div>${del(k)}</div>`;
+  const todoRow=(k,i)=>`<div class="kp-todo ${i?'':'top'}" data-id="${k.id}">${mine&&todo.length>1?`<span class="kp-grip" aria-hidden="true">≡</span>`:''}<span class="kp-no">${i+1}</span><div class="kp-b">${i?'':`<div class="kp-toptag">${T.kp_top}</div>`}<div>${esc(k.body)}</div>${meta(k)}</div>${mine?`<button type="button" class="kp-box" data-act="kpdone" data-id="${k.id}" aria-label="${T.kp_done}"></button>`:''}${del(k)}</div>`;
   const doneRow=k=>`<div class="kp-todo done">${mine?`<button type="button" class="kp-box on" data-act="kpundo" data-id="${k.id}" aria-label="${T.kp_undo}">✓</button>`:'<span class="kp-box on ro">✓</span>'}<div class="kp-b"><div>${esc(k.body)}</div><div class="kp-meta"><span>${fd(localDay(k.done_at),L)} ${T.kp_done}</span></div></div>${del(k)}</div>`;
   return `<div class="stack kp">${mine?'':`<div class="small muted">🔒 ${T.kp_ro}</div>`}
     <div class="card"><h2>${T.kp_todo}<span class="kp-n">${todo.length||''}</span></h2>
-      ${todo.length?todo.map(todoRow).join(''):`<div class="small muted">${mine?T.kp_none_todo:T.none}</div>`}
+      ${todo.length?`<div class="kp-list">${todo.map(todoRow).join('')}</div>${mine&&todo.length>1?`<div class="small muted kp-hint">${T.kp_drag}</div>`:''}`:`<div class="small muted">${mine?T.kp_none_todo:T.none}</div>`}
       ${mine?`<form data-form="kpadd" class="kp-add"><input class="inp" name="b" maxlength="1000" placeholder="${esc(T.kp_add_ph)}" autocomplete="off" enterkeyhint="done"><button class="btn sm" type="submit">${T.kp_add}</button></form>`:''}
       ${done.length?`<details class="kp-donebox" ${UI.kpDoneOpen?'open':''}><summary data-act="kpdoneopen">${T.kp_done_n.replace('{n}',done.length)}</summary>${done.map(doneRow).join('')}</details>`:''}</div>
     <div class="card"><h2>${T.kp_coach}<span class="kp-n">${co.length||''}</span></h2>
@@ -3003,7 +3035,7 @@ document.addEventListener('click',ev=>{
     let body=(sel||kpSource(src,id)).trim();if(!body)return;const long=body.length>1000;body=body.slice(0,1000);
     if(kpOf(UI.session).some(k=>k.src===src&&k.src_id===id&&k.body===body)){toast(t('kp_in'));return}
     try{getSelection()?.removeAllRanges()}catch(e){}
-    run(()=>kpAdd({kind,body,src,src_id:id,day:el.dataset.d||null}),()=>{if(long)setTimeout(()=>toast(t('kp_long')),60);toast(t(kind==='self'?'kp_saved_self':'kp_saved'));return null})}   // 軽い知らせだけ（何度も押すので大きな窓は出さない）
+    run(()=>kpAdd({kind,body,src,src_id:id,day:el.dataset.d||null,...(kind==='self'?{pos:kpTopPos()}:{})}),()=>{if(long)setTimeout(()=>toast(t('kp_long')),60);toast(t(kind==='self'?'kp_saved_self':'kp_saved'));return null})}   // 軽い知らせだけ（何度も押すので大きな窓は出さない）
   else if(a==='kpdone'){run(()=>kpSet(el.dataset.id,{done_at:new Date().toISOString()}),t('kp_done'))}
   else if(a==='kpundo'){run(()=>kpSet(el.dataset.id,{done_at:null}))}
   else if(a==='kpdel'){const id=el.dataset.id;askBox(t('kp_del_q'),t('kp_del')).then(ok=>{if(ok)run(()=>kpDel(id))})}
@@ -3175,7 +3207,7 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
   if(f.dataset.form==='editcmt'){const v=(fdt.get('c')||'').trim();if(!v)return;run(async()=>{await editComment(f.dataset.aid,f.dataset.d,v);UI.cmtEdit=null},t('ed_done'))}
-  if(f.dataset.form==='kpadd'){const b=(fdt.get('b')||'').trim().slice(0,1000);if(!b){UI.pressed=null;return}run(()=>kpAdd({kind:'self',body:b}),()=>{toast(t('kp_saved_self'));return null})}
+  if(f.dataset.form==='kpadd'){const b=(fdt.get('b')||'').trim().slice(0,1000);if(!b){UI.pressed=null;return}run(()=>kpAdd({kind:'self',body:b,pos:kpTopPos()}),()=>{toast(t('kp_saved_self'));return null})}
   if(f.dataset.form==='goals'){const gym=f.dataset.ym||curYm();run(()=>saveGoals(gym,fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:gym===curYm()?t('ch_goal_t'):t('g_last_saved'),msg:pick1(t('ch_goal'))}))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
   if(f.dataset.form==='cls'){const aid=f.dataset.aid;run(async()=>{must(await sb.from('profiles').update({weight_class:(fdt.get('wclass')||'').trim(),weight_limit:wKg(fdt.get('wlimit'))}).eq('id',aid));await loadAll()},t('saved_cls'))}
