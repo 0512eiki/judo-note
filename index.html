@@ -280,7 +280,21 @@ mark.kp-hl{background:var(--warn-s);color:inherit;border-radius:3px;padding:0 1p
 .kp-sec{font-size:calc(12*var(--u));font-weight:800;color:var(--accent);margin:-2px 0 4px;letter-spacing:.02em}
 .kp-more{display:flex;align-items:center;gap:6px;width:100%;margin:6px 0 2px;padding:9px 12px;border:1px dashed var(--line2);border-radius:12px;background:var(--panel2);color:var(--dim);font-weight:700;font-size:calc(13*var(--u));cursor:pointer;transition:transform .18s ease}
 .kp-todo.kp-later .kp-no{background:transparent;color:var(--faint)}.kp-todo.kp-later .kp-b{color:var(--dim)}
-.kp-donebox{margin-top:10px}.kp-donebox summary{cursor:pointer;font-size:calc(13*var(--u));color:var(--dim);font-weight:600;padding:4px 0}
+.kp-donebox{margin-top:10px}
+.kp-helpbar{display:flex;justify-content:flex-end;margin-bottom:-8px}
+.kn-new{display:inline-block;margin-left:3px;padding:0 5px;border-radius:6px;background:var(--bad);color:#fff;font-size:calc(9.5*var(--u));font-weight:800;line-height:15px;vertical-align:2px}
+.sheet-ui.kn{max-width:420px}.kn h2{margin:2px 0 6px;font-size:calc(20*var(--u));text-align:center}.kn-top{font-size:40px;text-align:center;line-height:1}
+.kn-sub{text-align:center;color:var(--dim);margin:0 0 12px;font-size:calc(14*var(--u))}
+.kn-step{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.kn-pic{flex:0 0 46%;min-width:0;font-size:calc(11.5*var(--u));pointer-events:none}.kn-txt{flex:1;font-size:calc(13.5*var(--u));line-height:1.45}
+.kn-txt b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--grad);color:#fff;font-size:12px;margin-right:6px;vertical-align:1px}
+.kn-cmt{background:var(--tint);border-radius:10px;padding:7px 8px;line-height:1.4}.kn-cmt span{display:block;color:var(--accent);font-weight:700;font-size:.9em}
+.kn-cmt .kp-pin,.kn-add i{display:inline-block;margin-top:5px;font-style:normal;font-size:.92em;padding:2px 8px}
+.kn-add{display:flex;gap:5px;align-items:center}.kn-add span{flex:1;border:1px solid var(--line2);border-radius:8px;padding:5px 7px;background:var(--panel-solid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.kn-add i{margin:0;background:var(--grad);color:#fff;border-radius:8px;font-weight:700}
+.kn-list>div{display:flex;gap:5px;align-items:center;padding:4px 0;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden}.kn-list em{font-style:normal;color:var(--faint)}
+.kn-list u{text-decoration:none;display:inline-grid;place-items:center;width:17px;height:17px;flex:none;border-radius:50%;background:var(--grad);color:#fff;font-size:10px;font-weight:800}.kn-list>div:nth-child(2) u{background:var(--line);color:var(--dim)}
+.kn-list .kn-dash{border:1px dashed var(--line2);border-radius:8px;padding:3px 7px;margin-top:4px;color:var(--dim);font-weight:700}
+.kn-who{font-size:calc(12*var(--u));color:var(--dim);margin:8px 0 12px;text-align:center}.kn-btns{display:flex;flex-direction:column;gap:8px}.kp-donebox summary{cursor:pointer;font-size:calc(13*var(--u));color:var(--dim);font-weight:600;padding:4px 0}
 .cform{display:flex;gap:8px;margin-top:8px}
 .compose{display:grid;gap:8px;margin-top:8px;width:100%;min-width:0}
 .cw-edit,.cw-prev{display:grid;gap:8px}
@@ -725,6 +739,9 @@ const I18N = {
   x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   kp_top:'いちばん練習したい', kp_drag:'≡ をつかんで動かすと、順番を変えられます。上の3つが「いま集中すること」。ほかのメモを開くと、入れかえもできます。', kp_moved:'順番を変えました', kp_focus:'いま集中する3つ', kp_more:'📝 ほかのメモ {n}こ', kp_less:'📝 ほかのメモを閉じる', kp_saved_memo:'📝 ほかのメモに入れました（≡ で上の3つと入れかえられます）',
+  kn_new:'NEW', kn_h:'「⭐ 大事」タブができました', kn_help:'？ 使い方', kn_sub:'コーチの大事な言葉と、いま練習したいことを1か所に。練習の前に30秒で見返せます。',
+  kn_1:'コーチのコメントで「⭐ 大事に入れる」を押す。文をなぞると、その部分だけ入ります。', kn_2:'「これから練習したいこと」を1行ずつ書く。いくつでもOK。', kn_3:'≡ で動かして、上の3つを「いま集中すること」に。できたら ✓。',
+  kn_go:'⭐ 大事タブを開く', kn_later:'あとで', kn_who:'コーチと保護者も見られます（書きかえはできません）', kn_ex1:'足を先に動かしてから引こう。', kn_ex2:'組み手で先に袖を取る', kn_ex3:'背負いで頭を下げない',
   t_key:'⭐ 大事', kp_todo:'🎯 これから練習したいこと', kp_coach:'⭐ コーチからの大事なこと', kp_add_ph:'＋ 1行で書く…', kp_add:'足す', kp_done_n:'✓ できた {n}こ',
   kp_pin:'⭐ 大事に入れる', kp_pin_sel:'⭐ 選んだ所を入れる', kp_pin_self:'🎯 練習したいことに入れる', kp_pin_self_sel:'🎯 選んだ所を練習したいことに', kp_in:'⭐ 入っています', kp_saved:'⭐ 大事ノートに入れました', kp_saved_self:'🎯 練習したいことに入れました',
   kp_open:'記録を見る ›', kp_open_q:'質問を見る ›', kp_del:'消す', kp_del_q:'大事ノートから消しますか？（元の記録は消えません）', kp_undo:'まだ', kp_done:'できた！', kp_none_todo:'まだありません。下の欄に1行で書くか、記録の振り返りから入れられます。', kp_none_coach:'まだありません。「記録」や「今日」のコーチのコメントで「⭐ 大事に入れる」を押すと、ここにたまります。文を指でなぞって選ぶと、その部分だけ入ります。', kp_ro:'見るだけ（足す・消すは選手本人だけ）', kp_long:'長いので最初の1000文字だけ入れました',
@@ -872,6 +889,9 @@ const I18N = {
   x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   kp_top:'Top priority', kp_drag:'Hold ≡ and drag to change the order. The top 3 are your focus. Open your other notes to swap them in.', kp_moved:'Order changed', kp_focus:'My focus — top 3', kp_more:'📝 Other notes ({n})', kp_less:'📝 Hide other notes', kp_saved_memo:'📝 Added to other notes (drag ≡ to swap it into your top 3)',
+  kn_new:'NEW', kn_h:'New tab: ⭐ Key Points', kn_help:'? How to use', kn_sub:"Coach's key points and the things you want to work on, all in one place. Check it for 30 seconds before practice.",
+  kn_1:'Tap "⭐ Save as key point" under Coach\'s comment. Select part of the text to save only that part.', kn_2:'Write the things you want to work on, one line each. As many as you like.', kn_3:'Drag ≡ to put your top 3 focus points on top. Check ✓ when you can do it.',
+  kn_go:'⭐ Open Key Points', kn_later:'Later', kn_who:'Your coach and parents can see it too (they can\'t change it).', kn_ex1:'Move your feet first, then pull.', kn_ex2:'Grip the sleeve first', kn_ex3:'Keep my head up on seoi-nage',
   t_key:'⭐ Key Points', kp_todo:'🎯 Things I want to work on', kp_coach:'⭐ Key points from Coach', kp_add_ph:'+ Write one line…', kp_add:'Add', kp_done_n:'✓ Done {n}',
   kp_pin:'⭐ Save as key point', kp_pin_sel:'⭐ Save the selected part', kp_pin_self:'🎯 Add to things to work on', kp_pin_self_sel:'🎯 Add the selected part', kp_in:'⭐ Saved', kp_saved:'⭐ Saved to Key Points', kp_saved_self:'🎯 Added to things to work on',
   kp_open:'Open the log ›', kp_open_q:'Open the question ›', kp_del:'Remove', kp_del_q:'Remove this from Key Points? (The original log stays.)', kp_undo:'Not yet', kp_done:'Got it!', kp_none_todo:'Nothing yet. Write one line below, or add it from your log.', kp_none_coach:'Nothing yet. Tap "⭐ Save as key point" under Coach\'s comment in History or Today. Select part of the text with your finger to save only that part.', kp_ro:'View only (only the athlete can add or remove)', kp_long:'It was long, so only the first 1000 characters were saved',
@@ -1545,7 +1565,9 @@ function athleteView(){
   const L=lang(), m=me(), myQ=ST.threads.filter(th=>th.aid===m.id);
   const newReplies=myQ.filter(th=>th.replies.length&&th.replies[th.replies.length-1].from==='coach'&&th.date>=addDays(TODAY,-7)).length;
   const newV=(ST.videos||[]).filter(v=>v.athlete_id===m.id&&v.uploaded_by!==m.id&&v.created_at>=new Date(Date.now()-7*864e5).toISOString()).length;
-  const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['v',t('t_videos'),UI.view==='v'?0:newV],['note',t('t_note')],...(ST.kpOk?[['key',t('t_key')]]:[])];
+  if(UI.view==='key'&&ST.kpOk&&!UI.previewAs)kpMark('visit');   // タブを開いたら NEW の印を消す
+  const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['v',t('t_videos'),UI.view==='v'?0:newV],['note',t('t_note')],...(ST.kpOk?[['key',t('t_key')+(kpSeen('visit')?'':` <span class="kn-new">${t('kn_new')}</span>`)]]:[])];
+  if(ST.kpOk&&!UI.previewAs&&!UI.student&&!UI.modal&&!kpSeen('intro')){kpMark('intro');UI.modal={type:'kpnew'}}   // 初めて開いたときに1回だけ、使い方のお知らせ
   let body='';
   if(UI.view==='today')body=athToday();
   if(UI.view==='log')body=`<div class="stack">${monthCard(m.id,L)}${calendarCard(m.id,L,false)}${runsCard(m.id,L,!UI.previewAs)}<div class="grid2"><div>${healthCharts(m.id,L,'full')}</div>${entryList(m.id,L,14,false)}</div></div>`;
@@ -1883,6 +1905,19 @@ document.addEventListener('pointerup',kpDrop);document.addEventListener('pointer
 async function kpAdd(row){const r=must(await sb.from('key_points').insert({athlete_id:UI.session,...row}).select().single());ST.kp=[r,...(ST.kp||[])]}
 async function kpSet(id,patch){const r=must(await sb.from('key_points').update(patch).eq('id',id).select().single());const x=(ST.kp||[]).find(k=>k.id===id);if(x)Object.assign(x,r)}
 async function kpDel(id){must(await sb.from('key_points').delete().eq('id',id));ST.kp=(ST.kp||[]).filter(k=>k.id!==id)}
+// 「⭐ 大事」のお知らせ：選手ごとに端末に「見た」を残す（intro＝お知らせ / visit＝タブを開いた → NEW の印を消す）
+const kpSeen=k=>{try{return !!localStorage.getItem(`judo-kp-${k}-${UI.session}`)}catch(e){return true}};
+const kpMark=k=>{try{localStorage.setItem(`judo-kp-${k}-${UI.session}`,'1')}catch(e){}};
+function kpIntro(T){   // 絵（画面のミニ版）＋1行ずつの3ステップ。✕・あとで・外を押すと閉じる
+  const step=(n,pic,txt)=>`<div class="kn-step"><div class="kn-pic">${pic}</div><div class="kn-txt"><b>${n}</b>${esc(txt)}</div></div>`;
+  return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui kn" role="dialog" aria-modal="true" aria-labelledby="kn-h" data-stop>
+    <div class="modal-x"><button class="btn sm" data-act="closemodal">✕</button></div>
+    <div class="kn-top">⭐</div><h2 id="kn-h">${esc(T.kn_h)}</h2><p class="kn-sub">${esc(T.kn_sub)}</p>
+    ${step(1,`<div class="kn-cmt"><span>${esc(T.from_coach)}</span><mark class="kp-hl">${esc(T.kn_ex1)}</mark><i class="kp-pin">${esc(T.kp_pin)}</i></div>`,T.kn_1)}
+    ${step(2,`<div class="kn-add"><span>${esc(T.kn_ex2)}</span><i>${esc(T.kp_add)}</i></div>`,T.kn_2)}
+    ${step(3,`<div class="kn-list"><div><em>≡</em><u>1</u>${esc(T.kn_ex2)}</div><div><em>≡</em><u>2</u>${esc(T.kn_ex3)}</div><div class="kn-dash">${esc(T.kp_more.replace('{n}',2))}</div></div>`,T.kn_3)}
+    <p class="kn-who">🔒 ${esc(T.kn_who)}</p>
+    <div class="kn-btns"><button class="btn" data-act="kpintro">${esc(T.kn_go)}</button><button class="btn ghost" data-act="closemodal">${esc(T.kn_later)}</button></div></div></div>`}
 function keyView(aid,L,canEdit){   // 「⭐ 大事」タブ（選手・保護者・コーチの選手ページで同じ形。新しいものが上）
   const T=I18N[L], mine=canEdit&&kpMine(aid), all=kpOf(aid).sort((a,b)=>b.created_at.localeCompare(a.created_at));
   const todo=kpTodo(aid), rest=todo.slice(KP_FOCUS), done=all.filter(k=>k.kind==='self'&&k.done_at).sort((a,b)=>b.done_at.localeCompare(a.done_at)), co=all.filter(k=>k.kind==='coach');
@@ -1891,7 +1926,7 @@ function keyView(aid,L,canEdit){   // 「⭐ 大事」タブ（選手・保護�
   const meta=k=>k.day?`<div class="kp-meta"><span>${fd(k.day,L)}</span>${link(k)}</div>`:'';
   const todoRow=(k,i)=>`<div class="kp-todo ${i?'':'top'} ${i>=KP_FOCUS?'kp-later':''}" data-id="${k.id}">${mine&&todo.length>1?`<span class="kp-grip" aria-hidden="true">≡</span>`:''}<span class="kp-no">${i<KP_FOCUS?i+1:'・'}</span><div class="kp-b">${i?'':`<div class="kp-toptag">${T.kp_top}</div>`}<div>${esc(k.body)}</div>${meta(k)}</div>${mine?`<button type="button" class="kp-box" data-act="kpdone" data-id="${k.id}" aria-label="${T.kp_done}"></button>`:''}${del(k)}</div>`;
   const doneRow=k=>`<div class="kp-todo done">${mine?`<button type="button" class="kp-box on" data-act="kpundo" data-id="${k.id}" aria-label="${T.kp_undo}">✓</button>`:'<span class="kp-box on ro">✓</span>'}<div class="kp-b"><div>${esc(k.body)}</div><div class="kp-meta"><span>${fd(localDay(k.done_at),L)} ${T.kp_done}</span></div></div>${del(k)}</div>`;
-  return `<div class="stack kp">${mine?'':`<div class="small muted">🔒 ${T.kp_ro}</div>`}
+  return `<div class="stack kp">${mine?`<div class="kp-helpbar"><button type="button" class="linkish" data-act="kphelp">${T.kn_help}</button></div>`:`<div class="small muted">🔒 ${T.kp_ro}</div>`}
     <div class="card"><h2>${T.kp_todo}<span class="kp-n">${todo.length||''}</span></h2>
       ${todo.length?`<div class="kp-sec">${T.kp_focus}</div><div class="kp-list">${todo.slice(0,KP_FOCUS).map(todoRow).join('')}${rest.length?`<button type="button" class="kp-more" data-act="kpmore" aria-expanded="${!!UI.kpMore}">${UI.kpMore?T.kp_less:T.kp_more.replace('{n}',rest.length)} ${UI.kpMore?'▴':'▾'}</button>${UI.kpMore?rest.map((k,i)=>todoRow(k,i+KP_FOCUS)).join(''):''}`:''}</div>${mine&&todo.length>1?`<div class="small muted kp-hint">${T.kp_drag}</div>`:''}`:`<div class="small muted">${mine?T.kp_none_todo:T.none}</div>`}
       ${mine?`<form data-form="kpadd" class="kp-add"><input class="inp" name="b" maxlength="1000" placeholder="${esc(T.kp_add_ph)}" autocomplete="off" enterkeyhint="done"><button class="btn sm" type="submit">${T.kp_add}</button></form>`:''}
@@ -2204,6 +2239,7 @@ function modalView(){
   if(m.type==='chart'){const days=UI.rgBig||90;body=`<div class="row" style="justify-content:space-between;margin-bottom:8px"><b>${esc(acct(m.aid)?.name||'')}</b>${rangeBar('rgBig',[[28,T.rg_4w],[90,T.rg_3m],[LOAD_DAYS,T.rg_all]])}</div>${oneChart(m.aid,L,m.k,days,true)}`}
   if(m.type==='day'){body=entryModal(m.aid,m.d,L);const ex=calExtra(m.aid,m.d,T);if(ex)body+=`<div class="stack" style="gap:4px;margin-top:12px">${ex}</div>`}
   if(m.type==='cal')body=calDayBody(m.aid,m.d,L);
+  if(m.type==='kpnew')return kpIntro(T);
   return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui wide" role="dialog" aria-modal="true" data-stop><div class="modal-x"><button class="btn sm" data-act="closemodal">✕ ${T.close2}</button></div>${body}</div></div>`;
 }
 function coachDetail(aid){
@@ -3047,6 +3083,8 @@ document.addEventListener('click',ev=>{
     run(()=>kpAdd({kind,body,src,src_id:id,day:el.dataset.d||null,...(kind==='self'?{pos:kpNewPos()}:{})}),()=>{if(long)setTimeout(()=>toast(t('kp_long')),60);toast(t(kind==='self'?(memo?'kp_saved_memo':'kp_saved_self'):'kp_saved'));return null})}   // 軽い知らせだけ（何度も押すので大きな窓は出さない）
   else if(a==='kpdone'){run(()=>kpSet(el.dataset.id,{done_at:new Date().toISOString()}),t('kp_done'))}
   else if(a==='kpundo'){const pos=kpNewPos();if(kpToMemo())UI.kpMore=true;run(()=>kpSet(el.dataset.id,{done_at:null,pos}))}   // 戻したものは、新しく足したときと同じ場所へ
+  else if(a==='kphelp'){UI.modal={type:'kpnew'};render()}
+  else if(a==='kpintro'){UI.modal=null;UI.view='key';UI.sel=null;render();window.scrollTo(0,0)}
   else if(a==='kpmore'){UI.kpMore=!UI.kpMore;render()}
   else if(a==='kpdel'){const id=el.dataset.id;askBox(t('kp_del_q'),t('kp_del')).then(ok=>{if(ok)run(()=>kpDel(id))})}
   else if(a==='kpdoneopen'){UI.kpDoneOpen=!el.parentElement.open}   // 描き直しても「できた」の開け閉めを保つ
