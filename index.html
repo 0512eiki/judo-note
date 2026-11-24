@@ -1567,7 +1567,7 @@ function athleteView(){
   const newV=(ST.videos||[]).filter(v=>v.athlete_id===m.id&&v.uploaded_by!==m.id&&v.created_at>=new Date(Date.now()-7*864e5).toISOString()).length;
   if(UI.view==='key'&&ST.kpOk&&!UI.previewAs)kpMark('visit');   // タブを開いたら NEW の印を消す
   const tabs=[['today',t('t_today')],['log',t('t_log')],['x',t('t_x')],['q',t('t_q'),newReplies||0],['v',t('t_videos'),UI.view==='v'?0:newV],['note',t('t_note')],...(ST.kpOk?[['key',t('t_key')+(kpSeen('visit')?'':` <span class="kn-new">${t('kn_new')}</span>`)]]:[])];
-  if(ST.kpOk&&!UI.previewAs&&!UI.student&&!UI.modal&&!kpSeen('intro')){kpMark('intro');UI.modal={type:'kpnew'}}   // 初めて開いたときに1回だけ、使い方のお知らせ
+  if(ST.kpOk&&!UI.previewAs&&!UI.student&&!UI.modal&&kpIntroDue()){kpIntroMark();UI.modal={type:'kpnew'}}   // 使い方のお知らせ：1日1回、3日分（11/24 本人）
   let body='';
   if(UI.view==='today')body=athToday();
   if(UI.view==='log')body=`<div class="stack">${monthCard(m.id,L)}${calendarCard(m.id,L,false)}${runsCard(m.id,L,!UI.previewAs)}<div class="grid2"><div>${healthCharts(m.id,L,'full')}</div>${entryList(m.id,L,14,false)}</div></div>`;
@@ -1908,6 +1908,10 @@ async function kpDel(id){must(await sb.from('key_points').delete().eq('id',id));
 // 「⭐ 大事」のお知らせ：選手ごとに端末に「見た」を残す（intro＝お知らせ / visit＝タブを開いた → NEW の印を消す）
 const kpSeen=k=>{try{return !!localStorage.getItem(`judo-kp-${k}-${UI.session}`)}catch(e){return true}};
 const kpMark=k=>{try{localStorage.setItem(`judo-kp-${k}-${UI.session}`,'1')}catch(e){}};
+const KP_INTRO_DAYS=3;   // お知らせを出す日数（1日1回）
+function kpIntroDays(){try{return JSON.parse(localStorage.getItem('judo-kp-introdays-'+UI.session)||'[]')}catch(e){return []}}
+function kpIntroDue(){const d=kpIntroDays();return !d.includes(TODAY)&&d.length<KP_INTRO_DAYS&&!kpOf(UI.session).length}   // もう ⭐ や練習したいことを入れた子には出さない
+function kpIntroMark(){try{localStorage.setItem('judo-kp-introdays-'+UI.session,JSON.stringify([...kpIntroDays(),TODAY]))}catch(e){}}
 function kpIntro(T){   // 絵（画面のミニ版）＋1行ずつの3ステップ。✕・あとで・外を押すと閉じる
   const step=(n,pic,txt)=>`<div class="kn-step"><div class="kn-pic">${pic}</div><div class="kn-txt"><b>${n}</b>${esc(txt)}</div></div>`;
   return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui kn" role="dialog" aria-modal="true" aria-labelledby="kn-h" data-stop>
