@@ -301,7 +301,7 @@ span.cm-tag{cursor:default;padding:1px 8px;font-size:calc(11*var(--u));border-co
 span.cm-tag.t-injury{background:var(--bad-s);color:var(--bad)}span.cm-tag.t-mental{background:var(--good-s);color:var(--good)}span.cm-tag.t-match{background:var(--warn-s);color:var(--warn)}
 .cm-voicebtn{width:100%;justify-content:center}.cv-seg textarea{margin-top:8px;min-height:64px}.cv-seg select{flex:1;min-width:0}.cv-arow{display:flex;gap:10px;align-items:center}.cv-arow span{flex:0 0 38%;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cv-arow input{flex:1;min-width:0}.cv-alias summary{cursor:pointer}
 .cm-save{margin-left:auto}.cm-h{margin:0;font-size:calc(20*var(--u))}.cm-paper{min-height:90px}.cm-from{font-size:calc(12.5*var(--u))}
-@media (min-width:900px){textarea.cm-paper{min-height:260px!important;height:260px;background:#fffef8 repeating-linear-gradient(transparent 0 31px,#e9e2c8 31px 32px);line-height:32px;font-size:calc(17*var(--u));color:#1d2a6b;border-color:#ece6cf}}
+textarea.cm-paper.on{min-height:260px!important;height:260px;background:#fffef8 repeating-linear-gradient(transparent 0 31px,#e9e2c8 31px 32px);line-height:32px;font-size:calc(17*var(--u));color:#1d2a6b;border-color:#ece6cf}
 .kn-new{display:inline-block;margin-left:3px;padding:0 5px;border-radius:6px;background:var(--bad);color:#fff;font-size:calc(9.5*var(--u));font-weight:800;line-height:15px;vertical-align:2px}
 .sheet-ui.kn{max-width:420px}.kn h2{margin:2px 0 6px;font-size:calc(20*var(--u));text-align:center}.kn-top{font-size:40px;text-align:center;line-height:1}
 .kn-sub{text-align:center;color:var(--dim);margin:0 0 12px;font-size:calc(14*var(--u))}
@@ -759,7 +759,7 @@ const I18N = {
   x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   kp_top:'いちばん練習したい', kp_drag:'≡ をつかんで動かすと、順番を変えられます。上の3つが「いま集中すること」。ほかのメモを開くと、入れかえもできます。', kp_moved:'順番を変えました', kp_focus:'いま集中する3つ', kp_more:'📝 ほかのメモ {n}こ', kp_less:'📝 ほかのメモを閉じる', kp_saved_memo:'📝 ほかのメモに入れました（≡ で上の3つと入れかえられます）',
-  cm_tab:'📝 メモ', cm_lock:'🔒 あなただけが見られます（選手・保護者には見えません）', cm_all:'👥 全体のメモ', cm_each:'🥋 選手ごと', cm_recent:'🥋 練習の前に（最近メモした子）', cm_none:'まだメモはありません。', cm_ph:'気づいたことを書く…', cm_save:'保存', cm_saved:'📝 メモを保存しました', cm_del_q:'このメモを消しますか？', cm_del:'消す', cm_edit:'直す', cm_back:'← 一覧', cm_hint:'🎙 キーボードのマイクで話して入れられます。iPad は Apple Pencil で欄に直接書くと文字になります。', cm_all_f:'ぜんぶ', cm_from:'📝 メモ', cm_quote:'{d} の記録より', cm_log:'📒 最近の記録（選手が書いた）', cm_nomemo:'（まだなし）', cm_tg:{waza:'技',fit:'体力',mental:'メンタル',injury:'ケガ',match:'試合',other:'その他'},
+  cm_tab:'📝 メモ', cm_lock:'🔒 あなただけが見られます（選手・保護者には見えません）', cm_all:'👥 全体のメモ', cm_each:'🥋 選手ごと', cm_recent:'🥋 練習の前に（最近メモした子）', cm_none:'まだメモはありません。', cm_ph:'気づいたことを書く…', cm_save:'保存', cm_saved:'📝 メモを保存しました', cm_del_q:'このメモを消しますか？', cm_del:'消す', cm_edit:'直す', cm_back:'← 一覧', cm_hint:'🎙 キーボードのマイクで話して入れられます。iPad は Apple Pencil で欄に直接書くと文字になります。', cm_hint_mac:'⌨️ 紙の欄をクリックして、そのまま打てます。🎤 話すときは fn キーを2回（Mac の音声入力）。⌘＋Enter で保存。', cm_all_f:'ぜんぶ', cm_from:'📝 メモ', cm_quote:'{d} の記録より', cm_log:'📒 最近の記録（選手が書いた）', cm_nomemo:'（まだなし）', cm_tg:{waza:'技',fit:'体力',mental:'メンタル',injury:'ケガ',match:'試合',other:'その他'},
   cv_btn:'🎙 まとめて話す（選手ごとに分ける）', cv_h:'🎙 まとめて話す', cv_ph:'例：アレックス、ひざが痛そう。乱取りは軽めに。ベン、袖を先に取れていた。', cv_hint:'キーボードのマイクで話すか、打ってください。名前の所で区切って、選手ごとのメモに分けます。文はこの端末の中だけで分けます（外に送りません）。', cv_split:'✂️ 選手ごとに分ける', cv_none:'分けられる文がありません。', cv_who:'だれ？', cv_saveN:'保存（{n}件）', cv_saved:'📝 {n}件のメモを保存しました', cv_unk:'名前が見つからなかった文は「全体」に入れました。下の「呼び名」に登録すると、次から自動で分かれます。', cv_alias:'🏷 呼び名（話すときの呼び方）', cv_alias_hint:'カンマで区切って何個でも（例：アレックス, アレ）。アプリの名前は登録しなくても分かります。', cv_alias_save:'呼び名を保存', cv_alias_saved:'🏷 呼び名を保存しました', cv_redo:'↩︎ やり直す',
   kn_new:'NEW', kn_h:'「⭐ 大事」タブができました', kn_help:'？ 使い方', kn_sub:'コーチの大事な言葉と、いま練習したいことを1か所に。練習の前に30秒で見返せます。',
   kn_1:'コーチのコメントで「⭐ 大事に入れる」を押す。文をなぞると、その部分だけ入ります。', kn_2:'「これから練習したいこと」を1行ずつ書く。いくつでもOK。', kn_3:'≡ で動かして、上の3つを「いま集中すること」に。できたら ✓。',
@@ -911,7 +911,7 @@ const I18N = {
   x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   kp_top:'Top priority', kp_drag:'Hold ≡ and drag to change the order. The top 3 are your focus. Open your other notes to swap them in.', kp_moved:'Order changed', kp_focus:'My focus — top 3', kp_more:'📝 Other notes ({n})', kp_less:'📝 Hide other notes', kp_saved_memo:'📝 Added to other notes (drag ≡ to swap it into your top 3)',
-  cm_tab:'📝 Notes', cm_lock:'🔒 Only you can see these (not athletes or parents)', cm_all:'👥 Team notes', cm_each:'🥋 Each athlete', cm_recent:'🥋 Before practice (recent notes)', cm_none:'No notes yet.', cm_ph:'Write what you noticed…', cm_save:'Save', cm_saved:'📝 Note saved', cm_del_q:'Delete this note?', cm_del:'Delete', cm_edit:'Edit', cm_back:'← List', cm_hint:'🎙 Use the keyboard mic to speak. On iPad, write in the box with Apple Pencil and it turns into text.', cm_all_f:'All', cm_from:'📝 Note', cm_quote:'From the {d} log', cm_log:'📒 Recent logs (by the athlete)', cm_nomemo:'(none yet)', cm_tg:{waza:'Technique',fit:'Fitness',mental:'Mental',injury:'Injury',match:'Match',other:'Other'},
+  cm_tab:'📝 Notes', cm_lock:'🔒 Only you can see these (not athletes or parents)', cm_all:'👥 Team notes', cm_each:'🥋 Each athlete', cm_recent:'🥋 Before practice (recent notes)', cm_none:'No notes yet.', cm_ph:'Write what you noticed…', cm_save:'Save', cm_saved:'📝 Note saved', cm_del_q:'Delete this note?', cm_del:'Delete', cm_edit:'Edit', cm_back:'← List', cm_hint:'🎙 Use the keyboard mic to speak. On iPad, write in the box with Apple Pencil and it turns into text.', cm_hint_mac:'⌨️ Click the paper box and type. 🎤 To speak, press fn twice (Mac dictation). ⌘+Enter saves.', cm_all_f:'All', cm_from:'📝 Note', cm_quote:'From the {d} log', cm_log:'📒 Recent logs (by the athlete)', cm_nomemo:'(none yet)', cm_tg:{waza:'Technique',fit:'Fitness',mental:'Mental',injury:'Injury',match:'Match',other:'Other'},
   cv_btn:'🎙 Speak all at once (split by athlete)', cv_h:'🎙 Speak all at once', cv_ph:'e.g. Alex, knee looks sore. Keep randori light. Ben, gripped the sleeve first.', cv_hint:'Use the keyboard mic or type. Notes are split at each name. Splitting happens on this device only (nothing is sent out).', cv_split:'✂️ Split by athlete', cv_none:'Nothing to split.', cv_who:'Who?', cv_saveN:'Save ({n})', cv_saved:'📝 Saved {n} notes', cv_unk:'Text with no name went to Team notes. Add nicknames below and it will split automatically next time.', cv_alias:'🏷 Nicknames (what you call them)', cv_alias_hint:'Separate with commas. App names work without adding them.', cv_alias_save:'Save nicknames', cv_alias_saved:'🏷 Nicknames saved', cv_redo:'↩︎ Start over',
   kn_new:'NEW', kn_h:'New tab: ⭐ Key Points', kn_help:'? How to use', kn_sub:"Coach's key points and the things you want to work on, all in one place. Check it for 30 seconds before practice.",
   kn_1:'Tap "⭐ Save as key point" under Coach\'s comment. Select part of the text to save only that part.', kn_2:'Write the things you want to work on, one line each. As many as you like.', kn_3:'Drag ≡ to put your top 3 focus points on top. Check ✓ when you can do it.',
@@ -1733,7 +1733,7 @@ function entryList(aid,L,n,coach){
 /* ---------- メモアプリのような全画面の書く画面（スマホ） ----------
    書く欄を押すと画面いっぱいに開き、キーボードの上に「完了／キャンセル」。打った文字はそのまま元の欄に入る */
 const memoOn=()=>matchMedia('(pointer: coarse)').matches||innerWidth<=760;
-function memoPrep(){if(!memoOn())return;document.querySelectorAll('#app textarea:not(.memo-ta)').forEach(ta=>{if(ta.dataset.memo||(ta.classList.contains('cm-ta')&&cmWide()))return;   // iPad のコーチメモは、その場で Apple Pencil で書く
+function memoPrep(){if(!memoOn())return;document.querySelectorAll('#app textarea:not(.memo-ta)').forEach(ta=>{if(ta.dataset.memo||(ta.classList.contains('cm-ta')&&cmInline()))return;   // iPad のコーチメモは、その場で Apple Pencil で書く
   ta.dataset.memo='1';ta.readOnly=true;ta.dataset.act='memo-open'})}
 let MEMO=null;
 function memoContext(ta){   // コーチが書くとき：上に選手が書いた内容を出す
@@ -1928,7 +1928,8 @@ function kpDrop(ev){if(!KPD||(ev&&ev.pointerId!==KPD.pid))return;const d=KPD;KPD
   const pos=a&&b?(pa+pb)/2:a?pa+1:b?pb-1:0;
   const x=(ST.kp||[]).find(k=>k.id===id), old=x?.pos;if(x)x.pos=pos;render();   // 先に画面を変えて、そのあと保存（失敗したら元に戻す）
   kpSet(id,{pos}).then(()=>toast(t('kp_moved'))).catch(e=>{if(x)x.pos=old;render();toast(errText(e))})}
-document.addEventListener('pointerup',kpDrop);document.addEventListener('pointercancel',kpDrop);
+document.addEventListener('pointerup',kpDrop);
+document.addEventListener('keydown',ev=>{if(ev.key==='Enter'&&(ev.metaKey||ev.ctrlKey)){const f=ev.target.closest?.('form[data-form^=cm],form[data-form^=cv]');if(f&&ev.target.tagName==='TEXTAREA'){ev.preventDefault();f.requestSubmit()}}});   // コーチメモ：⌘＋Enter で保存（パソコン）document.addEventListener('pointercancel',kpDrop);
 async function kpAdd(row){const r=must(await sb.from('key_points').insert({athlete_id:UI.session,...row}).select().single());ST.kp=[r,...(ST.kp||[])]}
 async function kpSet(id,patch){const r=must(await sb.from('key_points').update(patch).eq('id',id).select().single());const x=(ST.kp||[]).find(k=>k.id===id);if(x)Object.assign(x,r)}
 async function kpDel(id){must(await sb.from('key_points').delete().eq('id',id));ST.kp=(ST.kp||[]).filter(k=>k.id!==id)}
@@ -2277,6 +2278,8 @@ function modalView(){
 /* ---------- 📝 コーチメモ：見られるのはコーチ本人だけ（DB の決まりでも同じ）。iPhone＝一覧→選手／iPad（広い画面）＝左に一覧・右にメモ ---------- */
 const CM_TAGS=['waza','fit','mental','injury','match','other'];
 const cmWide=()=>innerWidth>=900;
+const cmMouse=()=>matchMedia('(pointer: fine)').matches&&!matchMedia('(any-pointer: coarse)').matches;   // Mac・パソコン（マウス・トラックパッド）
+const cmInline=()=>cmWide()||cmMouse();   // その場の紙に書く（iPad の広い画面・パソコン）。iPhone・iPad mini 縦は今まで通り全画面の書く画面
 const cmReal=()=>(ST.cm||[]).filter(m=>!(m.tags||[]).includes('alias'));   // 'alias' の行は「呼び名」の入れ物（メモの一覧には出さない）
 const cmOf=sel=>cmReal().filter(m=>sel==='all'?!m.athlete_id:m.athlete_id===sel);
 const cmLine=m=>m.body.split('\n')[0];
@@ -2286,9 +2289,9 @@ function cmMemoRow(m,T,L){
     <div class="cm-meta"><span>${fd(localDay(m.created_at),L)}</span>${(m.tags||[]).map(k=>`<span class="cm-tag t-${k}">${esc(T.cm_tg[k]||k)}</span>`).join('')}<span class="cm-sp"></span><button type="button" class="linkish" data-act="cmedit" data-id="${m.id}">${T.cm_edit}</button><button type="button" class="linkish cm-x" data-act="cmdel" data-id="${m.id}">${T.cm_del}</button></div></div>`}
 function cmComposer(sel,T,L){const q=UI.cmQuote&&UI.cmQuote.aid===sel?UI.cmQuote:null, tags=UI.cmTags||[];
   return `<form class="card cm-new" data-form="cmadd" data-sel="${sel}">${q?`<div class="cm-q">${esc(T.cm_quote.replace('{d}',fd(q.d,L)))}：${esc(q.text)} <button type="button" class="linkish" data-act="cmunquote" aria-label="✕">✕</button></div>`:''}
-    <textarea class="inp cm-ta cm-paper" id="cm-ta-${sel}" name="b" maxlength="4000" placeholder="${esc(T.cm_ph)}"></textarea>
+    <textarea class="inp cm-ta cm-paper ${cmInline()?'on':''}" id="cm-ta-${sel}" name="b" maxlength="4000" placeholder="${esc(T.cm_ph)}"></textarea>
     <div class="cm-tags">${CM_TAGS.map(k=>`<button type="button" class="cm-tag" data-act="cmtag" data-v="${k}" aria-pressed="${tags.includes(k)}">${esc(T.cm_tg[k])}</button>`).join('')}<button class="btn sm cm-save" type="submit">${T.cm_save}</button></div>
-    <div class="small muted" style="margin-top:6px">${T.cm_hint}</div></form>`}
+    <div class="small muted" style="margin-top:6px">${cmMouse()?T.cm_hint_mac:T.cm_hint}</div></form>`}
 function cmList(sel,T,L){const f=UI.cmFilter||'', all=cmOf(sel), list=f?all.filter(m=>(m.tags||[]).includes(f)):all, used=CM_TAGS.filter(k=>all.some(m=>(m.tags||[]).includes(k)));
   return `<div class="card">${used.length?`<div class="cm-tags cm-filter"><button type="button" class="cm-tag" data-act="cmfilter" data-v="" aria-pressed="${!f}">${T.cm_all_f} ${all.length}</button>${used.map(k=>`<button type="button" class="cm-tag" data-act="cmfilter" data-v="${k}" aria-pressed="${f===k}">${esc(T.cm_tg[k])} ${all.filter(m=>(m.tags||[]).includes(k)).length}</button>`).join('')}</div>`:''}
     ${list.length?list.map(m=>cmMemoRow(m,T,L)).join(''):`<div class="small muted">${T.cm_none}</div>`}</div>`}
@@ -2319,7 +2322,7 @@ function cmVoice(T,L,back){const sp=UI.cmSplit;
   const body=sp?`${sp.some(x=>x.aid==='all')?`<div class="small muted">${T.cv_unk}</div>`:''}
     <form class="stack" data-form="cvsave" style="gap:10px">${sp.length?sp.map((x,i)=>`<div class="card cv-seg"><div class="row" style="gap:8px;align-items:center"><input type="checkbox" name="on" value="${i}" ${x.on?'checked':''} aria-label="✓"><label class="small muted" for="cv-w-${i}">${T.cv_who}</label><select class="inp" id="cv-w-${i}" name="w${i}">${opts(x.aid)}</select></div><textarea class="inp cm-ta" id="cv-t-${i}" name="t${i}" maxlength="4000">${esc(x.text)}</textarea></div>`).join(''):`<div class="small muted">${T.cv_none}</div>`}
       <div class="row" style="gap:8px"><button class="btn" type="submit" ${sp.length?'':'disabled'}>${T.cv_saveN.replace('{n}',sp.filter(x=>x.on).length)}</button><button class="btn ghost" type="button" data-act="cvredo">${T.cv_redo}</button></div></form>`
-    :`<form class="card stack" data-form="cvsplit" style="gap:8px"><textarea class="inp cm-ta cm-paper" id="cv-text" name="v" maxlength="8000" placeholder="${esc(T.cv_ph)}"></textarea><div class="small muted">${T.cv_hint}</div><div><button class="btn" type="submit">${T.cv_split}</button></div></form>`;
+    :`<form class="card stack" data-form="cvsplit" style="gap:8px"><textarea class="inp cm-ta cm-paper ${cmInline()?'on':''}" id="cv-text" name="v" maxlength="8000" placeholder="${esc(T.cv_ph)}"></textarea><div class="small muted">${T.cv_hint}</div><div><button class="btn" type="submit">${T.cv_split}</button></div></form>`;
   return `<div class="stack cm-pane">${back?`<div><button class="btn ghost sm" data-act="cmsel" data-v="">${T.cm_back}</button></div>`:''}<h2 class="cm-h">${T.cv_h}</h2>${body}
     <details class="card cv-alias"><summary><b>${T.cv_alias}</b></summary><div class="small muted" style="margin:6px 0">${T.cv_alias_hint}</div>
       <form class="stack" data-form="cvalias" style="gap:6px">${ATH.map(a=>`<label class="cv-arow"><span>${esc(a.name)}</span><input class="inp" name="a_${a.id}" value="${esc(cmAliasRow(a.id)?.body||'')}" autocomplete="off"></label>`).join('')}<div><button class="btn ghost sm" type="submit">${T.cv_alias_save}</button></div></form></details></div>`}
@@ -3177,7 +3180,7 @@ document.addEventListener('click',ev=>{
     run(()=>kpAdd({kind,body,src,src_id:id,day:el.dataset.d||null,...(kind==='self'?{pos:kpNewPos()}:{})}),()=>{if(long)setTimeout(()=>toast(t('kp_long')),60);toast(t(kind==='self'?(memo?'kp_saved_memo':'kp_saved_self'):'kp_saved'));return null})}   // 軽い知らせだけ（何度も押すので大きな窓は出さない）
   else if(a==='kpdone'){run(()=>kpSet(el.dataset.id,{done_at:new Date().toISOString()}),t('kp_done'))}
   else if(a==='kpundo'){const pos=kpNewPos();if(kpToMemo())UI.kpMore=true;run(()=>kpSet(el.dataset.id,{done_at:null,pos}))}   // 戻したものは、新しく足したときと同じ場所へ
-  else if(a==='cmsel'){UI.cmSel=el.dataset.v||null;UI.cmFilter='';UI.cmEdit=null;render();if(!cmWide())window.scrollTo(0,0)}
+  else if(a==='cmsel'){UI.cmSel=el.dataset.v||null;UI.cmFilter='';UI.cmEdit=null;render();if(!cmWide())window.scrollTo(0,0);if(cmMouse()&&UI.cmSel)setTimeout(()=>document.querySelector('.cm-paper.on')?.focus({preventScroll:true}),30)}   // パソコンはすぐ打てるように
   else if(a==='cmtag'){const v=el.dataset.v, st=new Set(UI.cmTags||[]);st.has(v)?st.delete(v):st.add(v);UI.cmTags=[...st];el.setAttribute('aria-pressed',st.has(v))}   // 描き直さない（書いている文はそのまま）
   else if(a==='cmfilter'){UI.cmFilter=el.dataset.v||'';renderKeep()}
   else if(a==='cmedit'){UI.cmEdit=el.dataset.id||null;renderKeep()}
