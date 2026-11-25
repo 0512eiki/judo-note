@@ -282,6 +282,25 @@ mark.kp-hl{background:var(--warn-s);color:inherit;border-radius:3px;padding:0 1p
 .kp-todo.kp-later .kp-no{background:transparent;color:var(--faint)}.kp-todo.kp-later .kp-b{color:var(--dim)}
 .kp-donebox{margin-top:10px}
 .kp-helpbar{display:flex;justify-content:flex-end;margin-bottom:-8px}
+.cm-split{display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
+.cm-two{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px;align-items:start}
+.cm-row{display:flex;align-items:center;gap:10px;width:100%;padding:9px 8px;border:0;border-top:1px solid var(--line);background:none;text-align:left;cursor:pointer;color:var(--text);border-radius:12px;font:inherit}
+.cm-row:first-of-type{border-top:0}.cm-row.on{background:var(--tint)}
+.cm-rt{flex:1;min-width:0;display:flex;flex-direction:column}.cm-rt span{font-size:calc(12*var(--u));color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-n{font-size:calc(12*var(--u));color:var(--faint);font-weight:700}
+.card.cm-today{background:linear-gradient(135deg,var(--accent),var(--acc-2))!important;color:#fff;border-color:transparent}.cm-today b{color:#fff}.cm-today button{display:block;width:100%;background:none;border:0;color:#fff;text-align:left;padding:3px 0;font:inherit;font-size:calc(13*var(--u));cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-m{padding:9px 0;border-top:1px solid var(--line)}.cm-m:first-of-type{border-top:0}
+.cm-b{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}.clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cm-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:calc(12*var(--u));color:var(--faint);margin-top:3px}.cm-meta .linkish{font-size:calc(12*var(--u));padding:0}.cm-sp{flex:1}
+.cm-x{color:var(--bad)!important}
+.cm-q{border-left:3px solid var(--accent);background:var(--tint);border-radius:6px;padding:5px 8px;font-size:calc(12.5*var(--u));color:var(--dim);margin-bottom:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.cm-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}.cm-filter{margin:0 0 6px}
+.cm-tag{font-size:calc(12*var(--u));font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:var(--panel-solid);color:var(--dim);cursor:pointer}
+.cm-tag[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+span.cm-tag{cursor:default;padding:1px 8px;font-size:calc(11*var(--u));border-color:transparent;background:var(--tint);color:var(--accent)}
+span.cm-tag.t-injury{background:var(--bad-s);color:var(--bad)}span.cm-tag.t-mental{background:var(--good-s);color:var(--good)}span.cm-tag.t-match{background:var(--warn-s);color:var(--warn)}
+.cm-save{margin-left:auto}.cm-h{margin:0;font-size:calc(20*var(--u))}.cm-paper{min-height:90px}.cm-from{font-size:calc(12.5*var(--u))}
+@media (min-width:900px){.cm-paper{min-height:230px;background:#fffef8 repeating-linear-gradient(transparent 0 31px,#e9e2c8 31px 32px);line-height:32px;font-size:calc(17*var(--u));color:#1d2a6b;border-color:#ece6cf}}
 .kn-new{display:inline-block;margin-left:3px;padding:0 5px;border-radius:6px;background:var(--bad);color:#fff;font-size:calc(9.5*var(--u));font-weight:800;line-height:15px;vertical-align:2px}
 .sheet-ui.kn{max-width:420px}.kn h2{margin:2px 0 6px;font-size:calc(20*var(--u));text-align:center}.kn-top{font-size:40px;text-align:center;line-height:1}
 .kn-sub{text-align:center;color:var(--dim);margin:0 0 12px;font-size:calc(14*var(--u))}
@@ -739,6 +758,7 @@ const I18N = {
   x_editing:'{d}の記録を直しています', x_need:'種目を1つ以上入れてください', x_min_u:'分', x_sep:'、', x_count:'エクストラ {n}回', x_log:'記録タブの「最近の記録」にも、その日の分が出ます。',
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   kp_top:'いちばん練習したい', kp_drag:'≡ をつかんで動かすと、順番を変えられます。上の3つが「いま集中すること」。ほかのメモを開くと、入れかえもできます。', kp_moved:'順番を変えました', kp_focus:'いま集中する3つ', kp_more:'📝 ほかのメモ {n}こ', kp_less:'📝 ほかのメモを閉じる', kp_saved_memo:'📝 ほかのメモに入れました（≡ で上の3つと入れかえられます）',
+  cm_tab:'📝 メモ', cm_lock:'🔒 あなただけが見られます（選手・保護者には見えません）', cm_all:'👥 全体のメモ', cm_each:'🥋 選手ごと', cm_recent:'🥋 練習の前に（最近メモした子）', cm_none:'まだメモはありません。', cm_ph:'気づいたことを書く…', cm_save:'保存', cm_saved:'📝 メモを保存しました', cm_del_q:'このメモを消しますか？', cm_del:'消す', cm_edit:'直す', cm_back:'← 一覧', cm_hint:'🎙 キーボードのマイクで話して入れられます。iPad は Apple Pencil で欄に直接書くと文字になります。', cm_all_f:'ぜんぶ', cm_from:'📝 メモ', cm_quote:'{d} の記録より', cm_log:'📒 最近の記録（選手が書いた）', cm_nomemo:'（まだなし）', cm_tg:{waza:'技',fit:'体力',mental:'メンタル',injury:'ケガ',match:'試合',other:'その他'},
   kn_new:'NEW', kn_h:'「⭐ 大事」タブができました', kn_help:'？ 使い方', kn_sub:'コーチの大事な言葉と、いま練習したいことを1か所に。練習の前に30秒で見返せます。',
   kn_1:'コーチのコメントで「⭐ 大事に入れる」を押す。文をなぞると、その部分だけ入ります。', kn_2:'「これから練習したいこと」を1行ずつ書く。いくつでもOK。', kn_3:'≡ で動かして、上の3つを「いま集中すること」に。できたら ✓。',
   kn_go:'⭐ 大事タブを開く', kn_later:'あとで', kn_who:'コーチと保護者も見られます（書きかえはできません）', kn_ex1:'足を先に動かしてから引こう。', kn_ex2:'組み手で先に袖を取る', kn_ex3:'背負いで頭を下げない',
@@ -889,6 +909,7 @@ const I18N = {
   x_editing:'Editing the record for {d}', x_need:'Add at least one exercise', x_min_u:' min', x_sep:', ', x_count:'Extra training: {n}', x_log:'It also shows under that day in History.',
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   kp_top:'Top priority', kp_drag:'Hold ≡ and drag to change the order. The top 3 are your focus. Open your other notes to swap them in.', kp_moved:'Order changed', kp_focus:'My focus — top 3', kp_more:'📝 Other notes ({n})', kp_less:'📝 Hide other notes', kp_saved_memo:'📝 Added to other notes (drag ≡ to swap it into your top 3)',
+  cm_tab:'📝 Notes', cm_lock:'🔒 Only you can see these (not athletes or parents)', cm_all:'👥 Team notes', cm_each:'🥋 Each athlete', cm_recent:'🥋 Before practice (recent notes)', cm_none:'No notes yet.', cm_ph:'Write what you noticed…', cm_save:'Save', cm_saved:'📝 Note saved', cm_del_q:'Delete this note?', cm_del:'Delete', cm_edit:'Edit', cm_back:'← List', cm_hint:'🎙 Use the keyboard mic to speak. On iPad, write in the box with Apple Pencil and it turns into text.', cm_all_f:'All', cm_from:'📝 Note', cm_quote:'From the {d} log', cm_log:'📒 Recent logs (by the athlete)', cm_nomemo:'(none yet)', cm_tg:{waza:'Technique',fit:'Fitness',mental:'Mental',injury:'Injury',match:'Match',other:'Other'},
   kn_new:'NEW', kn_h:'New tab: ⭐ Key Points', kn_help:'? How to use', kn_sub:"Coach's key points and the things you want to work on, all in one place. Check it for 30 seconds before practice.",
   kn_1:'Tap "⭐ Save as key point" under Coach\'s comment. Select part of the text to save only that part.', kn_2:'Write the things you want to work on, one line each. As many as you like.', kn_3:'Drag ≡ to put your top 3 focus points on top. Check ✓ when you can do it.',
   kn_go:'⭐ Open Key Points', kn_later:'Later', kn_who:'Your coach and parents can see it too (they can\'t change it).', kn_ex1:'Move your feet first, then pull.', kn_ex2:'Grip the sleeve first', kn_ex3:'Keep my head up on seoi-nage',
@@ -1095,7 +1116,8 @@ async function loadAllOnce(){
   ST.cnotes={};must(cn).forEach(n=>ST.cnotes[n.event_id]=n);   // コーチのメモ：RLS でコーチ以外には1件も返らない
   if(acct(UI.session)?.role==='coach'){   // AI の訳（コーチだけの表。表がなくても画面は動くように）
     const tr=await sb.from('translations').select('*');
-    ST.trOk=!tr.error; ST.trans={};(tr.error?[]:tr.data).forEach(x=>ST.trans[x.src+':'+x.src_id]=x)}
+    ST.trOk=!tr.error; ST.trans={};(tr.error?[]:tr.data).forEach(x=>ST.trans[x.src+':'+x.src_id]=x);
+    const cmr=await pages(()=>sb.from('coach_memos').select('*').order('created_at',{ascending:false}).order('id'));ST.cmOk=!cmr.error;ST.cm=cmr.error?[]:cmr.data}   // コーチメモ：コーチ本人の分だけ返る（表がまだなければタブを出さない）
   if(acct(UI.session)?.role==='coach'){ST.invites=must(await sb.from('invites').select('*').is('used_by',null).order('created_at',{ascending:false}));
     ST.push={};const ps=await sb.rpc('team_push_status');(ps.data||[]).forEach(r=>ST.push[r.user_id]=r.devices)}   // 通知オンかどうかだけ
   UI.loadedAt=Date.now();
@@ -1693,7 +1715,7 @@ function entRow(aid,d,L,coach,idp='c'){   // 1日分の記録（最近の記録�
       <div class="meta">${attOf(e)==='absent'?`<span class="pill warn">${esc(attTxt(e,T))}</span>`:attOf(e)==='watch'?`<span class="pill acc">${T.att_l.watch}</span>`:''}<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>${e.types.length?`<span class="pill">${esc(typeTxt(e,L))}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(p=>`<span class="pill ${p.level>=2?'warn':''}">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
       ${e.note?`<p data-kp="entry:${e.id}">${kpText(e.note,'entry',e.id)}</p>${kpBtn(aid,'self','entry',e.id,d,e.note,T)}`:''}
       ${xDayBlock(aid,d,L)}
-      ${stamp(e,T)}
+      ${stamp(e,T)}${coach?cmFromBtn(aid,d,T):''}
       ${e.comment?cmtBlock(aid,d,e,T):''}
       ${!e.comment&&e.seen?`<div class="seen">${coach?T.seen_pill:T.seen_ath}</div>`:''}
       ${coach&&!e.comment?composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`${idp}-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`}):''}
@@ -1708,7 +1730,8 @@ function entryList(aid,L,n,coach){
 /* ---------- メモアプリのような全画面の書く画面（スマホ） ----------
    書く欄を押すと画面いっぱいに開き、キーボードの上に「完了／キャンセル」。打った文字はそのまま元の欄に入る */
 const memoOn=()=>matchMedia('(pointer: coarse)').matches||innerWidth<=760;
-function memoPrep(){if(!memoOn())return;document.querySelectorAll('#app textarea:not(.memo-ta)').forEach(ta=>{if(ta.dataset.memo)return;ta.dataset.memo='1';ta.readOnly=true;ta.dataset.act='memo-open'})}
+function memoPrep(){if(!memoOn())return;document.querySelectorAll('#app textarea:not(.memo-ta)').forEach(ta=>{if(ta.dataset.memo||(ta.classList.contains('cm-ta')&&cmWide()))return;   // iPad のコーチメモは、その場で Apple Pencil で書く
+  ta.dataset.memo='1';ta.readOnly=true;ta.dataset.act='memo-open'})}
 let MEMO=null;
 function memoContext(ta){   // コーチが書くとき：上に選手が書いた内容を出す
   if(acct(UI.session)?.role!=='coach'||UI.previewAs)return '';
@@ -1801,8 +1824,8 @@ function wRestore(){if(!UI.session||UI.previewAs)return;const o=wLoad(), now=Dat
   if(n&&!UI.wTold){UI.wTold=true;setTimeout(()=>toast(t('w_restored')),300)}}
 /* ---------- 開いていた画面も端末に残す：iPhone が裏でページを捨てて読み込み直しても、同じ選手・同じ記録・同じ返信ページに戻る ---------- */
 const NAV_ROLES=['coach','athlete','guardian'];   // コーチ・選手・保護者（11/22 本人が選んだ）
-const NAV_VIEWS={coach:['team','reply','vids','print','members'],athlete:['today','log','x','q','v','note','key'],guardian:['log','q','v','note','key']};
-const NAV_KEYS=['view','sel','ctab','rsel','rtarget','rpane','rtab','mtab','modal','cmtEdit','msgEdit','mEdit','entOpen','rdays','pAid','calYm','calDay','child','eday','xEdit','runEdit','vEdit','cIdx'];
+const NAV_VIEWS={coach:['team','reply','vids','memo','print','members'],athlete:['today','log','x','q','v','note','key'],guardian:['log','q','v','note','key']};
+const NAV_KEYS=['view','sel','ctab','rsel','rtarget','rpane','rtab','mtab','modal','cmtEdit','msgEdit','mEdit','entOpen','rdays','pAid','calYm','calDay','child','eday','xEdit','runEdit','vEdit','cIdx','cmSel'];
 const navKey=()=>'judo-nav-'+UI.session;
 function navSave(){if(!UI.session||UI.previewAs||UI.booting||!NAV_ROLES.includes(me()?.role))return;
   const o={t:Date.now(),day:TODAY,y:Math.round(MEMO?MEMO.y:scrollY)};NAV_KEYS.forEach(k=>{if(UI[k]!=null)o[k]=UI[k]});
@@ -1816,6 +1839,7 @@ function navRestore(){   // 起動のときだけ。3時間以内か同じ日な
   const ok=id=>!!id&&(role==='coach'?acct(id)?.role==='athlete':role==='athlete'?id===UI.session:id===(o.child||kids[0]));   // 選手は自分だけ、保護者は自分の子どもだけ
   if(o.sel&&!ok(o.sel))o.sel=null;
   if(o.rsel&&!ok(o.rsel)){o.rsel=null;o.rtarget=null}
+  if(o.cmSel&&o.cmSel!=='all'&&!ok(o.cmSel))o.cmSel=null;
   if(o.modal&&!ok(o.modal.aid))o.modal=null;
   if(role!=='coach')delete o.pAid;   // 選手・保護者の「誰の記録か」は、いつもログインした人から決める
   else if(o.pAid&&!acct(o.pAid))o.pAid=null;
@@ -1993,11 +2017,12 @@ function coachView(){
   if(UI.view==='q')UI.view='reply';   // 以前の「質問」タブは「返信」にまとめた
   let vSeen=0;try{vSeen=+localStorage.getItem('judo-vseen-'+UI.session)||0}catch(e){}
   const newV=UI.view==='vids'?0:(ST.videos||[]).filter(v=>v.uploaded_by!==UI.session&&tms(v.created_at)>Math.max(vSeen,Date.now()-14*864e5)).length;
-  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],...(pend||UI.view==='reply'?[['reply',t('t_reply'),pend]]:[]),['vids',t('t_videos'),newV],['print',t('t_print')],['members',t('t_members')]];
+  const tabs=[['team',t('t_team'),ATH.filter(a=>unreadOf(a.id)).length],...(pend||UI.view==='reply'?[['reply',t('t_reply'),pend]]:[]),['vids',t('t_videos'),newV],...(ST.cmOk?[['memo',t('cm_tab')]]:[]),['print',t('t_print')],['members',t('t_members')]];
   let body='';
   if(UI.view==='team')body=UI.sel?coachDetail(UI.sel):coachTeam();
   if(UI.view==='reply')body=replyView();
   if(UI.view==='print')body=coachPrint();
+  if(UI.view==='memo'&&ST.cmOk)body=cmView();
   if(UI.view==='members')body=membersView();
   if(UI.view==='vids'){try{localStorage.setItem('judo-vseen-'+UI.session,String(Date.now()))}catch(e){}body=`<div class="stack"><div class="hello"><div class="sub">${esc(ST.team?.name||'')}</div><h1>${t('t_videos')}</h1></div>${videosCard(null,L,true)}</div>`}
   return header(tabs)+`<main>${pushNag()}${pwReqCard()}${body}</main>`;
@@ -2173,7 +2198,7 @@ function replyView(){
     if(it.k==='e'){const e=E(aid,it.d), key=`e|${aid}|${it.d}`, p=pkeys.has(key), s=score(e);
       return day+`<div class="rm ${p?'pending':''} ${UI.rtarget===key?'target':''}"><div class="rm-h">${p?`<span class="pill bad">${T.r_wait}</span>`:''}<span>${T.r_k_e}</span>${newTag(aid,e.upd||e.at)}</div>
         <div class="meta">${attOf(e)!=='present'?`<span class="pill ${attOf(e)==='absent'?'warn':''}">${esc(attTxt(e,T)||T.rest)}</span>`:''}${s!=null?`<span class="pill ${s>=20?'good':s>=16?'':'bad'}">${T.score} ${s}${T.of25}</span>`:''}${e.min?`<span class="pill">${e.min}${T.min} · ${T.rpe} ${e.rpe}</span>`:''}${e.weight?`<span class="pill">${fmtW(e.weight)}</span>`:''}${e.pain.map(q=>`<span class="pill ${q.level>=2?'warn':''}">${esc(ptxt(q,T))}・${T.lv[q.level]}</span>`).join('')}${(e.head||[]).map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join('')}</div>
-        ${e.note?`<p class="rm-txt">${esc(e.note)}</p>${trBlock(aid,'entry',e.id,e.note,T)}`:''}
+        ${e.note?`<p class="rm-txt">${esc(e.note)}</p>${trBlock(aid,'entry',e.id,e.note,T)}`:''}${cmFromBtn(aid,it.d,T)}
         ${e.comment?cmtBlock(aid,it.d,e,T):e.seen?`<div class="seen">${T.seen_pill}</div>`:''}
         ${p?`<div class="rm-f"><button class="btn ghost sm" data-act="seen" data-aid="${aid}" data-d="${it.d}">${T.seen_btn}</button><button class="btn sm" data-act="rtarget" data-k="${key}">${T.r_this}</button></div>`:''}</div>`}
     const th=it.th, key=`q|${th.id}`, p=pkeys.has(key);
@@ -2224,7 +2249,7 @@ function entryModal(aid,d,L){
     <div class="stack" style="gap:8px">${e.types.length?`<div><div class="lbl">${T.content}</div>${esc(typeTxt(e,L))}</div>`:''}
      ${e.pain.length?`<div><div class="lbl">${T.pain}</div>${e.pain.map(p=>`<span class="pill warn">${esc(ptxt(p,T))}・${T.lv[p.level]}</span>`).join(' ')}</div>`:''}
      ${e.head?.length?`<div><div class="lbl">${T.head}</div>${e.head.map(k=>`<span class="pill bad">${T.hs[k]}</span>`).join(' ')}</div>`:''}</div></div>
-   ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}
+   ${e.note?`<div style="margin-top:12px"><div class="lbl">${T.note}</div><p style="white-space:pre-wrap;margin:4px 0">${esc(e.note)}</p></div>`:''}${cmFromBtn(aid,d,T)}
    ${xDayBlock(aid,d,L)}
    ${stamp(e,T)}
    <div style="margin-top:12px">${e.comment?cmtBlock(aid,d,e,T):composer({form:'comment',attrs:`data-aid="${aid}" data-d="${d}"`,id:`mc-${aid}-${d}`,name:'c',ph:T.cmt_ph,send:T.send,extra:e.seen?'':`<button class="btn ghost sm" type="button" data-act="seen" data-aid="${aid}" data-d="${d}">${T.seen_btn}</button>`})}${!e.comment&&e.seen?`<div class="seen">${T.seen_pill}</div>`:''}</div>`;
@@ -2246,9 +2271,46 @@ function modalView(){
   if(m.type==='kpnew')return kpIntro(T);
   return `<div class="scrim noprint" data-act="closemodal"><div class="sheet-ui wide" role="dialog" aria-modal="true" data-stop><div class="modal-x"><button class="btn sm" data-act="closemodal">✕ ${T.close2}</button></div>${body}</div></div>`;
 }
+/* ---------- 📝 コーチメモ：見られるのはコーチ本人だけ（DB の決まりでも同じ）。iPhone＝一覧→選手／iPad（広い画面）＝左に一覧・右にメモ ---------- */
+const CM_TAGS=['waza','fit','mental','injury','match','other'];
+const cmWide=()=>innerWidth>=900;
+const cmOf=sel=>(ST.cm||[]).filter(m=>sel==='all'?!m.athlete_id:m.athlete_id===sel);
+const cmLine=m=>m.body.split('\n')[0];
+function cmMemoRow(m,T,L){
+  if(UI.cmEdit===m.id)return `<form class="cm-m" data-form="cmedit" data-id="${m.id}"><textarea class="inp cm-ta" id="cm-ed-${m.id}" name="b" maxlength="4000">${esc(m.body)}</textarea><div class="row" style="gap:8px;margin-top:6px"><button class="btn sm" type="submit">${T.cm_save}</button><button class="btn ghost sm" type="button" data-act="cmedit" data-id="">${T.cancel}</button></div></form>`;
+  return `<div class="cm-m">${m.src_text?`<div class="cm-q">${esc(T.cm_quote.replace('{d}',fd(m.src_day,L)))}：${esc(m.src_text)}</div>`:''}<div class="cm-b">${esc(m.body)}</div>
+    <div class="cm-meta"><span>${fd(localDay(m.created_at),L)}</span>${(m.tags||[]).map(k=>`<span class="cm-tag t-${k}">${esc(T.cm_tg[k]||k)}</span>`).join('')}<span class="cm-sp"></span><button type="button" class="linkish" data-act="cmedit" data-id="${m.id}">${T.cm_edit}</button><button type="button" class="linkish cm-x" data-act="cmdel" data-id="${m.id}">${T.cm_del}</button></div></div>`}
+function cmComposer(sel,T,L){const q=UI.cmQuote&&UI.cmQuote.aid===sel?UI.cmQuote:null, tags=UI.cmTags||[];
+  return `<form class="card cm-new" data-form="cmadd" data-sel="${sel}">${q?`<div class="cm-q">${esc(T.cm_quote.replace('{d}',fd(q.d,L)))}：${esc(q.text)} <button type="button" class="linkish" data-act="cmunquote" aria-label="✕">✕</button></div>`:''}
+    <textarea class="inp cm-ta cm-paper" id="cm-ta-${sel}" name="b" maxlength="4000" placeholder="${esc(T.cm_ph)}"></textarea>
+    <div class="cm-tags">${CM_TAGS.map(k=>`<button type="button" class="cm-tag" data-act="cmtag" data-v="${k}" aria-pressed="${tags.includes(k)}">${esc(T.cm_tg[k])}</button>`).join('')}<button class="btn sm cm-save" type="submit">${T.cm_save}</button></div>
+    <div class="small muted" style="margin-top:6px">${T.cm_hint}</div></form>`}
+function cmList(sel,T,L){const f=UI.cmFilter||'', all=cmOf(sel), list=f?all.filter(m=>(m.tags||[]).includes(f)):all, used=CM_TAGS.filter(k=>all.some(m=>(m.tags||[]).includes(k)));
+  return `<div class="card">${used.length?`<div class="cm-tags cm-filter"><button type="button" class="cm-tag" data-act="cmfilter" data-v="" aria-pressed="${!f}">${T.cm_all_f} ${all.length}</button>${used.map(k=>`<button type="button" class="cm-tag" data-act="cmfilter" data-v="${k}" aria-pressed="${f===k}">${esc(T.cm_tg[k])} ${all.filter(m=>(m.tags||[]).includes(k)).length}</button>`).join('')}</div>`:''}
+    ${list.length?list.map(m=>cmMemoRow(m,T,L)).join(''):`<div class="small muted">${T.cm_none}</div>`}</div>`}
+function cmLogs(aid,T,L){const days=Object.keys(ST.entries[aid]||{}).filter(d=>E(aid,d)?.note).sort().reverse().slice(0,4);   // その子が書いた最近の記録（見ながら書ける）
+  return `<div class="card"><h2>${T.cm_log}</h2>${days.length?days.map(d=>{const e=E(aid,d);return `<div class="cm-m"><div class="cm-meta" style="margin:0 0 2px"><b style="color:var(--text)">${fd(d,L)}</b>${e.min?`<span>${e.min}${T.min} · ${T.rpe} ${e.rpe}</span>`:''}${e.pain.map(p=>`<span>${esc(ptxt(p,T))}</span>`).join('')}</div><div class="cm-b clamp3">${esc(e.note)}</div><button type="button" class="linkish" data-act="cmfrom" data-aid="${aid}" data-d="${d}">${T.cm_from}</button></div>`}).join(''):`<div class="small muted">${T.none}</div>`}</div>`}
+function cmPane(sel,T,L,back){const a=sel==='all'?null:acct(sel);
+  return `<div class="stack cm-pane">${back?`<div><button class="btn ghost sm" data-act="cmsel" data-v="">${T.cm_back}</button></div>`:''}${back||UI.view==='memo'?`<h2 class="cm-h">${a?esc(a.name):T.cm_all}</h2>`:''}
+    ${cmWide()&&a?`<div class="cm-two"><div class="stack">${cmComposer(sel,T,L)}${cmList(sel,T,L)}</div><div class="stack">${cmLogs(sel,T,L)}</div></div>`:`${cmComposer(sel,T,L)}${cmList(sel,T,L)}${a?cmLogs(sel,T,L):''}`}</div>`}
+function cmIndex(T,L,cur){const last=id=>cmOf(id)[0];
+  const recent=ATH.filter(a=>last(a.id)).sort((x,y)=>last(y.id).created_at.localeCompare(last(x.id).created_at)).slice(0,5);
+  const row=(id,name,av)=>{const m=last(id), n=cmOf(id).length;return `<button type="button" class="cm-row ${cur===id?'on':''}" data-act="cmsel" data-v="${id}"><span class="avatar">${av}</span><span class="cm-rt"><b>${name}</b><span>${m?esc(cmLine(m)):T.cm_nomemo}</span></span><span class="cm-n">${n||''}</span></button>`};
+  return `<div class="stack">${recent.length?`<div class="card cm-today"><b>${T.cm_recent}</b>${recent.map(a=>`<button type="button" data-act="cmsel" data-v="${a.id}">・${esc(a.name)} — ${esc(cmLine(last(a.id)))}</button>`).join('')}</div>`:''}
+    <div class="card">${row('all',T.cm_all,'👥')}</div>
+    <div class="card"><h2>${T.cm_each}</h2>${ATH.map(a=>row(a.id,esc(a.name),esc(a.short))).join('')||`<div class="small muted">${T.no_athletes}</div>`}</div></div>`}
+function cmView(){const L=lang(), T=I18N[L], sel=UI.cmSel&&(UI.cmSel==='all'||acct(UI.cmSel))?UI.cmSel:null;
+  const head=`<div class="hello"><div class="sub">${T.cm_lock}</div><h1>${T.cm_tab}</h1></div>`;
+  if(cmWide())return `<div class="stack">${head}<div class="cm-split"><div>${cmIndex(T,L,sel||'all')}</div><div>${cmPane(sel||'all',T,L,false)}</div></div></div>`;
+  return `<div class="stack">${head}${sel?cmPane(sel,T,L,true):cmIndex(T,L,null)}</div>`}
+function cmFromBtn(aid,d,T){return acct(UI.session)?.role==='coach'&&!UI.previewAs&&ST.cmOk&&E(aid,d)?`<div><button type="button" class="linkish cm-from" data-act="cmfrom" data-aid="${aid}" data-d="${d}">${T.cm_from}</button></div>`:''}
+async function cmAdd(row){const r=must(await sb.from('coach_memos').insert(row).select().single());ST.cm=[r,...(ST.cm||[])]}
+async function cmUpd(id,body){const r=must(await sb.from('coach_memos').update({body,updated_at:new Date().toISOString()}).eq('id',id).select().single());const x=(ST.cm||[]).find(m=>m.id===id);if(x)Object.assign(x,r)}
+async function cmDel(id){must(await sb.from('coach_memos').delete().eq('id',id));ST.cm=(ST.cm||[]).filter(m=>m.id!==id)}
+let CMW=null;addEventListener('resize',()=>{const w=cmWide();if(CMW!==null&&w!==CMW&&UI.session&&(UI.view==='memo'||UI.ctab==='memo'))renderKeep();CMW=w});   // iPad を回したら並びを変える
 function coachDetail(aid){
   const L=lang(), T=I18N[L], a=acct(aid), tab=UI.ctab||'over';
-  const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['x',T.t_x],['v',T.t_videos],['matches',T.events],['qa',T.ct_qa],...(ST.kpOk?[['key',T.t_key]]:[]),['ai',T.ai_tab]];
+  const tabs=[['over',T.ct_over],['days',T.ct_days],['charts',T.ct_charts],['run',T.run_title],['x',T.t_x],['v',T.t_videos],['matches',T.events],['qa',T.ct_qa],...(ST.kpOk?[['key',T.t_key]]:[]),...(ST.cmOk?[['memo',T.cm_tab]]:[]),['ai',T.ai_tab]];
   const head=`<button type="button" class="fab-close noprint" data-act="back" aria-label="${esc(T.back_team)}" title="${esc(T.back_team)}">✕</button><div><button class="btn ghost sm" data-act="back">${T.back}</button></div>
    <div class="hello"><div class="sub">${esc(a.cls)} · ${prefs(aid).lang==='en'?'English':'日本語'}</div><h1>${esc(a.name)}</h1><div class="flags" style="margin-top:8px">${pills(flags(aid,L))}</div><div style="margin-top:10px"><button class="btn ghost sm" data-act="preview" data-id="${aid}">${T.pv_btn}</button></div></div>
    <nav class="subtabs">${tabs.map(([k,l])=>`<button class="tab" data-act="ctab" data-v="${k}" ${tab===k?'aria-current="page"':''}>${l}</button>`).join('')}</nav>`;
@@ -2271,6 +2333,7 @@ function coachDetail(aid){
   if(tab==='matches')body=eventsCard(aid,L);
   if(tab==='ai')body=`<div class="card" style="max-width:760px">${aiPanel(aid,L)}</div>`;
   if(tab==='key')body=`<div style="max-width:760px">${keyView(aid,L,false)}</div>`;
+  if(tab==='memo'&&ST.cmOk)body=cmPane(aid,T,L,false);
   if(tab==='qa'){const gs=Object.keys(ST.goals).filter(k=>k.startsWith(aid+'|')).sort().reverse();
     body=`<div class="grid2">${questions(aid,L,true)}<div class="card"><h2>${T.goals_all}</h2>${gs.length?gs.map(k=>{const g=ST.goals[k];return `<div class="evitem" style="padding:8px 0"><b>${monthLabel(k.split('|')[1],L)}</b><ol style="margin:4px 0;padding-left:1.3em">${g.items.filter(Boolean).map(i=>`<li>${esc(i)}</li>`).join('')}</ol>${g.review?`<div class="small muted">${esc(g.review)}</div>`:''}</div>`}).join(''):`<div class="small muted">${T.none}</div>`}</div></div>`}
   return `<div class="stack">${head}${body}</div>`;
@@ -2816,7 +2879,7 @@ function render(){
   const m=me(), before=ovBefore();
   app.innerHTML=(m.role==='coach'?coachView():m.role==='guardian'?guardianView():athleteView())+(UI.settings?settingsView():'')+modalView()+accountsSheet();
   ovAfter(before);
-  if(m.role==='coach'&&(UI.sel||UI.view==='reply')&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
+  if(m.role==='coach'&&(UI.sel||UI.view==='reply'||UI.view==='memo')&&!UI.previewAs)app.querySelector('main')?.classList.add('wide');
   if(UI.rscroll){UI.rscroll=false;const tg=app.querySelector('.rm.target')||app.querySelector('.rm.pending');if(tg&&innerWidth>=900)tg.scrollIntoView({block:'center'})}
   if(UI.previewAs)app.querySelectorAll('main input, main textarea, main select:not([data-act=pym]), main form button, [data-act=evdel]').forEach(el=>el.disabled=true);
   const hdr=document.querySelector('header.top');if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');
@@ -3087,6 +3150,16 @@ document.addEventListener('click',ev=>{
     run(()=>kpAdd({kind,body,src,src_id:id,day:el.dataset.d||null,...(kind==='self'?{pos:kpNewPos()}:{})}),()=>{if(long)setTimeout(()=>toast(t('kp_long')),60);toast(t(kind==='self'?(memo?'kp_saved_memo':'kp_saved_self'):'kp_saved'));return null})}   // 軽い知らせだけ（何度も押すので大きな窓は出さない）
   else if(a==='kpdone'){run(()=>kpSet(el.dataset.id,{done_at:new Date().toISOString()}),t('kp_done'))}
   else if(a==='kpundo'){const pos=kpNewPos();if(kpToMemo())UI.kpMore=true;run(()=>kpSet(el.dataset.id,{done_at:null,pos}))}   // 戻したものは、新しく足したときと同じ場所へ
+  else if(a==='cmsel'){UI.cmSel=el.dataset.v||null;UI.cmFilter='';UI.cmEdit=null;render();if(!cmWide())window.scrollTo(0,0)}
+  else if(a==='cmtag'){const v=el.dataset.v, st=new Set(UI.cmTags||[]);st.has(v)?st.delete(v):st.add(v);UI.cmTags=[...st];el.setAttribute('aria-pressed',st.has(v))}   // 描き直さない（書いている文はそのまま）
+  else if(a==='cmfilter'){UI.cmFilter=el.dataset.v||'';renderKeep()}
+  else if(a==='cmedit'){UI.cmEdit=el.dataset.id||null;renderKeep()}
+  else if(a==='cmdel'){const id=el.dataset.id;askBox(t('cm_del_q'),t('cm_del')).then(ok=>{if(ok)run(()=>cmDel(id))})}
+  else if(a==='cmunquote'){UI.cmQuote=null;renderKeep()}
+  else if(a==='cmfrom'){const aid=el.dataset.aid, d=el.dataset.d, e=E(aid,d);if(!e)return;   // 記録から1タップ：その日の文を引用してメモを書く
+    UI.cmQuote={aid,d,text:String(e.note||'').trim().slice(0,600)};UI.cmSel=aid;UI.cmFilter='';UI.modal=null;
+    if(UI.view==='team'&&UI.sel===aid)UI.ctab='memo';else{UI.view='memo';UI.sel=null}
+    render();window.scrollTo(0,0);setTimeout(()=>{const ta=document.getElementById('cm-ta-'+aid);if(ta&&cmWide())ta.focus()},50)}
   else if(a==='kphelp'){UI.modal={type:'kpnew'};render()}
   else if(a==='kpintro'){UI.modal=null;UI.view='key';UI.sel=null;render();window.scrollTo(0,0)}
   else if(a==='kpmore'){UI.kpMore=!UI.kpMore;render()}
@@ -3259,6 +3332,11 @@ document.addEventListener('submit',ev=>{
   if(f.dataset.form==='cnote'){run(()=>saveCNote(f.dataset.ev,f.dataset.aid,(fdt.get('body')||'').trim()),t('cn_saved'))}
   if(f.dataset.form==='editmsg'){const v=(fdt.get('body')||'').trim();if(!v)return;const id=f.dataset.id;run(async()=>{await editMessage(id,v);UI.msgEdit=null},t('ed_done'))}
   if(f.dataset.form==='editcmt'){const v=(fdt.get('c')||'').trim();if(!v)return;run(async()=>{await editComment(f.dataset.aid,f.dataset.d,v);UI.cmtEdit=null},t('ed_done'))}
+  if(f.dataset.form==='cmadd'){const b=(fdt.get('b')||'').trim().slice(0,4000), sel=f.dataset.sel;if(!b){UI.pressed=null;return}
+    const q=UI.cmQuote&&UI.cmQuote.aid===sel?UI.cmQuote:null, row={athlete_id:sel==='all'?null:sel,body:b,tags:UI.cmTags||[],...(q?{src_day:q.d,src_text:q.text}:{})};
+    UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);
+    run(async()=>{await cmAdd(row);UI.cmTags=[];UI.cmQuote=null},()=>{toast(t('cm_saved'));return null})}
+  if(f.dataset.form==='cmedit'){const b=(fdt.get('b')||'').trim().slice(0,4000), id=f.dataset.id;if(!b){UI.pressed=null;return}UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);run(async()=>{await cmUpd(id,b);UI.cmEdit=null},()=>{toast(t('cm_saved'));return null})}
   if(f.dataset.form==='kpadd'){const b=(fdt.get('b')||'').trim().slice(0,1000);if(!b){UI.pressed=null;return}const memo=kpToMemo();if(memo)UI.kpMore=true;run(()=>kpAdd({kind:'self',body:b,pos:kpNewPos()}),()=>{toast(t(memo?'kp_saved_memo':'kp_saved_self'));return null})}
   if(f.dataset.form==='goals'){const gym=f.dataset.ym||curYm();run(()=>saveGoals(gym,fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:gym===curYm()?t('ch_goal_t'):t('g_last_saved'),msg:pick1(t('ch_goal'))}))}
   if(f.dataset.form==='invite'){run(async()=>{const c=must(await sb.rpc('create_invite',{memo:(fdt.get('memo')||'').trim()}));UI.newInvite=c;await loadAll()},()=>({title:t('ch_inv_t'),msg:pick1(t('ch_inv'))}))}
