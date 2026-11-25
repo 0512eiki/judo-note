@@ -299,6 +299,7 @@ mark.kp-hl{background:var(--warn-s);color:inherit;border-radius:3px;padding:0 1p
 .cm-tag[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 span.cm-tag{cursor:default;padding:1px 8px;font-size:calc(11*var(--u));border-color:transparent;background:var(--tint);color:var(--accent)}
 span.cm-tag.t-injury{background:var(--bad-s);color:var(--bad)}span.cm-tag.t-mental{background:var(--good-s);color:var(--good)}span.cm-tag.t-match{background:var(--warn-s);color:var(--warn)}
+.cm-voicebtn{width:100%;justify-content:center}.cv-seg textarea{margin-top:8px;min-height:64px}.cv-seg select{flex:1;min-width:0}.cv-arow{display:flex;gap:10px;align-items:center}.cv-arow span{flex:0 0 38%;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cv-arow input{flex:1;min-width:0}.cv-alias summary{cursor:pointer}
 .cm-save{margin-left:auto}.cm-h{margin:0;font-size:calc(20*var(--u))}.cm-paper{min-height:90px}.cm-from{font-size:calc(12.5*var(--u))}
 @media (min-width:900px){textarea.cm-paper{min-height:260px!important;height:260px;background:#fffef8 repeating-linear-gradient(transparent 0 31px,#e9e2c8 31px 32px);line-height:32px;font-size:calc(17*var(--u));color:#1d2a6b;border-color:#ece6cf}}
 .kn-new{display:inline-block;margin-left:3px;padding:0 5px;border-radius:6px;background:var(--bad);color:#fff;font-size:calc(9.5*var(--u));font-weight:800;line-height:15px;vertical-align:2px}
@@ -759,6 +760,7 @@ const I18N = {
   ch_x_t:'エクストラを記録しました！', ch_x:['自分から動けるのは本物の強さ。ナイス！','練習以外の積み重ねが、試合で効いてくる。','よくやった！その一歩が差になる。','見えないところの努力が、いちばん強い。'],
   kp_top:'いちばん練習したい', kp_drag:'≡ をつかんで動かすと、順番を変えられます。上の3つが「いま集中すること」。ほかのメモを開くと、入れかえもできます。', kp_moved:'順番を変えました', kp_focus:'いま集中する3つ', kp_more:'📝 ほかのメモ {n}こ', kp_less:'📝 ほかのメモを閉じる', kp_saved_memo:'📝 ほかのメモに入れました（≡ で上の3つと入れかえられます）',
   cm_tab:'📝 メモ', cm_lock:'🔒 あなただけが見られます（選手・保護者には見えません）', cm_all:'👥 全体のメモ', cm_each:'🥋 選手ごと', cm_recent:'🥋 練習の前に（最近メモした子）', cm_none:'まだメモはありません。', cm_ph:'気づいたことを書く…', cm_save:'保存', cm_saved:'📝 メモを保存しました', cm_del_q:'このメモを消しますか？', cm_del:'消す', cm_edit:'直す', cm_back:'← 一覧', cm_hint:'🎙 キーボードのマイクで話して入れられます。iPad は Apple Pencil で欄に直接書くと文字になります。', cm_all_f:'ぜんぶ', cm_from:'📝 メモ', cm_quote:'{d} の記録より', cm_log:'📒 最近の記録（選手が書いた）', cm_nomemo:'（まだなし）', cm_tg:{waza:'技',fit:'体力',mental:'メンタル',injury:'ケガ',match:'試合',other:'その他'},
+  cv_btn:'🎙 まとめて話す（選手ごとに分ける）', cv_h:'🎙 まとめて話す', cv_ph:'例：アレックス、ひざが痛そう。乱取りは軽めに。ベン、袖を先に取れていた。', cv_hint:'キーボードのマイクで話すか、打ってください。名前の所で区切って、選手ごとのメモに分けます。文はこの端末の中だけで分けます（外に送りません）。', cv_split:'✂️ 選手ごとに分ける', cv_none:'分けられる文がありません。', cv_who:'だれ？', cv_saveN:'保存（{n}件）', cv_saved:'📝 {n}件のメモを保存しました', cv_unk:'名前が見つからなかった文は「全体」に入れました。下の「呼び名」に登録すると、次から自動で分かれます。', cv_alias:'🏷 呼び名（話すときの呼び方）', cv_alias_hint:'カンマで区切って何個でも（例：アレックス, アレ）。アプリの名前は登録しなくても分かります。', cv_alias_save:'呼び名を保存', cv_alias_saved:'🏷 呼び名を保存しました', cv_redo:'↩︎ やり直す',
   kn_new:'NEW', kn_h:'「⭐ 大事」タブができました', kn_help:'？ 使い方', kn_sub:'コーチの大事な言葉と、いま練習したいことを1か所に。練習の前に30秒で見返せます。',
   kn_1:'コーチのコメントで「⭐ 大事に入れる」を押す。文をなぞると、その部分だけ入ります。', kn_2:'「これから練習したいこと」を1行ずつ書く。いくつでもOK。', kn_3:'≡ で動かして、上の3つを「いま集中すること」に。できたら ✓。',
   kn_go:'⭐ 大事タブを開く', kn_later:'あとで', kn_who:'コーチと保護者も見られます（書きかえはできません）', kn_ex1:'足を先に動かしてから引こう。', kn_ex2:'組み手で先に袖を取る', kn_ex3:'背負いで頭を下げない',
@@ -910,6 +912,7 @@ const I18N = {
   ch_x_t:'Extra training saved!', ch_x:['Training on your own is real strength. Nice!','The work outside practice shows up in matches.','Well done! That extra step makes the difference.','The effort nobody sees is the strongest kind.'],
   kp_top:'Top priority', kp_drag:'Hold ≡ and drag to change the order. The top 3 are your focus. Open your other notes to swap them in.', kp_moved:'Order changed', kp_focus:'My focus — top 3', kp_more:'📝 Other notes ({n})', kp_less:'📝 Hide other notes', kp_saved_memo:'📝 Added to other notes (drag ≡ to swap it into your top 3)',
   cm_tab:'📝 Notes', cm_lock:'🔒 Only you can see these (not athletes or parents)', cm_all:'👥 Team notes', cm_each:'🥋 Each athlete', cm_recent:'🥋 Before practice (recent notes)', cm_none:'No notes yet.', cm_ph:'Write what you noticed…', cm_save:'Save', cm_saved:'📝 Note saved', cm_del_q:'Delete this note?', cm_del:'Delete', cm_edit:'Edit', cm_back:'← List', cm_hint:'🎙 Use the keyboard mic to speak. On iPad, write in the box with Apple Pencil and it turns into text.', cm_all_f:'All', cm_from:'📝 Note', cm_quote:'From the {d} log', cm_log:'📒 Recent logs (by the athlete)', cm_nomemo:'(none yet)', cm_tg:{waza:'Technique',fit:'Fitness',mental:'Mental',injury:'Injury',match:'Match',other:'Other'},
+  cv_btn:'🎙 Speak all at once (split by athlete)', cv_h:'🎙 Speak all at once', cv_ph:'e.g. Alex, knee looks sore. Keep randori light. Ben, gripped the sleeve first.', cv_hint:'Use the keyboard mic or type. Notes are split at each name. Splitting happens on this device only (nothing is sent out).', cv_split:'✂️ Split by athlete', cv_none:'Nothing to split.', cv_who:'Who?', cv_saveN:'Save ({n})', cv_saved:'📝 Saved {n} notes', cv_unk:'Text with no name went to Team notes. Add nicknames below and it will split automatically next time.', cv_alias:'🏷 Nicknames (what you call them)', cv_alias_hint:'Separate with commas. App names work without adding them.', cv_alias_save:'Save nicknames', cv_alias_saved:'🏷 Nicknames saved', cv_redo:'↩︎ Start over',
   kn_new:'NEW', kn_h:'New tab: ⭐ Key Points', kn_help:'? How to use', kn_sub:"Coach's key points and the things you want to work on, all in one place. Check it for 30 seconds before practice.",
   kn_1:'Tap "⭐ Save as key point" under Coach\'s comment. Select part of the text to save only that part.', kn_2:'Write the things you want to work on, one line each. As many as you like.', kn_3:'Drag ≡ to put your top 3 focus points on top. Check ✓ when you can do it.',
   kn_go:'⭐ Open Key Points', kn_later:'Later', kn_who:'Your coach and parents can see it too (they can\'t change it).', kn_ex1:'Move your feet first, then pull.', kn_ex2:'Grip the sleeve first', kn_ex3:'Keep my head up on seoi-nage',
@@ -1839,7 +1842,7 @@ function navRestore(){   // 起動のときだけ。3時間以内か同じ日な
   const ok=id=>!!id&&(role==='coach'?acct(id)?.role==='athlete':role==='athlete'?id===UI.session:id===(o.child||kids[0]));   // 選手は自分だけ、保護者は自分の子どもだけ
   if(o.sel&&!ok(o.sel))o.sel=null;
   if(o.rsel&&!ok(o.rsel)){o.rsel=null;o.rtarget=null}
-  if(o.cmSel&&o.cmSel!=='all'&&!ok(o.cmSel))o.cmSel=null;
+  if(o.cmSel&&o.cmSel!=='all'&&o.cmSel!=='voice'&&!ok(o.cmSel))o.cmSel=null;
   if(o.modal&&!ok(o.modal.aid))o.modal=null;
   if(role!=='coach')delete o.pAid;   // 選手・保護者の「誰の記録か」は、いつもログインした人から決める
   else if(o.pAid&&!acct(o.pAid))o.pAid=null;
@@ -2274,7 +2277,8 @@ function modalView(){
 /* ---------- 📝 コーチメモ：見られるのはコーチ本人だけ（DB の決まりでも同じ）。iPhone＝一覧→選手／iPad（広い画面）＝左に一覧・右にメモ ---------- */
 const CM_TAGS=['waza','fit','mental','injury','match','other'];
 const cmWide=()=>innerWidth>=900;
-const cmOf=sel=>(ST.cm||[]).filter(m=>sel==='all'?!m.athlete_id:m.athlete_id===sel);
+const cmReal=()=>(ST.cm||[]).filter(m=>!(m.tags||[]).includes('alias'));   // 'alias' の行は「呼び名」の入れ物（メモの一覧には出さない）
+const cmOf=sel=>cmReal().filter(m=>sel==='all'?!m.athlete_id:m.athlete_id===sel);
 const cmLine=m=>m.body.split('\n')[0];
 function cmMemoRow(m,T,L){
   if(UI.cmEdit===m.id)return `<form class="cm-m" data-form="cmedit" data-id="${m.id}"><textarea class="inp cm-ta" id="cm-ed-${m.id}" name="b" maxlength="4000">${esc(m.body)}</textarea><div class="row" style="gap:8px;margin-top:6px"><button class="btn sm" type="submit">${T.cm_save}</button><button class="btn ghost sm" type="button" data-act="cmedit" data-id="">${T.cancel}</button></div></form>`;
@@ -2296,13 +2300,36 @@ function cmPane(sel,T,L,back){const a=sel==='all'?null:acct(sel);
 function cmIndex(T,L,cur){const last=id=>cmOf(id)[0];
   const recent=ATH.filter(a=>last(a.id)).sort((x,y)=>last(y.id).created_at.localeCompare(last(x.id).created_at)).slice(0,5);
   const row=(id,name,av)=>{const m=last(id), n=cmOf(id).length;return `<button type="button" class="cm-row ${cur===id?'on':''}" data-act="cmsel" data-v="${id}"><span class="avatar">${av}</span><span class="cm-rt"><b>${name}</b><span>${m?esc(cmLine(m)):T.cm_nomemo}</span></span><span class="cm-n">${n||''}</span></button>`};
-  return `<div class="stack">${recent.length?`<div class="card cm-today"><b>${T.cm_recent}</b>${recent.map(a=>`<button type="button" data-act="cmsel" data-v="${a.id}">・${esc(a.name)} — ${esc(cmLine(last(a.id)))}</button>`).join('')}</div>`:''}
+  return `<div class="stack"><button type="button" class="btn cm-voicebtn" data-act="cmsel" data-v="voice">${T.cv_btn}</button>${recent.length?`<div class="card cm-today"><b>${T.cm_recent}</b>${recent.map(a=>`<button type="button" data-act="cmsel" data-v="${a.id}">・${esc(a.name)} — ${esc(cmLine(last(a.id)))}</button>`).join('')}</div>`:''}
     <div class="card">${row('all',T.cm_all,'👥')}</div>
     <div class="card"><h2>${T.cm_each}</h2>${ATH.map(a=>row(a.id,esc(a.name),esc(a.short))).join('')||`<div class="small muted">${T.no_athletes}</div>`}</div></div>`}
-function cmView(){const L=lang(), T=I18N[L], sel=UI.cmSel&&(UI.cmSel==='all'||acct(UI.cmSel))?UI.cmSel:null;
+/* 6：練習のあとにまとめて話す → 名前の所で区切って選手ごとのメモに。AI は使わない（名前も中身も外に出さない） */
+const cmAliasRow=aid=>(ST.cm||[]).find(m=>m.athlete_id===aid&&(m.tags||[]).includes('alias'));
+function cmAliases(){const out=[];ATH.forEach(a=>{const own=[a.name,...a.name.split(/\s+/)], extra=(cmAliasRow(a.id)?.body||'').split(/[,、，\n]/);
+  [...own,...extra].map(x=>x.trim()).filter(x=>[...x].length>=2).forEach(x=>out.push({w:x,aid:a.id}))});
+  const cnt={};out.forEach(o=>{const k=o.w.toLowerCase();(cnt[k]||(cnt[k]=new Set())).add(o.aid)});
+  return out.filter(o=>cnt[o.w.toLowerCase()].size===1).sort((x,y)=>y.w.length-x.w.length)}   // 2人に同じ呼び方があるときは使わない（まちがえて分けない）
+function cmSplit(text){const al=cmAliases(), low=text.toLowerCase(), hits=[];
+  for(const a of al){const w=a.w.toLowerCase();for(let i=low.indexOf(w);i>=0;i=low.indexOf(w,i+1)){if(!hits.some(h=>i<h.end&&i+w.length>h.i))hits.push({i,end:i+w.length,aid:a.aid})}}
+  hits.sort((x,y)=>x.i-y.i);const segs=[];const push=(aid,t)=>{t=t.replace(/^(さん|くん|ちゃん|君)?[\s、,，.:：]*(は|が|も)?[\s、,，.:：]*/,'').trim();if(!t)return;const last=segs[segs.length-1];if(last&&last.aid===aid)last.text+=' '+t;else segs.push({aid,text:t,on:true})};
+  if(!hits.length){push('all',text);return segs}
+  push('all',text.slice(0,hits[0].i));hits.forEach((h,k)=>push(h.aid,text.slice(h.end,k+1<hits.length?hits[k+1].i:text.length)));return segs}
+function cmVoice(T,L,back){const sp=UI.cmSplit;
+  const opts=v=>`<option value="all" ${v==='all'?'selected':''}>${T.cm_all}</option>${ATH.map(a=>`<option value="${a.id}" ${v===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}`;
+  const body=sp?`${sp.some(x=>x.aid==='all')?`<div class="small muted">${T.cv_unk}</div>`:''}
+    <form class="stack" data-form="cvsave" style="gap:10px">${sp.length?sp.map((x,i)=>`<div class="card cv-seg"><div class="row" style="gap:8px;align-items:center"><input type="checkbox" name="on" value="${i}" ${x.on?'checked':''} aria-label="✓"><label class="small muted" for="cv-w-${i}">${T.cv_who}</label><select class="inp" id="cv-w-${i}" name="w${i}">${opts(x.aid)}</select></div><textarea class="inp cm-ta" id="cv-t-${i}" name="t${i}" maxlength="4000">${esc(x.text)}</textarea></div>`).join(''):`<div class="small muted">${T.cv_none}</div>`}
+      <div class="row" style="gap:8px"><button class="btn" type="submit" ${sp.length?'':'disabled'}>${T.cv_saveN.replace('{n}',sp.filter(x=>x.on).length)}</button><button class="btn ghost" type="button" data-act="cvredo">${T.cv_redo}</button></div></form>`
+    :`<form class="card stack" data-form="cvsplit" style="gap:8px"><textarea class="inp cm-ta cm-paper" id="cv-text" name="v" maxlength="8000" placeholder="${esc(T.cv_ph)}"></textarea><div class="small muted">${T.cv_hint}</div><div><button class="btn" type="submit">${T.cv_split}</button></div></form>`;
+  return `<div class="stack cm-pane">${back?`<div><button class="btn ghost sm" data-act="cmsel" data-v="">${T.cm_back}</button></div>`:''}<h2 class="cm-h">${T.cv_h}</h2>${body}
+    <details class="card cv-alias"><summary><b>${T.cv_alias}</b></summary><div class="small muted" style="margin:6px 0">${T.cv_alias_hint}</div>
+      <form class="stack" data-form="cvalias" style="gap:6px">${ATH.map(a=>`<label class="cv-arow"><span>${esc(a.name)}</span><input class="inp" name="a_${a.id}" value="${esc(cmAliasRow(a.id)?.body||'')}" autocomplete="off"></label>`).join('')}<div><button class="btn ghost sm" type="submit">${T.cv_alias_save}</button></div></form></details></div>`}
+async function cmAddMany(rows){if(!rows.length)return;const r=must(await sb.from('coach_memos').insert(rows).select());ST.cm=[...r,...(ST.cm||[])]}
+async function cmAliasSave(map){for(const [aid,body] of Object.entries(map)){const x=cmAliasRow(aid);
+  if(x){if(x.body===body)continue;if(!body){await cmDel(x.id);continue}await cmUpd(x.id,body)}else if(body)await cmAdd({athlete_id:aid,body,tags:['alias']})}}
+function cmView(){const L=lang(), T=I18N[L], sel=UI.cmSel&&(UI.cmSel==='all'||UI.cmSel==='voice'||acct(UI.cmSel))?UI.cmSel:null;
   const head=`<div class="hello"><div class="sub">${T.cm_lock}</div><h1>${T.cm_tab}</h1></div>`;
-  if(cmWide())return `<div class="stack">${head}<div class="cm-split"><div>${cmIndex(T,L,sel||'all')}</div><div>${cmPane(sel||'all',T,L,false)}</div></div></div>`;
-  return `<div class="stack">${head}${sel?cmPane(sel,T,L,true):cmIndex(T,L,null)}</div>`}
+  if(cmWide())return `<div class="stack">${head}<div class="cm-split"><div>${cmIndex(T,L,sel||'all')}</div><div>${sel==='voice'?cmVoice(T,L,false):cmPane(sel||'all',T,L,false)}</div></div></div>`;
+  return `<div class="stack">${head}${sel==='voice'?cmVoice(T,L,true):sel?cmPane(sel,T,L,true):cmIndex(T,L,null)}</div>`}
 function cmFromBtn(aid,d,T){return acct(UI.session)?.role==='coach'&&!UI.previewAs&&ST.cmOk&&E(aid,d)?`<div><button type="button" class="linkish cm-from" data-act="cmfrom" data-aid="${aid}" data-d="${d}">${T.cm_from}</button></div>`:''}
 async function cmAdd(row){const r=must(await sb.from('coach_memos').insert(row).select().single());ST.cm=[r,...(ST.cm||[])]}
 async function cmUpd(id,body){const r=must(await sb.from('coach_memos').update({body,updated_at:new Date().toISOString()}).eq('id',id).select().single());const x=(ST.cm||[]).find(m=>m.id===id);if(x)Object.assign(x,r)}
@@ -3155,6 +3182,7 @@ document.addEventListener('click',ev=>{
   else if(a==='cmfilter'){UI.cmFilter=el.dataset.v||'';renderKeep()}
   else if(a==='cmedit'){UI.cmEdit=el.dataset.id||null;renderKeep()}
   else if(a==='cmdel'){const id=el.dataset.id;askBox(t('cm_del_q'),t('cm_del')).then(ok=>{if(ok)run(()=>cmDel(id))})}
+  else if(a==='cvredo'){UI.cmSplit=null;render()}
   else if(a==='cmunquote'){UI.cmQuote=null;renderKeep()}
   else if(a==='cmfrom'){const aid=el.dataset.aid, d=el.dataset.d, e=E(aid,d);if(!e)return;   // 記録から1タップ：その日の文を引用してメモを書く
     UI.cmQuote={aid,d,text:String(e.note||'').trim().slice(0,600)};UI.cmSel=aid;UI.cmFilter='';UI.modal=null;
@@ -3336,6 +3364,12 @@ document.addEventListener('submit',ev=>{
     const q=UI.cmQuote&&UI.cmQuote.aid===sel?UI.cmQuote:null, row={athlete_id:sel==='all'?null:sel,body:b,tags:UI.cmTags||[],...(q?{src_day:q.d,src_text:q.text}:{})};
     UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);
     run(async()=>{await cmAdd(row);UI.cmTags=[];UI.cmQuote=null},()=>{toast(t('cm_saved'));return null})}
+  if(f.dataset.form==='cvsplit'){const v=(fdt.get('v')||'').trim();UI.pressed=null;if(!v)return;UI.cmSplit=cmSplit(v);UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);wDrop(UI.wSending);UI.wSending=null;render();window.scrollTo(0,0);return}
+  if(f.dataset.form==='cvsave'){const sp=UI.cmSplit||[], on=new Set(fdt.getAll('on').map(Number));
+    const rows=sp.map((x,i)=>({aid:fdt.get('w'+i)||'all',body:(fdt.get('t'+i)||'').trim().slice(0,4000),i})).filter(r=>on.has(r.i)&&r.body).map(r=>({athlete_id:r.aid==='all'?null:r.aid,body:r.body,tags:[]}));
+    if(!rows.length){UI.pressed=null;return}UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);
+    run(async()=>{await cmAddMany(rows);UI.cmSplit=null},()=>{toast(t('cv_saved').replace('{n}',rows.length));return null});return}
+  if(f.dataset.form==='cvalias'){const map={};ATH.forEach(a=>map[a.id]=(fdt.get('a_'+a.id)||'').trim().slice(0,200));run(()=>cmAliasSave(map),()=>{toast(t('cv_alias_saved'));return null});return}
   if(f.dataset.form==='cmedit'){const b=(fdt.get('b')||'').trim().slice(0,4000), id=f.dataset.id;if(!b){UI.pressed=null;return}UI.wSending=[...f.querySelectorAll('textarea[id]')].map(wId);run(async()=>{await cmUpd(id,b);UI.cmEdit=null},()=>{toast(t('cm_saved'));return null})}
   if(f.dataset.form==='kpadd'){const b=(fdt.get('b')||'').trim().slice(0,1000);if(!b){UI.pressed=null;return}const memo=kpToMemo();if(memo)UI.kpMore=true;run(()=>kpAdd({kind:'self',body:b,pos:kpNewPos()}),()=>{toast(t(memo?'kp_saved_memo':'kp_saved_self'));return null})}
   if(f.dataset.form==='goals'){const gym=f.dataset.ym||curYm();run(()=>saveGoals(gym,fdt.getAll('g').map(s=>s.trim()),(fdt.get('review')||'').trim()),()=>({title:gym===curYm()?t('ch_goal_t'):t('g_last_saved'),msg:pick1(t('ch_goal'))}))}
